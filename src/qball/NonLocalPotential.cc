@@ -265,7 +265,57 @@ void NonLocalPotential::update_twnl(const bool compute_stress) {
   // It is assumed that nsp, npr[is], nquad[is] did not change since init
   
   tmap["update_twnl"].start();
-    
+  compute_twnl(D3vector(0.0, 0.0, 0.0), -1, twnl, dtwnl, compute_stress);
+  update_twnl_atoms();
+  tmap["update_twnl"].stop();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void NonLocalPotential::set_traveling(const bool traveling) {
+  traveling_ = traveling;
+  update_twnl_atoms();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void NonLocalPotential::update_twnl_atoms(void) {
+  // traveling pseudopotentials (Stengel, Royo, Artacho, PRL 136, 196401 (2026)):
+  // the projectors of an atom moving with velocity v are evaluated at k+G-A-v.
+  // The phase exp(-i q.R) is left unchanged in energy(): the extra constant
+  // phase exp(i v.R) cancels between the projection and its adjoint.
+  twnl_atom_.clear();
+  if ( !traveling_ ) return;
+
+  const int ngwl = basis_.localsize();
+  vector<vector<double> > vel;
+  atoms_.get_velocities(vel,true);
+
+  twnl_atom_.resize(nsp);
+  for ( int is = 0; is < nsp; is++ ) {
+    twnl_atom_[is].resize(na[is]);
+    if ( npr[is] == 0 ) continue; // no nonlocal projectors for this species
+    Species *s = atoms_.species_list[is];
+    for ( int ia = 0; ia < na[is]; ia++ ) {
+      const D3vector v(vel[is][3*ia], vel[is][3*ia+1], vel[is][3*ia+2]);
+      if ( v.x == 0.0 && v.y == 0.0 && v.z == 0.0 ) continue;
+      if ( s->ultrasoft() || nquad[is] > 0 )
+        Messages::fatal("traveling_pseudo: only norm-conserving Kleinman-Bylander pseudopotentials are supported for moving atoms (species " + s->name() + ")");
+      vector<vector<double> > tw(nsp), dtw(nsp);
+      tw[is].resize(npr[is]*ngwl);
+      compute_twnl(v, is, tw, dtw, false);
+      twnl_atom_[is][ia].swap(tw[is]);
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void NonLocalPotential::compute_twnl(const D3vector & shift, const int only_is,
+  vector<vector<double> > & twnl, vector<vector<double> > & dtwnl,
+  const bool compute_stress) {
+  // compute the projector tables twnl[is] (and dtwnl[is] if compute_stress)
+  // at q = k+G-A-shift. shift = 0 gives the standard tables; shift = v gives
+  // the projectors of an atom moving with velocity v (traveling pseudopotentials).
+  // If only_is >= 0, only species only_is is computed.
+
   const int ngwl = basis_.localsize();
   const double pi = M_PI;
   const double fpi = 4.0 * pi;
@@ -287,7 +337,9 @@ void NonLocalPotential::update_twnl(const bool compute_stress) {
   const double *kpg_y = basis_.kpgx_ptr(1);
   const double *kpg_z = basis_.kpgx_ptr(2);
 
-  if(vp){
+  const bool shifted = ( shift.x != 0.0 || shift.y != 0.0 || shift.z != 0.0 );
+
+  if(vp && !shifted){
     kpg = vp->get_kpgpa(basis_);
     kpg2 = vp->get_kpgpa2(basis_);
     kpgi = vp->get_kpgpai(basis_);
@@ -295,9 +347,36 @@ void NonLocalPotential::update_twnl(const bool compute_stress) {
     kpg_y = vp->get_kpgpax(basis_, 1);
     kpg_z = vp->get_kpgpax(basis_, 2);
   }
+
+  if(shifted){
+    // q = k+G-A-shift
+    D3vector a = shift;
+    if(vp) a += vp->value();
+    double * qx = new double[ngwl];
+    double * qy = new double[ngwl];
+    double * qz = new double[ngwl];
+    double * q = new double[ngwl];
+    double * q2 = new double[ngwl];
+    double * qi = new double[ngwl];
+    for ( int ig = 0; ig < ngwl; ig++ ) {
+      qx[ig] = basis_.kpgx_ptr(0)[ig] - a.x;
+      qy[ig] = basis_.kpgx_ptr(1)[ig] - a.y;
+      qz[ig] = basis_.kpgx_ptr(2)[ig] - a.z;
+      q2[ig] = qx[ig]*qx[ig] + qy[ig]*qy[ig] + qz[ig]*qz[ig];
+      q[ig] = sqrt(q2[ig]);
+      qi[ig] = ( q2[ig] > 0.0 ) ? 1.0/q[ig] : 0.0;
+    }
+    kpg = q;
+    kpg2 = q2;
+    kpgi = qi;
+    kpg_x = qx;
+    kpg_y = qy;
+    kpg_z = qz;
+  }
   
   // compute twnl and dtwnl
   for ( int is = 0; is < nsp; is++ ) {
+    if ( only_is >= 0 && is != only_is ) continue;
     Species *s = atoms_.species_list[is];
     if (!s->ultrasoft()) {
       int ilm = 0;
@@ -1509,7 +1588,7 @@ void NonLocalPotential::update_twnl(const bool compute_stress) {
   }
 
   
-  if(vp){
+  if(vp || shifted){
     delete [] kpg;
     delete [] kpg2;
     delete [] kpgi;
@@ -1517,8 +1596,6 @@ void NonLocalPotential::update_twnl(const bool compute_stress) {
     delete [] kpg_y;
     delete [] kpg_z;
   }
-
-  tmap["update_twnl"].stop();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1987,11 +2064,15 @@ double NonLocalPotential::energy(SlaterDet& sd, bool compute_hpsi, SlaterDet& ds
         tmap["comp_anl"].start();
         for ( int ipr = 0; ipr < npr[is]; ipr++ ) {
           // twnl[is][ig+ngwl*ipr]
-          const double * t = &twnl[is][ngwl*ipr];                            
+          const double * t_sp = &twnl[is][ngwl*ipr];                            
           const int l = lproj[is][ipr];                                      
 
           // anl_loc[ig+ipra*ngwl]                                           
           for ( int ia = 0; ia < ia_block_size; ia++ ) {
+            // traveling pseudopotentials: moving atoms have their own projectors
+            const double * t = t_sp;
+            if ( traveling_ && !twnl_atom_[is][iastart+ia].empty() )
+              t = &twnl_atom_[is][iastart+ia][ngwl*ipr];
             double* a;
             if (basis_.real())
               a = &anl_loc_gamma[2*(ia+ipr*ia_block_size)*ngwl];             
@@ -2189,11 +2270,15 @@ double NonLocalPotential::energy(SlaterDet& sd, bool compute_hpsi, SlaterDet& ds
             // compute anl_loc  
             for ( int ipr = 0; ipr < npr[is]; ipr++ ) {
               // twnl[is][ig+ngwl*ipr]                                       
-              const double * t = &twnl[is][ngwl*ipr];                        
+              const double * t_sp = &twnl[is][ngwl*ipr];                        
               const int l = lproj[is][ipr];                                  
 
               // anl_loc[ig+ipra*ngwl]                                       
               for ( int ia = 0; ia < ia_block_size; ia++ ) {
+                // traveling pseudopotentials: moving atoms have their own projectors
+                const double * t = t_sp;
+                if ( traveling_ && !twnl_atom_[is][iastart+ia].empty() )
+                  t = &twnl_atom_[is][iastart+ia][ngwl*ipr];
                 double* a;
                 if (basis_.real())
                   a = &anl_loc_gamma[2*(ia+ipr*ia_block_size)*ngwl];             

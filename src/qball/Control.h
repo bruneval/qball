@@ -115,6 +115,7 @@ struct Control
   bool timer_savesyscmd;
     
   bool tddft_involved;
+  bool traveling_pseudo; // velocity-dependent nonlocal projectors (traveling pseudopotentials)
   bool dft_plus_u;
   bool ultrasoft;
   bool nlcc;         // non-linear core correction

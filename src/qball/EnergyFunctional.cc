@@ -150,6 +150,22 @@ EnergyFunctional::EnergyFunctional(const Sample& s, const Wavefunction& wf, Char
       for (int kloc=0; kloc<wf_.nkptloc(); kloc++) 
 	nlp[ispin][kloc] = new NonLocalPotential((AtomSet&)s_.atoms, wf_.sdloc(ispin, kloc)->context(), wf_.sdloc(ispin, kloc)->basis(), vp, compute_stress);
 
+  // traveling pseudopotentials (see vars/TravelingPseudo.h and etf_kb.md):
+  // only in RT-TDDFT with atoms moving at constant velocity (atoms_dyn IMPULSIVE)
+  if ( s_.ctrl.traveling_pseudo && s_.ctrl.tddft_involved && s_.ctrl.atoms_dyn != "LOCKED" ) {
+    if ( s_.ctrl.atoms_dyn != "IMPULSIVE" )
+      Messages::fatal("traveling_pseudo ON requires atoms_dyn IMPULSIVE (atoms at constant velocity)");
+    if ( compute_stress )
+      Messages::fatal("traveling_pseudo ON is not supported with stress ON");
+    for ( int ispin = 0; ispin < wf_.nspin(); ispin++ )
+      if (wf_.spinactive(ispin))
+        for (int kloc=0; kloc<wf_.nkptloc(); kloc++) {
+          if ( wf_.sdloc(ispin, kloc)->basis().real() )
+            Messages::fatal("traveling_pseudo ON requires complex wavefunctions: set force_complex_wf ON");
+          nlp[ispin][kloc]->set_traveling(true);
+        }
+  }
+
   if (s_.ctrl.extra_memory >= 5) // use extra memory in large, huge mode
     for ( int ispin = 0; ispin < wf_.nspin(); ispin++ )
       if (wf_.spinactive(ispin)) 

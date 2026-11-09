@@ -227,3 +227,44 @@ E₀ + 1 Ha (the time-step error of the local-only run).
      bit-for-bit identical to the option off.
    - When the analytic A^nl exists: it must match the finite-difference
      A^nl.
+
+## 11. Implementation status
+
+Done (branch `etf`):
+
+- Input variable `traveling_pseudo` (`src/vars/TravelingPseudo.h`, flag
+  `ctrl.traveling_pseudo`), registered in `src/main/qb.cc` and
+  `src/qball/qbLink.cc`.
+- `NonLocalPotential`:
+  - the old body of `update_twnl` is now `compute_twnl(shift, only_is, ...)`,
+    which builds the projector tables at q = k+G−A−shift. With shift = 0 it
+    runs exactly the old code.
+  - `update_twnl_atoms()` builds one table per moving atom
+    (`twnl_atom_[is][ia]`, at shift = v); it stops with an error for
+    ultrasoft or semilocal pseudopotentials.
+  - `energy()` uses the moving atom's own table where the projectors are
+    assembled (energy and Hψ) and in the force loop. The phase and the
+    force factor k+G−A are unchanged (the constant phase exp(i v·R)
+    cancels).
+- `EnergyFunctional` switches it on only for RT-TDDFT with
+  `atoms_dyn IMPULSIVE`; it stops with an error for other ionic dynamics
+  (except `LOCKED`, where it has no effect), for real wavefunctions, and for
+  `stress ON` (the stress code does not use the per-atom tables).
+
+Checks:
+
+- Moving Ne test (section 9), now with `set traveling_pseudo ON` and
+  `TD_dt` = `dt` = 0.0125 a.u., 40 steps: the first step gives exactly
+  E₀ + 1 Ha (−32.28838802); after 40 steps the error is 1.9e-4 Ha.
+  With `OFF` the error stays 0.184 Ha.
+- The remaining error is a time-step error: at t = 0.5 a.u. it is 3.2e-3,
+  7.7e-4, 1.9e-4 and 5.0e-5 Ha for dt = 0.05, 0.025, 0.0125 and 0.00625
+  (scales as dt²).
+- Option ON with all velocities zero: output identical to OFF (bit for bit).
+  Option ON with `atoms_dyn LOCKED`: identical to OFF.
+- Errors checked: `atoms_dyn MD`, missing `force_complex_wf ON`.
+- `make check-short`: 17/17 pass; the other 16 tests give identical results.
+
+Not done yet:
+
+- Printing A^nl and A^nl·v of each moving atom (decision 4).

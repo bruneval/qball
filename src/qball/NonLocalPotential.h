@@ -65,6 +65,10 @@ class NonLocalPotential
   vector<vector<double> > wt;       // wt[is][ipr]
   vector<vector<double> > twnl;     // twnl[is][npr*ngwl]
   vector<vector<double> > dtwnl;    // dtwnl[is][6*npr*ngwl], ij=0,..,5
+  // traveling pseudopotentials: projectors of each moving atom, evaluated at
+  // k+G-A-v (v = atom velocity); empty for atoms at rest
+  bool traveling_ = false;
+  vector<vector<vector<double> > > twnl_atom_; // twnl_atom_[is][ia][npr*ngwl]
   
   vector<int>             nquad;    // nquad[is]
   vector<vector<double> > rquad;    // rquad[is][iquad], iquad = 0, nquad[is]-1
@@ -77,6 +81,10 @@ class NonLocalPotential
   
   mutable TimerMap tmap;
   void init(const bool compute_stress);
+  void compute_twnl(const D3vector & shift, const int only_is,
+    vector<vector<double> > & twnl, vector<vector<double> > & dtwnl,
+    const bool compute_stress);
+  void update_twnl_atoms(void);
 
   VectorPotential * vp;
   
@@ -87,6 +95,7 @@ class NonLocalPotential
   ~NonLocalPotential(void);
                
   void update_twnl(const bool compute_stress);
+  void set_traveling(const bool traveling);   // traveling pseudopotentials on/off
   void update_usfns(SlaterDet& sd, Basis* cdbasis);  // update Q_nm^I(G), beta^I(G) when atoms
                                       // move or basis changes
   void use_highmem(void) { highmem_ = true; }  // use extra memory to speed calculation

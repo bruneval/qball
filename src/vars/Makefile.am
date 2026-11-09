@@ -62,6 +62,7 @@ noinst_HEADERS =                            \
 	StandardVar.h                       \
 	Stress.h                            \
 	TDDt.h                              \
+	TravelingPseudo.h                   \
 	Thermostat.h                        \
 	ThresholdForce.h                    \
 	ThresholdScf.h                      \

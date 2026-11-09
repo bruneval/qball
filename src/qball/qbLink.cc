@@ -121,6 +121,7 @@ using namespace std;
 #include <vars/Force_Complex_WF.h>
 #include <vars/Non_Selfconsistent_Energy_Output.h>
 #include <vars/TDDt.h>
+#include <vars/TravelingPseudo.h>
 #include <vars/NA_overlaps.h>
 #include <vars/Dt.h>
 #include <vars/Nempty.h>
@@ -421,6 +422,7 @@ void qbLink::init(void) {
   ui->addVar(new Force_Complex_WF(s));
   ui->addVar(new Non_Selfconsistent_Energy_Output(s));
   ui->addVar(new TDDt(s));
+  ui->addVar(new TravelingPseudo(s));
   ui->addVar(new NA_overlaps(s));
   ui->addVar(new WF_Phase_RealVar(s));
   ui->addVar(new SaveFreq(s));

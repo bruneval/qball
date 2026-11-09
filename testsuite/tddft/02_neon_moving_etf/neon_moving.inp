@@ -8,6 +8,7 @@
 # exactly at E0 + N_e u^2/2 = E0 + 8 * 0.5^2 / 2 = E0 + 1 Ha at all times.
 # This holds only if the nonlocal projectors travel with the atom
 # (Stengel, Royo, Artacho, PRL 136, 196401 (2026)); see etf_kb.md.
+# With traveling_pseudo OFF the energy is wrong by up to 0.18 Ha.
 #
 # 1) ground state with the atom at rest
 set cell 14 0 0 0 14 0 0 0 14 bohr
@@ -26,7 +27,8 @@ run 0 100 5
 # 2) the atom moves at constant velocity (IMPULSIVE), electrons boosted by A = -u
 set vector_potential -0.5 0.0 0.0
 set atoms_dyn IMPULSIVE
+set traveling_pseudo ON
 set wf_dyn ETRS
-set TD_dt 0.025 atomictime
-set dt 0.025 atomictime
-run 20 1
+set TD_dt 0.0125 atomictime
+set dt 0.0125 atomictime
+run 40 1
