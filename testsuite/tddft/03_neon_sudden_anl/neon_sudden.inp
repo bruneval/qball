@@ -8,14 +8,14 @@
 # v constant is Delta(E_KS + A^nl.v) = v . Delta(P), where
 #   A^nl = i<[V_nl, r]> = -dE_nl/dv   (nonlocal part of the electron momentum)
 #   P    = d<sum r>/dt = <p> + A^nl  (physical electron momentum)
-# (Stengel, Royo, Artacho, PRL 136, 196401 (2026), Eq. 6; see etf_kb.md).
+# (Stengel, Royo, Artacho, PRL 136, 196401 (2026), Eq. 6).
 # E_KS alone misses v . Delta(A^nl): a spurious oscillation.
 # The checks are done by anl_check.sh from the printed energies, A^nl, the
 # electronic current (<p>) and the electronic dipole computed from the density
 # (P = -d dipole/dt; density_dipole ON). The atom starts at the box centre so
 # that its density stays far from the cell boundaries.
 # The cutoff must be converged (80 Ry): the relation P = <p> + A^nl assumes a
-# complete basis; at 40 Ry it is off by about 0.1 (see etf_kb.md, section 12).
+# complete basis; at 40 Ry it is off by about 0.1.
 #
 # 1) ground state with the atom at rest
 set cell 14 0 0 0 14 0 0 0 14 bohr

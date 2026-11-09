@@ -20,9 +20,6 @@ QBALL must be installed before testing: the tests read pseudopotentials from ins
 If the configure options (e.g. --prefix) change, run "make clean" before "make":
 the install path is compiled into the program and make does not notice the change.
 
-Exception to "just bug fixes": the branch etf implements traveling pseudopotentials
-(velocity-dependent nonlocal projectors, Stengel/Royo/Artacho PRL 2026). The plan is in etf_kb.md.
-
 Testing: use the short test suite only (19 tests, skips the long fullerene and Al32 MD tests).
 From the build directory:
 

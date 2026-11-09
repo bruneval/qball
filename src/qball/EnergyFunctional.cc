@@ -150,7 +150,7 @@ EnergyFunctional::EnergyFunctional(const Sample& s, const Wavefunction& wf, Char
       for (int kloc=0; kloc<wf_.nkptloc(); kloc++) 
 	nlp[ispin][kloc] = new NonLocalPotential((AtomSet&)s_.atoms, wf_.sdloc(ispin, kloc)->context(), wf_.sdloc(ispin, kloc)->basis(), vp, compute_stress);
 
-  // traveling pseudopotentials (see vars/TravelingPseudo.h and etf_kb.md):
+  // traveling pseudopotentials (see vars/TravelingPseudo.h):
   // only in RT-TDDFT with atoms moving at constant velocity (atoms_dyn IMPULSIVE)
   if ( s_.ctrl.traveling_pseudo && s_.ctrl.tddft_involved && s_.ctrl.atoms_dyn != "LOCKED" ) {
     if ( s_.ctrl.atoms_dyn != "IMPULSIVE" )

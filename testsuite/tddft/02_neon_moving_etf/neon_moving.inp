@@ -7,7 +7,7 @@
 # ground state translated with the nucleus, and the total energy must stay
 # exactly at E0 + N_e u^2/2 = E0 + 8 * 0.5^2 / 2 = E0 + 1 Ha at all times.
 # This holds only if the nonlocal projectors travel with the atom
-# (Stengel, Royo, Artacho, PRL 136, 196401 (2026)); see etf_kb.md.
+# (Stengel, Royo, Artacho, PRL 136, 196401 (2026)).
 # With traveling_pseudo OFF the energy is wrong by up to 0.18 Ha.
 #
 # 1) ground state with the atom at rest

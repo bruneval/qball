@@ -3,7 +3,7 @@
 #   T. Jarrin, Phys. Rev. B 112, 245202 (2025), Sec. III A and Figs. 2 and 4.
 # Neutral Si projectile at 1 MeV (v = 1.19817 a.u.) moving along z at constant
 # velocity (atoms_dyn IMPULSIVE: the target atoms stay fixed), with traveling
-# pseudopotentials (traveling_pseudo ON; see etf_kb.md).
+# pseudopotentials (traveling_pseudo ON).
 #
 # Differences with Jarrin (to keep the test small; this is a regression test,
 # it does not reproduce his stopping power):
