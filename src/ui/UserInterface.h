@@ -62,7 +62,7 @@ public:
   virtual char const*name ( void ) const = 0;
   virtual int set ( int argc, char **argv ) = 0;
   virtual string print ( void ) const = 0;
-  virtual const Dimensions & dimensions() const {return Dimensions::one;}
+  virtual Dimensions dimensions() const {return Dimensions::one;}
 };
 
 class UserInterface
