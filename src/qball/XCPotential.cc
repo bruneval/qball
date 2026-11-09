@@ -150,7 +150,7 @@ void XCPotential::update(vector<vector<double> >& vr)
        // unpolarized
        double* rh;
        if (tddft_involved_)
-          rh = (double*)&(cd_ecalc_.rhor[0][0]);
+          rh = (double*)&((cd_ecalc_.nlcc() ? cd_ecalc_.xcrhor : cd_ecalc_.rhor)[0][0]);
        else
           rh = (double*)xcf_->rho;
       const double *const v = xcf_->vxc1;
@@ -167,8 +167,8 @@ void XCPotential::update(vector<vector<double> >& vr)
        double* rh_dn;
        if (tddft_involved_)
        {
-          rh_up = &(cd_ecalc_.rhor[0][0]);
-          rh_dn = &(cd_ecalc_.rhor[1][0]);
+          rh_up = &((cd_ecalc_.nlcc() ? cd_ecalc_.xcrhor : cd_ecalc_.rhor)[0][0]);
+          rh_dn = &((cd_ecalc_.nlcc() ? cd_ecalc_.xcrhor : cd_ecalc_.rhor)[1][0]);
        }
        else
        {
@@ -375,7 +375,7 @@ void XCPotential::update(vector<vector<double> >& vr)
       //const double *const rh = xcf_->rho;
       double* rh;
       if (tddft_involved_)
-         rh = &(cd_ecalc_.rhor[0][0]);
+         rh = &((cd_ecalc_.nlcc() ? cd_ecalc_.xcrhor : cd_ecalc_.rhor)[0][0]);
       else
          rh = (double*)xcf_->rho;
       {
@@ -402,8 +402,8 @@ void XCPotential::update(vector<vector<double> >& vr)
       double* rh_dn;
       if (tddft_involved_)
       {
-         rh_up = &(cd_ecalc_.rhor[0][0]);
-         rh_dn = &(cd_ecalc_.rhor[1][0]);
+         rh_up = &((cd_ecalc_.nlcc() ? cd_ecalc_.xcrhor : cd_ecalc_.rhor)[0][0]);
+         rh_dn = &((cd_ecalc_.nlcc() ? cd_ecalc_.xcrhor : cd_ecalc_.rhor)[1][0]);
       }
       else
       {
@@ -446,7 +446,7 @@ void XCPotential::update_exc(vector<vector<double> >& vr)
          // unpolarized
          // AS: was previously const double *const rh = xcf_->rho;
          // AS: however, the energy has to be determined with the new wave function
-         const double *const rh = &(cd_ecalc_.rhor[0][0]);
+         const double *const rh = &((cd_ecalc_.nlcc() ? cd_ecalc_.xcrhor : cd_ecalc_.rhor)[0][0]);
          for ( int i = 0; i < size; i++ )
          {
             exc_ += rh[i] * e[i];
@@ -481,7 +481,7 @@ void XCPotential::update_exc(vector<vector<double> >& vr)
          // AS: was previously const double *const rh = xcf_->rho;
          // AS: however, the energy has to be determined with the new wave function
          // AS: untested so far!
-         const double *const rh = &(cd_ecalc_.rhor[0][0]);
+         const double *const rh = &((cd_ecalc_.nlcc() ? cd_ecalc_.xcrhor : cd_ecalc_.rhor)[0][0]);
          {
             for ( int ir = 0; ir < np012loc_; ir++ )
             {
