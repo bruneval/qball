@@ -20,12 +20,12 @@ QBALL must be installed before testing: the tests read pseudopotentials from ins
 If the configure options (e.g. --prefix) change, run "make clean" before "make":
 the install path is compiled into the program and make does not notice the change.
 
-Testing: use the short test suite only (13 tests, skips the long fullerene and Al32 MD tests).
+Testing: use the short test suite only (14 tests, skips the long fullerene and Al32 MD tests).
 From the build directory:
 
     cd testsuite
     MPIEXEC="$(which mpiexec) --oversubscribe --bind-to none" OMP_NUM_THREADS=1 make check-short
 
-Expected result: 13/13 pass.
+Expected result: 14/14 pass.
 (GaAs uses a looser tolerance of 1e-3 Ha: its ekin, eps, enl differ from the reference by up to 4.4e-4 Ha
 with our compiler and libraries; this was already the case before any of our changes.)
