@@ -96,6 +96,9 @@ class NonLocalPotential
                
   void update_twnl(const bool compute_stress);
   void set_traveling(const bool traveling);   // traveling pseudopotentials on/off
+  bool moving(const int is, const int ia) const  // atom has its own (traveling) projectors
+  { return traveling_ && !twnl_atom_[is][ia].empty(); }
+  D3vector anl_velocity(SlaterDet& sd, const int is, const int ia); // A^nl = -dE_nl/dv
   void update_usfns(SlaterDet& sd, Basis* cdbasis);  // update Q_nm^I(G), beta^I(G) when atoms
                                       // move or basis changes
   void use_highmem(void) { highmem_ = true; }  // use extra memory to speed calculation

@@ -407,6 +407,22 @@ void EhrenSampleStepper::step(int niter)
        density_dipole = cd_.dipole();
     }
 
+    // traveling pseudopotentials: A^nl = -dE_nl/dv of each moving atom;
+    // all tasks take part in the calculation
+    vector<D3vector> anl_value, anl_vel;
+    vector<string> anl_name;
+    if ( ef_.traveling() && iter%s_.ctrl.iprint == 0 ) {
+       for ( int is = 0; is < atoms.atom_list.size(); is++ ) {
+          for ( int ia = 0; ia < atoms.atom_list[is].size(); ia++ ) {
+             const D3vector v = atoms.atom_list[is][ia]->velocity();
+             if ( v.x == 0.0 && v.y == 0.0 && v.z == 0.0 ) continue;
+             anl_value.push_back(ef_.anl_velocity(s_.wf, is, ia));
+             anl_vel.push_back(v);
+             anl_name.push_back(atoms.atom_list[is][ia]->name());
+          }
+       }
+    }
+
     if ( oncoutpe && iter%s_.ctrl.iprint == 0)
     {
        cout.setf(ios::fixed,ios::floatfield);
@@ -428,6 +444,12 @@ void EhrenSampleStepper::step(int niter)
                << density_dipole.x << " " << density_dipole.y << " "
                << density_dipole.z << " </electronic_dipole_density>\n"
                << setprecision(8);
+       for ( int k = 0; k < anl_value.size(); k++ )
+          cout << "  <anl_velocity> " << anl_name[k] << " " << setprecision(10)
+               << anl_value[k].x << " " << anl_value[k].y << " " << anl_value[k].z
+               << " </anl_velocity>\n"
+               << "  <anl_dot_v> " << anl_name[k] << " " << anl_value[k] * anl_vel[k]
+               << " </anl_dot_v>\n" << setprecision(8);
        if ( compute_stress )
        {
           const double pext = (sigma_ext[0]+sigma_ext[1]+sigma_ext[2])/3.0;

@@ -277,6 +277,45 @@ void NonLocalPotential::set_traveling(const bool traveling) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+D3vector NonLocalPotential::anl_velocity(SlaterDet& sd, const int is, const int ia) {
+  // A^nl = -dE_nl/dv = i<[V_nl, r]> for the moving atom (is, ia): nonlocal
+  // part of the electron momentum (Stengel, Royo, Artacho, PRL 136, 196401
+  // (2026), Eq. 6). Central finite difference in the atom velocity, with the
+  // wavefunctions fixed; only the projectors of this atom change.
+  if ( !moving(is, ia) ) return D3vector(0.0, 0.0, 0.0); // e.g. no projectors
+  const int ngwl = basis_.localsize();
+  vector<vector<double> > vel;
+  atoms_.get_velocities(vel,true);
+  const D3vector v(vel[is][3*ia], vel[is][3*ia+1], vel[is][3*ia+2]);
+  const double delta = 1.0e-4;
+
+  vector<vector<double> > fion(nsp);
+  for ( int js = 0; js < nsp; js++ ) fion[js].resize(3*na[js], 0.0);
+  valarray<double> sigma(0.0, 6);
+  vector<complex<double> > veff;
+
+  double a[3];
+  for ( int j = 0; j < 3; j++ ) {
+    double e[2];
+    for ( int isign = 0; isign < 2; isign++ ) {
+      D3vector vs = v;
+      const double d = ( isign == 0 ) ? delta : -delta;
+      if ( j == 0 ) vs.x += d;
+      if ( j == 1 ) vs.y += d;
+      if ( j == 2 ) vs.z += d;
+      vector<vector<double> > tw(nsp), dtw(nsp);
+      tw[is].resize(npr[is]*ngwl);
+      compute_twnl(vs, is, tw, dtw, false);
+      twnl_atom_[is][ia].swap(tw[is]);  // projectors at v +- delta
+      e[isign] = energy(sd, false, sd, false, fion, false, sigma, veff);
+      twnl_atom_[is][ia].swap(tw[is]);  // restore the projectors at v
+    }
+    a[j] = -( e[0] - e[1] ) / ( 2.0 * delta );
+  }
+  return D3vector(a[0], a[1], a[2]);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void NonLocalPotential::update_twnl_atoms(void) {
   // traveling pseudopotentials (Stengel, Royo, Artacho, PRL 136, 196401 (2026)):
   // the projectors of an atom moving with velocity v are evaluated at k+G-A-v.

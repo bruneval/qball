@@ -265,19 +265,30 @@ Checks:
 - Errors checked: `atoms_dyn MD`, missing `force_complex_wf ON`.
 - `make check-short`: 17/17 pass; the other 16 tests give identical results.
 
-Not done yet:
+A^nl printing (decision 4), also done:
 
-- Printing A^nl and A^nl·v of each moving atom (decision 4); the test of
-  section 12 checks it.
+- `NonLocalPotential::anl_velocity(sd, is, ia)`: A^nl = −∂E_nl/∂v by
+  central finite difference (δ = 1e-4 a.u.); for each direction the moving
+  atom's table is rebuilt at v ± δ, `energy()` is evaluated with the
+  wavefunctions fixed, and the table is restored.
+- `EnergyFunctional::anl_velocity(psi, is, ia)`: sum over spins and k-points
+  with the same weights as `enl_`.
+- `EhrenSampleStepper` prints, after `<etotal>`, for each moving atom:
+  `<anl_velocity> name Ax Ay Az </anl_velocity>` and
+  `<anl_dot_v> name A·v </anl_dot_v>` (10 decimals).
+- Checks: A^nl agrees with the slope of the first-step energy in v
+  ([E(0.51) − E(0.49)]/0.02 = 0.720429 vs −A^nl(0.5) = 0.720440); A^nl = 0
+  (to 1e-4) for the boosted Ne of section 9; the test of section 12 passes;
+  `make check-short`: 18/18, the other 17 tests unchanged.
 
 ## 12. Regression test: Ne sudden start, A^nl (`testsuite/tddft/03_neon_sudden_anl`)
 
-Same Ne atom as section 9, placed at the box centre (7, 7, 7), but
+Same Ne atom as section 9, placed at the centre of the 14 bohr box, but
 **without** the vector-potential trick: the ground state is computed at rest,
 then the nucleus is suddenly set moving at v = 0.5 a.u. along x
 (`IMPULSIVE`, `traveling_pseudo ON`), while the electrons start at rest. Seen
-from the atom, the electrons get a kick and slosh around the nucleus. ETRS,
-`TD_dt` = `dt` = 0.025 a.u., 104 steps (about 19 s).
+from the atom, the electrons get a kick and slosh around the nucleus.
+80 Ry, ETRS, `TD_dt` = `dt` = 0.025 a.u., 42 steps (about 30 s).
 
 Physics: with velocity-dependent projectors, the work done by the agent that
 keeps v constant is
@@ -287,46 +298,49 @@ keeps v constant is
 (P = physical electron momentum, ⟨p⟩ = canonical momentum). Also
 ΔE_KS = v·Δ⟨p⟩, so E_KS alone misses v·ΔA^nl: a spurious oscillation.
 
-How the quantities are obtained:
+How the quantities are obtained (all printed together for step N, for the
+same wavefunctions):
 
 - ⟨p⟩ = −`total_electronic_current` (electron charge −1; canonical part
   only, no nonlocal contribution).
-- P = −d(dipole)/dt, central difference of the new output
-  `<electronic_dipole_density>` (section 13).
-- A^nl: printed by QBALL (to be implemented, decision 4) as
-  `<anl_velocity> Ne Ax Ay Az </anl_velocity>` and
-  `<anl_dot_v> Ne value </anl_dot_v>`, one line per moving atom and per step.
-- Energy, current, density dipole and A^nl of step N are printed together,
-  for the same wavefunctions (start of the step).
+- P = −d(dipole)/dt, central difference of `<electronic_dipole_density>`
+  (section 13).
+- A^nl: `<anl_velocity>` (section 11).
 
-Measured with the current code, A^nl obtained as P − ⟨p⟩ (400-step run):
+Findings:
 
-- E_KS jumps by +0.1837 Ha at the first step (the nonlocal energy changes
-  when the projectors switch from at-rest to traveling); afterwards
-  ΔE_KS = v·Δ⟨p⟩ holds within 1.4e-3 Ha over 400 steps (time-step error).
-- v·A^nl oscillates between about −0.25 and +0.13 Ha. Between steps 20 and
-  100 it goes from +0.133 to −0.131 Ha, so E_KS alone misses the work by
-  0.264 Ha.
+- E_KS jumps at the first step (+0.1837 Ha at 40 Ry): the nonlocal energy
+  changes when the projectors switch from at-rest to traveling. Consistent
+  with A^nl: the jump is about −½ v A^nl(t=0).
+- Afterwards ΔE_KS = v·Δ⟨p⟩ holds within 2.4e-4 Ha per step.
+- **The cutoff must be converged.** The relation P = ⟨p⟩ + A^nl assumes a
+  complete basis: in a truncated plane-wave basis the Hamiltonian (also its
+  local part) does not commute exactly with r. Measured A^nl − (P − ⟨p⟩)
+  over the first atomic unit: −0.06 to −0.10 at 40 Ry (independent of the
+  time step), +0.003 to +0.008 at 80 Ry and the same at 120 Ry. At 40 Ry
+  A^nl itself is unconverged (0.19 instead of 0.27 at t = 0.25).
+- Box size matters too: in a 12 bohr box the mismatch grows to 0.024
+  (some density ejected by the kick reaches the cell boundaries sooner).
+- At 80 Ry, v·A^nl goes from 0.113 Ha (step 10) to 0.067 Ha (step 40).
 
 Why not the Wannier dipole (`wf_diag MLWFC`): it was tried first. It has
-isolated bad values (one step off by about 0.1, e.g. steps 152 and 274 of a
-400-step run), it is computed after the propagation (one step later than
-the energy and current, which biased A^nl by up to about 0.2 Ha·(1/v) during
-the fast initial acceleration), and it is 5 to 10 times less accurate
-(P = 4.004 instead of 4 on the boosted Ne of section 9).
+isolated bad values (one step off by about 0.1), it is computed after the
+propagation (one step later than the energy and current, which biased the
+first estimates of A^nl), and it is 5 to 10 times less accurate (P = 4.004
+instead of 4 on the boosted Ne of section 9).
 
 Checks (`neon_sudden.test`, computed by `anl_check.sh` from the output):
 
-| Check | Expected | Tolerance | Current code |
+| Check | Expected | Tolerance | Measured |
 |---|---|---|---|
-| ground-state energy | −33.28838802 | 1e-4 | pass |
-| `ks_balance`: ΔE_KS − v·ΔP, steps 20→100 | 0.26430022 (regression value: the missing −v·ΔA^nl) | 1e-2 | pass |
-| `anl` at step 20: A_x − (P − ⟨p⟩) | 0 (exact) | 1e-2 | fail (A^nl not printed) |
-| `anl` at step 100 | 0 (exact) | 1e-2 | fail (A^nl not printed) |
-| `energy_balance`: Δ(E_KS + A^nl·v) − v·ΔP, steps 20→100 | 0 (exact) | 5e-3 | fail (A^nl not printed) |
+| ground-state energy | −33.35662277 | 1e-4 | −33.35662277 |
+| `ks_balance`: ΔE_KS − v·ΔP, steps 10→40 | 0.04330732 (regression value: the missing −v·ΔA^nl) | 1e-2 | 0.04330732 |
+| `anl` at step 10: A_x − (P − ⟨p⟩) | 0 (exact; A^nl ≈ 0.22) | 2e-2 | 0.0083 |
+| `anl` at step 40 | 0 (exact; A^nl ≈ 0.13) | 2e-2 | 0.0046 |
+| `energy_balance`: Δ(E_KS + A^nl·v) − v·ΔP, steps 10→40 | 0 (exact) | 5e-3 | −0.0020 |
 
-The tolerances may be tightened once A^nl is implemented and the actual
-errors are known; the effect being tested is 0.26 Ha.
+Before A^nl was printed, the last three checks failed (no output); with
+A^nl = 0 the `anl` checks would be off by about 0.2.
 
 ## 13. Density dipole output (`set density_dipole ON`)
 

@@ -73,6 +73,7 @@ class EnergyFunctional
   XCPotential* xcp;
   EnthalpyFunctional* epvf;
   vector<vector<NonLocalPotential*> > nlp;
+  bool traveling_ = false; // traveling pseudopotentials active (see vars/TravelingPseudo.h)
   vector<vector<ConfinementPotential*> > cfp; // cfp[ispin][ikp]
   HubbardPotential* hubp_;
   ChargeDensity *hamil_cd_;   // AS: specifies the density used for setting up the Hamiltonian
@@ -108,6 +109,9 @@ class EnergyFunctional
   
   ChargeDensity *hamil_cd() { return hamil_cd_; } ;   // AS: specifies the density used for setting up the Hamiltonian
 
+  // traveling pseudopotentials: A^nl = -dE_nl/dv of a moving atom
+  bool traveling(void) const { return traveling_; }
+  D3vector anl_velocity(Wavefunction& psi, const int is, const int ia);
   double energy(Wavefunction& wf, bool compute_hpsi, Wavefunction& dwf,
     bool compute_forces, vector<vector<double> >& fion,
                 bool compute_stress, valarray<double>& sigma);

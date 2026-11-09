@@ -164,6 +164,7 @@ EnergyFunctional::EnergyFunctional(const Sample& s, const Wavefunction& wf, Char
             Messages::fatal("traveling_pseudo ON requires complex wavefunctions: set force_complex_wf ON");
           nlp[ispin][kloc]->set_traveling(true);
         }
+    traveling_ = true;
   }
 
   if (s_.ctrl.extra_memory >= 5) // use extra memory in large, huge mode
@@ -1138,6 +1139,31 @@ void EnergyFunctional::update_exc_ehart_eps(void)
   vbasis_->context().dsum(2,1,&tsum[0],2);
   eps_   = tsum[0];
   ehart_ = tsum[1];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+D3vector EnergyFunctional::anl_velocity(Wavefunction& psi, const int is, const int ia) {
+  // traveling pseudopotentials: A^nl = -dE_nl/dv of the moving atom (is, ia),
+  // averaged over k-points and spins with the same weights as enl_.
+  // All tasks must call this function.
+  double asum[4] = { 0.0, 0.0, 0.0, 0.0 };
+  for ( int ispin = 0; ispin < psi.nspin(); ispin++ ) {
+    if (psi.spinactive(ispin)) {
+      for (int kloc=0; kloc<psi.nkptloc(); kloc++) {
+        const double wt = psi.weight(psi.kptloc(kloc));
+        const D3vector a = nlp[ispin][kloc]->anl_velocity(*psi.sdloc(ispin, kloc), is, ia);
+        asum[0] += wt*a.x;
+        asum[1] += wt*a.y;
+        asum[2] += wt*a.z;
+        asum[3] += wt;
+      }
+    }
+  }
+  psi.wfcontext()->dsum('r',4,1,&asum[0],4);
+  assert(asum[3] != 0.0);
+  if (psi.nspin() == 2)
+    asum[3] *= 0.5;
+  return D3vector(asum[0]/asum[3], asum[1]/asum[3], asum[2]/asum[3]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
