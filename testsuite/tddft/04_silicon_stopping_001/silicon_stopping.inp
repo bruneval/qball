@@ -1,0 +1,57 @@
+# Electronic stopping of a Si projectile in bulk Si, <001> channel, off-center 1/4
+# trajectory, 12-valence-electron pseudopotential, after
+#   T. Jarrin, Phys. Rev. B 112, 245202 (2025), Sec. III A and Figs. 2 and 4.
+# Neutral Si projectile at 1 MeV (v = 1.19817 a.u.) moving along z at constant
+# velocity (atoms_dyn IMPULSIVE: the target atoms stay fixed), with traveling
+# pseudopotentials (traveling_pseudo ON; see etf_kb.md).
+#
+# Differences with Jarrin (to keep the test small; this is a regression test,
+# it does not reproduce his stopping power):
+#   - 1x1x1 cubic cell (8 Si atoms, a = 5.431 A = 10.2631 bohr) instead of 3x3x3;
+#   - pseudopotential: PseudoDojo ONCVPSP LDA scalar-relativistic, no core
+#     correction, Si-sp (12 valence electrons: 2s 2p 3s 3p; Kleinman-Bylander
+#     form), UPF format, downloaded from
+#     https://raw.githubusercontent.com/PseudoDojo/ONCVPSP-LDA-SR-noCCv0.4/master/Si/Si-sp.upf
+#     instead of Jarrin's Hamann-type pseudopotential;
+#   - 45 Ry cutoff instead of 220 Ry (PseudoDojo hints: 76 to 96 Ry);
+#   - Gamma point only, Fermi smearing (8 empty bands) for a robust ground state;
+#   - 20 time steps of 0.02 a.u. (the initial transient only).
+#
+# Geometry: in projection along z, the atomic columns are at (m, n) a/4 with
+# m + n even; the channel centre (a/4, 0) has 4 columns at d = a/4. The
+# off-center 1/4 position is at d/4 from the nearest column (0, 0):
+# (x, y) = (a/16, 0). Start height z0 = 7a/16, where the projectile stays at
+# least 3.66 bohr from all atoms along its path.
+#
+# 1) ground state of the 8 atoms + neutral projectile (projectile at rest)
+set cell 10.2631 0 0 0 10.2631 0 0 0 10.2631 bohr
+species silicon Si-sp.upf
+species projectile Si-sp.upf
+atom Si1 silicon 0.0000 0.0000 0.0000 bohr
+atom Si2 silicon 0.0000 5.1315 5.1315 bohr
+atom Si3 silicon 5.1315 0.0000 5.1315 bohr
+atom Si4 silicon 5.1315 5.1315 0.0000 bohr
+atom Si5 silicon 2.5658 2.5658 2.5658 bohr
+atom Si6 silicon 2.5658 7.6973 7.6973 bohr
+atom Si7 silicon 7.6973 2.5658 7.6973 bohr
+atom Si8 silicon 7.6973 7.6973 2.5658 bohr
+atom P projectile 0.6414 0.0000 4.4901 bohr 0.0 0.0 1.19817 atomicvelocity
+set xc LDA
+set ecut 45 rydberg
+set ecutprec 6 rydberg
+set force_complex_wf ON
+set nempty 8
+set smearing fermi
+set smearing_width 0.01 hartree
+set wf_dyn PSDA
+set threshold_scf 1.E-8 5
+randomize_wf
+run 0 100 5
+
+# 2) the projectile moves at constant velocity, traveling pseudopotentials
+set atoms_dyn IMPULSIVE
+set traveling_pseudo ON
+set wf_dyn ETRS
+set TD_dt 0.02 atomictime
+set dt 0.02 atomictime
+run 20 1

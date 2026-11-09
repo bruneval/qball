@@ -388,3 +388,71 @@ Validation on the boosted Ne of section 9, moved to the box centre:
 the dipole starts at −55.99995 (exact −56) in each direction; y and z stay
 constant to 6e-9; P = −dD_x/dt is between 3.9992 and 3.9998 at every step
 (exact 4, the difference is a time-step error).
+
+## 14. Regression test: Si projectile in Si (`testsuite/tddft/04_silicon_stopping_001`)
+
+After T. Jarrin, Phys. Rev. B 112, 245202 (2025): Si⁰ projectile in bulk Si,
+⟨001⟩ channel, "off-center ¼" trajectory, 12-valence-electron
+pseudopotential (his Figs. 2 and 4; at 1 MeV he finds 162 eV/Å off-center ¼
+vs 75 eV/Å in the channel centre, Table III). Jarrin did not provide input
+files; the setup below is ours.
+
+- Projectile: neutral Si at 1 MeV, v = 1.19817 a.u. along z
+  (`atoms_dyn IMPULSIVE`, target atoms fixed, `traveling_pseudo ON`).
+- Cell: 1×1×1 cubic (8 Si atoms, a = 5.431 Å = 10.2631 bohr) instead of
+  Jarrin's 3×3×3; Γ point only.
+- Pseudopotential: PseudoDojo ONCVPSP LDA scalar-relativistic, no core
+  correction, `Si-sp` (12 valence electrons, 2 projectors each for s, p, d,
+  Kleinman-Bylander form), UPF format (UPF2, linear grid from r = 0), from
+  https://raw.githubusercontent.com/PseudoDojo/ONCVPSP-LDA-SR-noCCv0.4/master/Si/Si-sp.upf
+  (folder: https://github.com/PseudoDojo/ONCVPSP-LDA-SR-noCCv0.4/tree/master/Si).
+  (The standard PseudoDojo LDA v0.4 set only has the 4-electron Si; Jarrin's
+  Hamann-type pseudopotential is semilocal, which traveling pseudopotentials
+  do not support.)
+- Geometry: in projection along z the atomic columns are at (m, n)·a/4 with
+  m + n even; the channel centre (a/4, 0) has 4 columns at d = a/4.
+  Off-center ¼ = d/4 from the nearest column (0, 0): (x, y) = (a/16, 0).
+  Start height z₀ = 7a/16, chosen so that the projectile stays at least
+  3.66 bohr from all atoms along the path (Jarrin requires ≥ 0.8 Å).
+- Ground state of 8 atoms + neutral projectile, LDA, 45 Ry, Fermi smearing
+  (8 empty bands), then ETRS, `TD_dt` = `dt` = 0.02 a.u., 20 steps (about
+  22 s). This covers only the initial transient: the test is a regression
+  test and does not reproduce Jarrin's stopping power (crossing one lattice
+  constant takes about 8.6 a.u., i.e. hundreds of steps).
+
+Observations (sudden start, the projectile's own 12 electrons start at
+rest):
+
+- The energy jumps by +1.98 Ha at the first step (switch-on of the
+  traveling projectors), consistent with −½ A^nl·v (A^nl·v = −3.70 Ha).
+- The energy then rises by about 17 Ha over 0.4 a.u. (the bound electrons
+  are dragged along: 12 v²/2 ≈ 8.6 Ha alone) and A^nl·v swings between
+  −3.7 and +1.3 Ha: the traveling correction is large for a heavy
+  projectile.
+- Time step: dt = 0.02 vs 0.01 changes the energy after 0.38 a.u. by
+  0.018 Ha (0.1 %) and A^nl·v by 0.004 Ha.
+- Cutoff: not converged at 45 Ry (energy rise 16.84 / 17.48 / 17.62 Ha at
+  45 / 60 / 76 Ry), acceptable for a regression test.
+
+Checks (`silicon_stopping.test`; regression values from our run):
+
+| Check | Value | Tolerance |
+|---|---|---|
+| ground-state energy | −826.34157529 | 1e-4 |
+| energy after step 20 | −809.50031578 | 1e-3 |
+| projectile A^nl·v after step 20 | 0.8888255793 | 1e-3 |
+
+UPF vs PSP8: the same pseudopotential is also distributed as `Si-sp.psp8`
+(both written by the same ONCVPSP run). The test was first built with the
+PSP8 file; with the UPF file:
+
+- the energy rise (step 1: 1.98335902 vs 1.98335922 Ha; step 20:
+  16.84125951 vs 16.84126074 Ha) and A^nl·v (step 1: −3.67744073 vs
+  −3.67744089; step 20: 0.88882558 vs 0.88882564) agree within about 1e-6 Ha;
+- the total energy is shifted by a constant +8.3e-4 Ha (9e-5 Ha per atom),
+  the same in the ground state and at steps 1 and 20, almost entirely in the
+  local pseudopotential term (`eps` +8.3e-4, all other terms below 1e-5).
+  The likely reason is the range of the tabulated local potential: 15.1 bohr
+  in the UPF file, 6 bohr in the PSP8 file (QBALL continues it with −Z/r).
+  Same kind of offset as found earlier between the UPF and PSP8 versions
+  of the PseudoDojo C pseudopotential (3e-4 Ha for diamond).
