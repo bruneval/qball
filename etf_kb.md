@@ -174,6 +174,15 @@ Checks (`neon_moving.test`):
 | ground-state energy E₀ | −33.28838802 | −33.28838802 (pass) |
 | energy after TD step 1 (tol. 1e-3) | E₀ + 1 = −32.28838802 | −32.10467497 (fail, 0.184 Ha off) |
 | energy after TD step 20 (tol. 1e-3) | E₀ + 1 = −32.28838802 | −32.32353897 (fail, 0.035 Ha off) |
+| A^nl·v after the last TD step (tol. 5.0e-4, added later) | 0 (exact) | 7.8e-5 with `traveling_pseudo ON` (step 40) |
+
+A^nl·v check (added after the A^nl printing): the electrons move rigidly
+with the nucleus, so A^nl = i⟨[V_nl, r]⟩ = 0 exactly (real at-rest ground
+state, real at-rest projectors). Measured: exactly 0 at the first step
+(below 5e-11); afterwards a time-step error that scales as dt² (at
+t = 0.25 a.u.: 5.4e-4, 1.4e-4, 3.5e-5 Ha for dt = 0.025, 0.0125, 0.00625).
+With the test settings (dt = 0.0125, 40 steps) |A^nl·v| stays below
+1.35e-4 Ha; at step 40 it is 7.8e-5 Ha.
 
 Why the setup can be trusted:
 

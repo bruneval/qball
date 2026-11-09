@@ -16,3 +16,9 @@ match ; etotal_gs     ; GREPFIELD(out, '<etotal>', 2) ; -33.28838802
 Precision  : 1e-3
 match ; etotal_step1  ; SHELL(grep -a '<etotal>' out | sed -n 2p | awk '{printf $2}') ; -32.28838802
 match ; etotal_step40 ; SHELL(grep -a '<etotal>' out | tail -1 | awk '{printf $2}')   ; -32.28838802
+# The electrons move rigidly with the nucleus, so A^nl = i<[V_nl, r]> = 0
+# exactly (real at-rest ground state and real at-rest projectors). A^nl.v is
+# 0 at the first step; afterwards it is a time-step error (about 8e-5 Ha at
+# step 40, scales as dt^2).
+Precision  : 5.0e-4
+match ; anl_dot_v_step40 ; SHELL(grep -a '<anl_dot_v>' out | tail -1 | awk '{printf $3}') ; 0.0
