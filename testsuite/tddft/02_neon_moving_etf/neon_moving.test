@@ -1,0 +1,17 @@
+Test       : RT-TDDFT moving Neon (traveling pseudopotentials)
+Program    : qball
+TestGroups : short-run
+Enabled    : Yes
+
+ExtraFile  : Ne.psp8
+Input      : neon_moving.inp
+
+# The expected values are exact, not taken from a previous run:
+# E0 is the ground-state energy; after the boost the energy must be E0 + 1 Ha.
+# ground state (first value in the output)
+match ; etotal_gs     ; GREPFIELD(out, '<etotal>', 2) ; -33.28838802
+# moving atom: first and last RT-TDDFT steps. Tolerance 1e-3 Ha covers the
+# time-step error (about 1e-4 Ha); the missing traveling factor gives 0.18 Ha.
+Precision  : 1e-3
+match ; etotal_step1  ; SHELL(grep -a '<etotal>' out | sed -n 2p | awk '{printf $2}') ; -32.28838802
+match ; etotal_step20 ; SHELL(grep -a '<etotal>' out | tail -1 | awk '{printf $2}')   ; -32.28838802
