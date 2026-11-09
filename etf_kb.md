@@ -110,7 +110,7 @@ In practice:
 - Kleinman-Bylander norm-conserving pseudopotentials only (`oncv_`). Exclude
   semilocal pseudopotentials (`nquad > 0`) and ultrasoft ones.
 
-## 7. Open decision: the initial state
+## 7. The initial state (decided: option 1, see section 10)
 
 At t = 0, the projectile is set moving at v.
 
@@ -189,3 +189,41 @@ Why the setup can be trusted:
 
 Expected after the fix: the two TD checks within about 1e-4 Ha of
 E₀ + 1 Ha (the time-step error of the local-only run).
+
+## 10. Decisions (agreed before implementation)
+
+1. **Input option, default off.** A new variable
+   `set traveling_pseudo ON|OFF`, default `OFF`. With `OFF`, results are
+   identical to the current code, including all existing tests (e.g. Al₃₂
+   MD). The moving Ne test (section 9) gets `set traveling_pseudo ON` once
+   the option exists. (Adding it before then would make QBALL stop with
+   "no such variable" instead of showing the physics error.)
+2. **Scope.** Only Ehrenfest / RT-TDDFT propagation, not ground-state or
+   Born-Oppenheimer runs, and only with `atoms_dyn IMPULSIVE` (constant
+   velocity). With the option on and any other ionic dynamics (e.g. `MD`),
+   QBALL stops with a clear error, because the forces would need the
+   missing dA^nl/dt term.
+3. **Initial state: plain switch-on** (section 7, option 1). The ground state
+   is computed with the atom at rest and v = 0 projectors; the velocity
+   starts at t = 0. No extra code.
+4. **Energy output.**
+   - `<etotal>` stays the Kohn-Sham energy E_KS, so existing scripts and
+     tests read the same quantity.
+   - A^nl and A^nl·v of each moving atom are printed on separate lines, so
+     the deposited energy E_KS + A^nl·v (section 4) can be built from the
+     output.
+   - A^nl is first computed by central finite difference in v; an analytic
+     version may follow.
+5. **Forces.** The force code is left unchanged. In `IMPULSIVE` the forces
+   do not move the atoms; the reported force on a moving atom lacks the
+   dA^nl/dt term (section 5), and this is documented rather than fixed.
+6. **Unsupported cases stop with an error** when the option is on:
+   - a moving atom with an ultrasoft or semilocal (`nquad > 0`)
+     pseudopotential;
+   - real wavefunctions (Γ point without `set force_complex_wf ON`).
+7. **Tests.**
+   - The moving Ne test (section 9) with `set traveling_pseudo ON` must pass.
+   - With the option on and all velocities zero, results must be
+     bit-for-bit identical to the option off.
+   - When the analytic A^nl exists: it must match the finite-difference
+     A^nl.
