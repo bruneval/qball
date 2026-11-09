@@ -111,7 +111,7 @@ class EnergyFunctional
 
   // traveling pseudopotentials: A^nl = -dE_nl/dv of a moving atom
   bool traveling(void) const { return traveling_; }
-  D3vector anl_velocity(Wavefunction& psi, const int is, const int ia);
+  D3vector anl_velocity(Wavefunction& psi, const int is, const int ia, const bool analytic = true);
   double energy(Wavefunction& wf, bool compute_hpsi, Wavefunction& dwf,
     bool compute_forces, vector<vector<double> >& fion,
                 bool compute_stress, valarray<double>& sigma);

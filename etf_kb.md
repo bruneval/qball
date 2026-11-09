@@ -267,19 +267,47 @@ Checks:
 
 A^nl printing (decision 4), also done:
 
-- `NonLocalPotential::anl_velocity(sd, is, ia)`: A^nl = −∂E_nl/∂v by
-  central finite difference (δ = 1e-4 a.u.); for each direction the moving
-  atom's table is rebuilt at v ± δ, `energy()` is evaluated with the
-  wavefunctions fixed, and the table is restored.
-- `EnergyFunctional::anl_velocity(psi, is, ia)`: sum over spins and k-points
-  with the same weights as `enl_`.
+- Analytic version (used for the output):
+  `NonLocalPotential::anl_velocity_analytic(sd, is, ia)` computes
+  A_α = Σ_n occ_n Σ_p wt_p/Ω · 2 Re[P*_np ∂P_np/∂q_α] for the moving atom
+  only, with the same projection conventions and MPI reductions as the
+  norm-conserving part of `energy()`. The q-gradient of each projector table
+  comes from `compute_twnl_gradient`: with t_p(q) = v(|q|) Y_lm(n),
+  n = q/|q|,
+  ∂t/∂q_α = v′ n_α Y + (v/|q|)(∂Y/∂n_α − n_α Σ_β n_β ∂Y/∂n_β),
+  where v, v′ come from `Species::dvnlg` and Y_lm, ∂Y/∂n are the same 16
+  real harmonics (l = 0–3, same constants and m order) as in
+  `compute_twnl` (file-local helper `ylm_gradient`).
+- Finite-difference version (kept as a reference):
+  `NonLocalPotential::anl_velocity(sd, is, ia)`, A^nl = −∂E_nl/∂v by central
+  finite difference (δ = 1e-4 a.u.): for each direction the moving atom's
+  table is rebuilt at v ± δ, `energy()` is evaluated with the wavefunctions
+  fixed, and the table is restored.
+- `EnergyFunctional::anl_velocity(psi, is, ia, analytic = true)`: sum over
+  spins and k-points with the same weights as `enl_`.
 - `EhrenSampleStepper` prints, after `<etotal>`, for each moving atom:
   `<anl_velocity> name Ax Ay Az </anl_velocity>` and
   `<anl_dot_v> name A·v </anl_dot_v>` (10 decimals).
-- Checks: A^nl agrees with the slope of the first-step energy in v
-  ([E(0.51) − E(0.49)]/0.02 = 0.720429 vs −A^nl(0.5) = 0.720440); A^nl = 0
-  (to 1e-4) for the boosted Ne of section 9; the test of section 12 passes;
-  `make check-short`: 18/18, the other 17 tests unchanged.
+
+Checks of A^nl:
+
+- Finite difference vs slope of the first-step energy in v:
+  [E(0.51) − E(0.49)]/0.02 = 0.720429 vs −A^nl(0.5) = 0.720440.
+- A^nl = 0 (to 1e-4) for the boosted Ne of section 9.
+- Analytic vs finite difference (decision 7, third test):
+  - moving Ne (s, p projectors), 42 steps: max difference 1.0e-9;
+  - moving Au (PseudoDojo `Au.upf`: s, p, d, f projectors), velocity
+    (0.3, −0.2, 0.4), vector potential (0.1, 0.05, −0.02): max difference
+    1.4e-9 (|A| up to 0.37);
+  - sensitivity: multiplying only the l = 3 gradients by 1.01 raises the Au
+    difference to 1.2e-3, so the f-projector formulas are really tested.
+- Cost on the Ne test (42 steps): 0.501 s/step analytic, 0.502 s/step
+  finite difference, 0.497 s/step without A^nl. For a single light atom the
+  propagation dominates; the analytic version should matter in large cells,
+  where each finite-difference evaluation goes over all atoms (6 per moving
+  atom per step). Not measured on a large system.
+- `make check-short`: 18/18; all values identical to the finite-difference
+  version.
 
 ## 12. Regression test: Ne sudden start, A^nl (`testsuite/tddft/03_neon_sudden_anl`)
 

@@ -1142,7 +1142,7 @@ void EnergyFunctional::update_exc_ehart_eps(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-D3vector EnergyFunctional::anl_velocity(Wavefunction& psi, const int is, const int ia) {
+D3vector EnergyFunctional::anl_velocity(Wavefunction& psi, const int is, const int ia, const bool analytic) {
   // traveling pseudopotentials: A^nl = -dE_nl/dv of the moving atom (is, ia),
   // averaged over k-points and spins with the same weights as enl_.
   // All tasks must call this function.
@@ -1151,7 +1151,9 @@ D3vector EnergyFunctional::anl_velocity(Wavefunction& psi, const int is, const i
     if (psi.spinactive(ispin)) {
       for (int kloc=0; kloc<psi.nkptloc(); kloc++) {
         const double wt = psi.weight(psi.kptloc(kloc));
-        const D3vector a = nlp[ispin][kloc]->anl_velocity(*psi.sdloc(ispin, kloc), is, ia);
+        const D3vector a = analytic ?
+          nlp[ispin][kloc]->anl_velocity_analytic(*psi.sdloc(ispin, kloc), is, ia) :
+          nlp[ispin][kloc]->anl_velocity(*psi.sdloc(ispin, kloc), is, ia);
         asum[0] += wt*a.x;
         asum[1] += wt*a.y;
         asum[2] += wt*a.z;
