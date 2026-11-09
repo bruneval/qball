@@ -38,6 +38,7 @@
 #include <map>
 #include "Timer.h"
 #include "Context.h"
+#include <math/d3vector.h>
 
 class Sample;
 class Wavefunction;
@@ -93,6 +94,7 @@ class ChargeDensity {
   void update_rhor(void);
   
   Basis* vbasis(void) const { return vbasis_; }
+  D3vector dipole(void); // -int r n(r) d3r, r on the cell grid (isolated systems)
   const Context& vcontext(void) const { return vcontext_; }
   FourierTransform* vft(void) const { return vft_; }
   FourierTransform* ft(int ispin, int ikp) const { return ft_[ispin][ikp]; }

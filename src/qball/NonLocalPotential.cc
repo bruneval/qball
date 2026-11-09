@@ -265,7 +265,281 @@ void NonLocalPotential::update_twnl(const bool compute_stress) {
   // It is assumed that nsp, npr[is], nquad[is] did not change since init
   
   tmap["update_twnl"].start();
-    
+  compute_twnl(D3vector(0.0, 0.0, 0.0), -1, twnl, dtwnl, compute_stress);
+  update_twnl_atoms();
+  tmap["update_twnl"].stop();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void NonLocalPotential::set_traveling(const bool traveling) {
+  traveling_ = traveling;
+  update_twnl_atoms();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+D3vector NonLocalPotential::anl_velocity(SlaterDet& sd, const int is, const int ia) {
+  // A^nl = -dE_nl/dv = i<[V_nl, r]> for the moving atom (is, ia): nonlocal
+  // part of the electron momentum (Stengel, Royo, Artacho, PRL 136, 196401
+  // (2026), Eq. 6). Central finite difference in the atom velocity, with the
+  // wavefunctions fixed; only the projectors of this atom change.
+  if ( !moving(is, ia) ) return D3vector(0.0, 0.0, 0.0); // e.g. no projectors
+  tmap["anl_fd"].start();
+  const int ngwl = basis_.localsize();
+  vector<vector<double> > vel;
+  atoms_.get_velocities(vel,true);
+  const D3vector v(vel[is][3*ia], vel[is][3*ia+1], vel[is][3*ia+2]);
+  const double delta = 1.0e-4;
+
+  vector<vector<double> > fion(nsp);
+  for ( int js = 0; js < nsp; js++ ) fion[js].resize(3*na[js], 0.0);
+  valarray<double> sigma(0.0, 6);
+  vector<complex<double> > veff;
+
+  double a[3];
+  for ( int j = 0; j < 3; j++ ) {
+    double e[2];
+    for ( int isign = 0; isign < 2; isign++ ) {
+      D3vector vs = v;
+      const double d = ( isign == 0 ) ? delta : -delta;
+      if ( j == 0 ) vs.x += d;
+      if ( j == 1 ) vs.y += d;
+      if ( j == 2 ) vs.z += d;
+      vector<vector<double> > tw(nsp), dtw(nsp);
+      tw[is].resize(npr[is]*ngwl);
+      compute_twnl(vs, is, tw, dtw, false);
+      twnl_atom_[is][ia].swap(tw[is]);  // projectors at v +- delta
+      e[isign] = energy(sd, false, sd, false, fion, false, sigma, veff);
+      twnl_atom_[is][ia].swap(tw[is]);  // restore the projectors at v
+    }
+    a[j] = -( e[0] - e[1] ) / ( 2.0 * delta );
+  }
+  tmap["anl_fd"].stop();
+  return D3vector(a[0], a[1], a[2]);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Real spherical harmonic Y_lm(n) used by compute_twnl (same constants and m
+// ordering) and its gradient with respect to the components of n, treated
+// as independent variables (n is a unit vector).
+static void ylm_gradient(const int l, const int m, const double nx,
+  const double ny, const double nz, double & y, double g[3]) {
+  const double fpi = 4.0 * M_PI;
+  const double s14pi = sqrt(1.0/fpi);
+  const double s34pi = sqrt(3.0/fpi);
+  const double s54pi = sqrt(5.0/fpi);
+  const double s3 = sqrt(3.0);
+  const double s74pi = sqrt(7.0/fpi);
+  const double s2132pi = sqrt(21.0/(32.*M_PI));
+  const double s3532pi = sqrt(35.0/(32.*M_PI));
+  const double s1054pi = sqrt(105.0/fpi);
+  g[0] = g[1] = g[2] = 0.0;
+  if ( l == 0 ) {
+    y = s14pi;
+  }
+  else if ( l == 1 ) {
+    const double n[3] = { nx, ny, nz };
+    y = s34pi * n[m];
+    g[m] = s34pi;
+  }
+  else if ( l == 2 ) {
+    const double c = s54pi * s3;
+    switch ( m ) {
+    case 0: y = s54pi * 0.5 * ( 3.0 * nz*nz - 1.0 ); g[2] = s54pi * 3.0 * nz; break;
+    case 1: y = 0.5 * c * ( nx*nx - ny*ny ); g[0] = c * nx; g[1] = -c * ny; break;
+    case 2: y = c * nx * ny; g[0] = c * ny; g[1] = c * nx; break;
+    case 3: y = c * ny * nz; g[1] = c * nz; g[2] = c * ny; break;
+    case 4: y = c * nx * nz; g[0] = c * nz; g[2] = c * nx; break;
+    default: assert(false);
+    }
+  }
+  else if ( l == 3 ) {
+    switch ( m ) {
+    case 0: y = s74pi * 0.5 * nz * ( 5.0 * nz*nz - 3.0 );
+            g[2] = s74pi * 0.5 * ( 15.0 * nz*nz - 3.0 ); break;
+    case 1: y = s2132pi * nx * ( 5.0 * nz*nz - 1.0 );
+            g[0] = s2132pi * ( 5.0 * nz*nz - 1.0 ); g[2] = s2132pi * 10.0 * nx * nz; break;
+    case 2: y = s2132pi * ny * ( 5.0 * nz*nz - 1.0 );
+            g[1] = s2132pi * ( 5.0 * nz*nz - 1.0 ); g[2] = s2132pi * 10.0 * ny * nz; break;
+    case 3: y = s1054pi * nx * ny * nz;
+            g[0] = s1054pi * ny * nz; g[1] = s1054pi * nx * nz; g[2] = s1054pi * nx * ny; break;
+    case 4: y = s1054pi * 0.5 * nz * ( nx*nx - ny*ny );
+            g[0] = s1054pi * nx * nz; g[1] = -s1054pi * ny * nz; g[2] = s1054pi * 0.5 * ( nx*nx - ny*ny ); break;
+    case 5: y = s3532pi * nx * ( nx*nx - 3.0 * ny*ny );
+            g[0] = s3532pi * 3.0 * ( nx*nx - ny*ny ); g[1] = -s3532pi * 6.0 * nx * ny; break;
+    case 6: y = s3532pi * ny * ( 3.0 * nx*nx - ny*ny );
+            g[0] = s3532pi * 6.0 * nx * ny; g[1] = s3532pi * 3.0 * ( nx*nx - ny*ny ); break;
+    default: assert(false);
+    }
+  }
+  else {
+    assert(false);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void NonLocalPotential::compute_twnl_gradient(const D3vector & shift, const int is,
+  vector<double> grad[3]) {
+  // analytic gradient d t_p(q)/dq_alpha of the Kleinman-Bylander projector
+  // tables of species is, at q = k+G-A-shift. With t_p(q) = v(|q|) Y_lm(n),
+  // n = q/|q|:  dt/dq_a = v' n_a Y + (v/|q|) ( dY/dn_a - n_a (n . dY/dn) )
+  const int ngwl = basis_.localsize();
+  Species *s = atoms_.species_list[is];
+  assert( !s->ultrasoft() && nquad[is] == 0 );
+  D3vector a = shift;
+  if(vp) a += vp->value();
+  for ( int j = 0; j < 3; j++ ) grad[j].assign(npr[is]*ngwl, 0.0);
+  for ( int l = 0; l <= lmax[is]; l++ ) {
+    if ( l == lloc[is] ) continue;
+    for ( int ic = 0; ic < s->nchannels(); ic++ ) {
+      for ( int m = 0; m < 2*l+1; m++ ) {
+        const int ipr = iprojlm[is][l][m][ic];
+        for ( int ig = 0; ig < ngwl; ig++ ) {
+          const double qx = basis_.kpgx_ptr(0)[ig] - a.x;
+          const double qy = basis_.kpgx_ptr(1)[ig] - a.y;
+          const double qz = basis_.kpgx_ptr(2)[ig] - a.z;
+          const double q = sqrt(qx*qx + qy*qy + qz*qz);
+          double v, dv;
+          s->dvnlg(l, ic, q, v, dv);
+          double gq[3];
+          if ( q > 1.0e-12 ) {
+            const double nx = qx/q, ny = qy/q, nz = qz/q;
+            double y, gy[3];
+            ylm_gradient(l, m, nx, ny, nz, y, gy);
+            const double ndotg = nx*gy[0] + ny*gy[1] + nz*gy[2];
+            const double n[3] = { nx, ny, nz };
+            for ( int j = 0; j < 3; j++ )
+              gq[j] = dv * n[j] * y + ( v / q ) * ( gy[j] - n[j] * ndotg );
+          }
+          else {
+            // q = 0: t ~ v'(0) Y_1m(n) q for l = 1, smooth with zero gradient otherwise
+            gq[0] = gq[1] = gq[2] = 0.0;
+            if ( l == 1 ) gq[m] = sqrt(3.0/(4.0*M_PI)) * dv;
+          }
+          for ( int j = 0; j < 3; j++ ) grad[j][ngwl*ipr + ig] = gq[j];
+        }
+      }
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+D3vector NonLocalPotential::anl_velocity_analytic(SlaterDet& sd, const int is, const int ia) {
+  // A^nl = -dE_nl/dv = dE_nl/dq for the moving atom (is, ia), analytic:
+  //   A_a = sum_n occ_n sum_p wt_p/Omega 2 Re[ conj(P_np) dP_np/dq_a ]
+  // P_np = sum_G conj(beta_p(G)) c_n(G), beta_p = (-i)^l t_p(q) exp(-i q.R).
+  // The q-dependence of the phase gives a purely imaginary term that cancels.
+  // Same conventions and reductions as the norm-conserving part of energy().
+  if ( !moving(is, ia) ) return D3vector(0.0, 0.0, 0.0);
+  assert( !basis_.real() );
+  tmap["anl_analytic"].start();
+  const int ngwl = basis_.localsize();
+  const int mloc = sd.c().mloc();
+  const int nstloc = sd.nstloc();
+  const double omega_inv = 1.0 / basis_.cell().volume();
+  const vector<double>& occ = sd.occ();
+
+  vector<vector<double> > vel, tau;
+  atoms_.get_velocities(vel,true);
+  atoms_.get_positions(tau,true);
+  const D3vector v(vel[is][3*ia], vel[is][3*ia+1], vel[is][3*ia+2]);
+
+  vector<double> grad[3];
+  compute_twnl_gradient(v, is, grad);
+  const vector<double>& t = twnl_atom_[is][ia];
+
+  // phase exp(i arg), arg = -(k+G-A).R, as in energy()
+  D3vector a(0.0, 0.0, 0.0);
+  if(vp) a = vp->value();
+  vector<complex<double> > eigr(ngwl);
+  for ( int ig = 0; ig < ngwl; ig++ ) {
+    const double arg = -( ( basis_.kpgx_ptr(0)[ig] - a.x ) * tau[is][3*ia]
+                        + ( basis_.kpgx_ptr(1)[ig] - a.y ) * tau[is][3*ia+1]
+                        + ( basis_.kpgx_ptr(2)[ig] - a.z ) * tau[is][3*ia+2] );
+    eigr[ig] = complex<double>(cos(arg), sin(arg));
+  }
+
+  // projections P (k = 0) and dP/dq_a (k = 1..3), local part of the G sum
+  const int np = npr[is];
+  vector<complex<double> > buf(4*np*nstloc, 0.0), sum(4*np*nstloc, 0.0);
+  const complex<double>* c = sd.c().cvalptr();
+  for ( int ipr = 0; ipr < np; ipr++ ) {
+    const int l = lproj[is][ipr];
+    complex<double> il(1.0, 0.0); // (-i)^l
+    for ( int k = 0; k < l; k++ ) il *= complex<double>(0.0, -1.0);
+    for ( int k = 0; k < 4; k++ ) {
+      const double * tk = ( k == 0 ) ? &t[ngwl*ipr] : &grad[k-1][ngwl*ipr];
+      for ( int n = 0; n < nstloc; n++ ) {
+        complex<double> p = 0.0;
+        for ( int ig = 0; ig < ngwl; ig++ )
+          p += conj( il * tk[ig] * eigr[ig] ) * c[ig + mloc*n];
+        buf[(k*np + ipr)*nstloc + n] = p;
+      }
+    }
+  }
+  if ( nstloc > 0 ) {
+    MPI_Comm basis_comm = basis_.context().comm();
+    MPI_Allreduce(&buf[0], &sum[0], 4*np*nstloc, MPI_DOUBLE_COMPLEX, MPI_SUM, basis_comm);
+  }
+
+  double asum[3] = { 0.0, 0.0, 0.0 };
+  for ( int ipr = 0; ipr < np; ipr++ ) {
+    const double fac = wt[is][ipr] * omega_inv;
+    for ( int lj = 0; lj < sd.c().nblocks(); lj++ ) {
+      for ( int jj = 0; jj < sd.c().nbs(lj); jj++ ) {
+        const int nglobal = sd.c().j(lj,jj);
+        const int norig = lj*sd.c().nb()+jj;
+        const double facn = fac * occ[nglobal];
+        const complex<double> p = sum[ipr*nstloc + norig];
+        for ( int j = 0; j < 3; j++ )
+          asum[j] += facn * 2.0 * real( conj(p) * sum[((j+1)*np + ipr)*nstloc + norig] );
+      }
+    }
+  }
+  ctxt_.dsum('r',3,1,&asum[0],3);
+  tmap["anl_analytic"].stop();
+  return D3vector(asum[0], asum[1], asum[2]);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void NonLocalPotential::update_twnl_atoms(void) {
+  // traveling pseudopotentials (Stengel, Royo, Artacho, PRL 136, 196401 (2026)):
+  // the projectors of an atom moving with velocity v are evaluated at k+G-A-v.
+  // The phase exp(-i q.R) is left unchanged in energy(): the extra constant
+  // phase exp(i v.R) cancels between the projection and its adjoint.
+  twnl_atom_.clear();
+  if ( !traveling_ ) return;
+
+  const int ngwl = basis_.localsize();
+  vector<vector<double> > vel;
+  atoms_.get_velocities(vel,true);
+
+  twnl_atom_.resize(nsp);
+  for ( int is = 0; is < nsp; is++ ) {
+    twnl_atom_[is].resize(na[is]);
+    if ( npr[is] == 0 ) continue; // no nonlocal projectors for this species
+    Species *s = atoms_.species_list[is];
+    for ( int ia = 0; ia < na[is]; ia++ ) {
+      const D3vector v(vel[is][3*ia], vel[is][3*ia+1], vel[is][3*ia+2]);
+      if ( v.x == 0.0 && v.y == 0.0 && v.z == 0.0 ) continue;
+      if ( s->ultrasoft() || nquad[is] > 0 )
+        Messages::fatal("traveling_pseudo: only norm-conserving Kleinman-Bylander pseudopotentials are supported for moving atoms (species " + s->name() + ")");
+      vector<vector<double> > tw(nsp), dtw(nsp);
+      tw[is].resize(npr[is]*ngwl);
+      compute_twnl(v, is, tw, dtw, false);
+      twnl_atom_[is][ia].swap(tw[is]);
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void NonLocalPotential::compute_twnl(const D3vector & shift, const int only_is,
+  vector<vector<double> > & twnl, vector<vector<double> > & dtwnl,
+  const bool compute_stress) {
+  // compute the projector tables twnl[is] (and dtwnl[is] if compute_stress)
+  // at q = k+G-A-shift. shift = 0 gives the standard tables; shift = v gives
+  // the projectors of an atom moving with velocity v (traveling pseudopotentials).
+  // If only_is >= 0, only species only_is is computed.
+
   const int ngwl = basis_.localsize();
   const double pi = M_PI;
   const double fpi = 4.0 * pi;
@@ -287,7 +561,9 @@ void NonLocalPotential::update_twnl(const bool compute_stress) {
   const double *kpg_y = basis_.kpgx_ptr(1);
   const double *kpg_z = basis_.kpgx_ptr(2);
 
-  if(vp){
+  const bool shifted = ( shift.x != 0.0 || shift.y != 0.0 || shift.z != 0.0 );
+
+  if(vp && !shifted){
     kpg = vp->get_kpgpa(basis_);
     kpg2 = vp->get_kpgpa2(basis_);
     kpgi = vp->get_kpgpai(basis_);
@@ -295,9 +571,36 @@ void NonLocalPotential::update_twnl(const bool compute_stress) {
     kpg_y = vp->get_kpgpax(basis_, 1);
     kpg_z = vp->get_kpgpax(basis_, 2);
   }
+
+  if(shifted){
+    // q = k+G-A-shift
+    D3vector a = shift;
+    if(vp) a += vp->value();
+    double * qx = new double[ngwl];
+    double * qy = new double[ngwl];
+    double * qz = new double[ngwl];
+    double * q = new double[ngwl];
+    double * q2 = new double[ngwl];
+    double * qi = new double[ngwl];
+    for ( int ig = 0; ig < ngwl; ig++ ) {
+      qx[ig] = basis_.kpgx_ptr(0)[ig] - a.x;
+      qy[ig] = basis_.kpgx_ptr(1)[ig] - a.y;
+      qz[ig] = basis_.kpgx_ptr(2)[ig] - a.z;
+      q2[ig] = qx[ig]*qx[ig] + qy[ig]*qy[ig] + qz[ig]*qz[ig];
+      q[ig] = sqrt(q2[ig]);
+      qi[ig] = ( q2[ig] > 0.0 ) ? 1.0/q[ig] : 0.0;
+    }
+    kpg = q;
+    kpg2 = q2;
+    kpgi = qi;
+    kpg_x = qx;
+    kpg_y = qy;
+    kpg_z = qz;
+  }
   
   // compute twnl and dtwnl
   for ( int is = 0; is < nsp; is++ ) {
+    if ( only_is >= 0 && is != only_is ) continue;
     Species *s = atoms_.species_list[is];
     if (!s->ultrasoft()) {
       int ilm = 0;
@@ -1509,7 +1812,7 @@ void NonLocalPotential::update_twnl(const bool compute_stress) {
   }
 
   
-  if(vp){
+  if(vp || shifted){
     delete [] kpg;
     delete [] kpg2;
     delete [] kpgi;
@@ -1517,8 +1820,6 @@ void NonLocalPotential::update_twnl(const bool compute_stress) {
     delete [] kpg_y;
     delete [] kpg_z;
   }
-
-  tmap["update_twnl"].stop();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1987,11 +2288,15 @@ double NonLocalPotential::energy(SlaterDet& sd, bool compute_hpsi, SlaterDet& ds
         tmap["comp_anl"].start();
         for ( int ipr = 0; ipr < npr[is]; ipr++ ) {
           // twnl[is][ig+ngwl*ipr]
-          const double * t = &twnl[is][ngwl*ipr];                            
+          const double * t_sp = &twnl[is][ngwl*ipr];                            
           const int l = lproj[is][ipr];                                      
 
           // anl_loc[ig+ipra*ngwl]                                           
           for ( int ia = 0; ia < ia_block_size; ia++ ) {
+            // traveling pseudopotentials: moving atoms have their own projectors
+            const double * t = t_sp;
+            if ( traveling_ && !twnl_atom_[is][iastart+ia].empty() )
+              t = &twnl_atom_[is][iastart+ia][ngwl*ipr];
             double* a;
             if (basis_.real())
               a = &anl_loc_gamma[2*(ia+ipr*ia_block_size)*ngwl];             
@@ -2189,11 +2494,15 @@ double NonLocalPotential::energy(SlaterDet& sd, bool compute_hpsi, SlaterDet& ds
             // compute anl_loc  
             for ( int ipr = 0; ipr < npr[is]; ipr++ ) {
               // twnl[is][ig+ngwl*ipr]                                       
-              const double * t = &twnl[is][ngwl*ipr];                        
+              const double * t_sp = &twnl[is][ngwl*ipr];                        
               const int l = lproj[is][ipr];                                  
 
               // anl_loc[ig+ipra*ngwl]                                       
               for ( int ia = 0; ia < ia_block_size; ia++ ) {
+                // traveling pseudopotentials: moving atoms have their own projectors
+                const double * t = t_sp;
+                if ( traveling_ && !twnl_atom_[is][iastart+ia].empty() )
+                  t = &twnl_atom_[is][iastart+ia][ngwl*ipr];
                 double* a;
                 if (basis_.real())
                   a = &anl_loc_gamma[2*(ia+ipr*ia_block_size)*ngwl];             

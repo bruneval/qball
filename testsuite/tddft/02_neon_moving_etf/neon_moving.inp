@@ -1,0 +1,34 @@
+# Galilean test for traveling pseudopotentials (electron translation factor).
+# Isolated Ne atom (PseudoDojo PBE v0.4 standard Ne.psp8, 2 s + 2 p projectors)
+# moving at constant velocity u = 0.5 a.u. along x in an empty box.
+#
+# The electrons are carried along by a constant uniform vector potential
+# A = -u, which is a pure gauge boost: the exact solution is the at-rest
+# ground state translated with the nucleus, and the total energy must stay
+# exactly at E0 + N_e u^2/2 = E0 + 8 * 0.5^2 / 2 = E0 + 1 Ha at all times.
+# This holds only if the nonlocal projectors travel with the atom
+# (Stengel, Royo, Artacho, PRL 136, 196401 (2026)); see etf_kb.md.
+# With traveling_pseudo OFF the energy is wrong by up to 0.18 Ha.
+#
+# 1) ground state with the atom at rest
+set cell 14 0 0 0 14 0 0 0 14 bohr
+species neon Ne.psp8
+atom Ne neon 0.0 0.0 0.0 bohr 0.5 0.0 0.0 atomicvelocity
+set xc PBE
+set ecut 40 rydberg
+set ecutprec 4 rydberg
+set force_complex_wf ON
+set wf_dyn PSDA
+set wf_diag T
+set threshold_scf 1.E-10 5
+randomize_wf
+run 0 100 5
+
+# 2) the atom moves at constant velocity (IMPULSIVE), electrons boosted by A = -u
+set vector_potential -0.5 0.0 0.0
+set atoms_dyn IMPULSIVE
+set traveling_pseudo ON
+set wf_dyn ETRS
+set TD_dt 0.0125 atomictime
+set dt 0.0125 atomictime
+run 40 1

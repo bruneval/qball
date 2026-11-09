@@ -1,0 +1,17 @@
+Test       : RT-TDDFT Si projectile in Si, <001> off-center 1/4 (traveling pseudopotentials)
+Program    : qball
+TestGroups : short-run
+Enabled    : Yes
+
+ExtraFile  : Si-sp.upf
+Input      : silicon_stopping.inp
+Reference  : silicon_stopping_reference.xml
+
+# regression values (see silicon_stopping.inp for the setup)
+# ground state: 8 Si atoms + neutral Si projectile
+match ; etotal_gs     ; GREPFIELD(out, '<etotal>', 2) ; -826.34157529
+# after 20 RT-TDDFT steps (projectile moved by 0.46 bohr): energy rise of the
+# initial transient (about 16.8 Ha) and the projectile's A^nl.v
+Precision  : 1e-3
+match ; etotal_step20 ; SHELL(grep -a '<etotal>' out | tail -1 | awk '{printf $2}') ; -809.50031578
+match ; anl_dot_v_step20 ; SHELL(grep -a '<anl_dot_v>' out | tail -1 | awk '{printf $3}') ; 0.8888255793

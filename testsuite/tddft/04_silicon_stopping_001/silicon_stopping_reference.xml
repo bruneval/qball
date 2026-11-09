@@ -1,0 +1,3227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+                   ___________________________
+                   |                         |
+                   | qball alsos             |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |      Lawrence Livermore |
+                   |     National Laboratory |
+                   |                         |
+                   | Copyright (c) 2003-2016 |
+                   |_________________________|
+
+-->
+<qbox:simulation xmlns:qbox="http://www.quantum-simulation.org/ns/fpmd/fpmd-1.0">
+<release> qball alsos </release>
+<npes> 4 </npes>
+<nthreads> 1 </nthreads>
+<user> bruneval </user>
+<sysname> Linux </sysname>
+<nodename> localhost </nodename>
+<start_time> 2026-11-09T13:07:25Z </start_time>
+<!-- [qball] # Electronic stopping of a Si projectile in bulk Si, <001> channel, off-center 1/4 -->
+<!-- [qball] # trajectory, 12-valence-electron pseudopotential, after -->
+<!-- [qball] #   T. Jarrin, Phys. Rev. B 112, 245202 (2025), Sec. III A and Figs. 2 and 4. -->
+<!-- [qball] # Neutral Si projectile at 1 MeV (v = 1.19817 a.u.) moving along z at constant -->
+<!-- [qball] # velocity (atoms_dyn IMPULSIVE: the target atoms stay fixed), with traveling -->
+<!-- [qball] # pseudopotentials (traveling_pseudo ON; see etf_kb.md). -->
+<!-- [qball] # -->
+<!-- [qball] # Differences with Jarrin (to keep the test small; this is a regression test, -->
+<!-- [qball] # it does not reproduce his stopping power): -->
+<!-- [qball] #   - 1x1x1 cubic cell (8 Si atoms, a = 5.431 A = 10.2631 bohr) instead of 3x3x3; -->
+<!-- [qball] #   - pseudopotential: PseudoDojo ONCVPSP LDA scalar-relativistic, no core -->
+<!-- [qball] #     correction, Si-sp (12 valence electrons: 2s 2p 3s 3p; Kleinman-Bylander -->
+<!-- [qball] #     form), downloaded from -->
+<!-- [qball] #     https://github.com/PseudoDojo/ONCVPSP-LDA-SR-noCCv0.4/tree/master/Si -->
+<!-- [qball] #     instead of Jarrin's Hamann-type pseudopotential; -->
+<!-- [qball] #   - 45 Ry cutoff instead of 220 Ry (PseudoDojo hints: 76 to 96 Ry); -->
+<!-- [qball] #   - Gamma point only, Fermi smearing (8 empty bands) for a robust ground state; -->
+<!-- [qball] #   - 20 time steps of 0.02 a.u. (the initial transient only). -->
+<!-- [qball] # -->
+<!-- [qball] # Geometry: in projection along z, the atomic columns are at (m, n) a/4 with -->
+<!-- [qball] # m + n even; the channel centre (a/4, 0) has 4 columns at d = a/4. The -->
+<!-- [qball] # off-center 1/4 position is at d/4 from the nearest column (0, 0): -->
+<!-- [qball] # (x, y) = (a/16, 0). Start height z0 = 7a/16, where the projectile stays at -->
+<!-- [qball] # least 3.66 bohr from all atoms along its path. -->
+<!-- [qball] # -->
+<!-- [qball] # 1) ground state of the 8 atoms + neutral projectile (projectile at rest) -->
+<!-- [qball] set cell 10.2631 0 0 0 10.2631 0 0 0 10.2631 bohr -->
+  <unitcell>
+<unit_cell 
+    a="10.26310000  0.00000000   0.00000000  "
+    b="0.00000000   10.26310000  0.00000000  "
+    c="0.00000000   0.00000000   10.26310000 " />
+  </unitcell>
+<!-- [qball] species silicon Si-sp.upf -->
+  <!-- SpeciesCmd: defining species silicon as Si-sp.upf -->
+  <!-- SpeciesReader opening file Si-sp.upf -->
+  <!--   format: UPF2 -->
+  <!--   size:   267792 -->
+  <!-- SpeciesReader::readSpecies: potential type:  Kleinman-Bylander norm-conserving -->
+  <!-- SpeciesReader::readSpecies: read description 
+
+ This pseudopotential file has been produced using the code
+ ONCVPSP  (Optimized Norm-Conservinng Vanderbilt PSeudopotential)
+ scalar-relativistic version 3.3.0 08/16/2017 by D. R. Hamann
+ The code is available through a link at URL www.mat-simresearch.com.
+ Documentation with the package provides a full discription of the
+ input data below.
+
+
+ While it is not required under the terms of the GNU GPL, it is
+ suggested that you cite D. R. Hamann, Phys. Rev. B 88, 085117 (2013)
+ in any publication using these pseudopotentials.
+
+     -->
+  <!-- SpeciesReader::readSpecies: read symbol Si -->
+  <!-- SpeciesReader::readSpecies: read atomic_number 14 -->
+  <!-- SpeciesReader::readSpecies: read mass 28.08400000 -->
+  <!-- SpeciesReader::readSpecies: read valence_charge 12 -->
+  <!-- SpeciesReader::readSpecies: read lmax 2 -->
+  <!-- SpeciesReader::readSpecies: read llocal -1 -->
+  <!-- SpeciesReader::readSpecies: read mesh_spacing 0.01000000 -->
+  <!-- SpeciesReader::readSpecies: read local_potential size=1510 -->
+  <!-- SpeciesReader::readSpecies: read projector l=0 i=0 size=1510 -->
+  <!-- SpeciesReader::readSpecies: read projector l=0 i=1 size=1510 -->
+  <!-- SpeciesReader::readSpecies: read projector l=1 i=0 size=1510 -->
+  <!-- SpeciesReader::readSpecies: read projector l=1 i=1 size=1510 -->
+  <!-- SpeciesReader::readSpecies: read projector l=2 i=0 size=1510 -->
+  <!-- SpeciesReader::readSpecies: read projector l=2 i=1 size=1510 -->
+  <!-- SpeciesReader::readSpecies: read d_ij l=0 -->
+  <!-- SpeciesReader::readSpecies: read d_ij l=1 -->
+  <!-- SpeciesReader::readSpecies: read d_ij l=2 -->
+<!-- Species silicon:  extending grid to rmax = 40.00000000 to increase vnlg resolution (4096 pts) -->
+SPECIES.ndft = 4096, np = 1510, rmax = 40.96000000, gmax = 314.08256632, hubbard_l = -1
+
+ species silicon:
+ name_ = silicon
+ description_ = 
+
+ This pseudopotential file has been produced using the code
+ ONCVPSP  (Optimized Norm-Conservinng Vanderbilt PSeudopotential)
+ scalar-relativistic version 3.3.0 08/16/2017 by D. R. Hamann
+ The code is available through a link at URL www.mat-simresearch.com.
+ Documentation with the package provides a full discription of the
+ input data below.
+
+
+ While it is not required under the terms of the GNU GPL, it is
+ suggested that you cite D. R. Hamann, Phys. Rev. B 88, 085117 (2013)
+ in any publication using these pseudopotentials.
+
+    
+ uri_ = Si-sp.upf
+ symbol_ = Si
+ atomic_number_ = 14
+ Kleinman-Bylander potential
+ valence charge = 12 / ionic mass_ = 28.08400000 (amu)
+ lmax_ =   2
+ llocal_ = -1
+ rcps_ =   1.50000000
+<!-- [qball] species projectile Si-sp.upf -->
+  <!-- SpeciesCmd: defining species projectile as Si-sp.upf -->
+  <!-- SpeciesReader opening file Si-sp.upf -->
+  <!--   format: UPF2 -->
+  <!--   size:   267792 -->
+  <!-- SpeciesReader::readSpecies: potential type:  Kleinman-Bylander norm-conserving -->
+  <!-- SpeciesReader::readSpecies: read description 
+
+ This pseudopotential file has been produced using the code
+ ONCVPSP  (Optimized Norm-Conservinng Vanderbilt PSeudopotential)
+ scalar-relativistic version 3.3.0 08/16/2017 by D. R. Hamann
+ The code is available through a link at URL www.mat-simresearch.com.
+ Documentation with the package provides a full discription of the
+ input data below.
+
+
+ While it is not required under the terms of the GNU GPL, it is
+ suggested that you cite D. R. Hamann, Phys. Rev. B 88, 085117 (2013)
+ in any publication using these pseudopotentials.
+
+     -->
+  <!-- SpeciesReader::readSpecies: read symbol Si -->
+  <!-- SpeciesReader::readSpecies: read atomic_number 14 -->
+  <!-- SpeciesReader::readSpecies: read mass 28.08400000 -->
+  <!-- SpeciesReader::readSpecies: read valence_charge 12 -->
+  <!-- SpeciesReader::readSpecies: read lmax 2 -->
+  <!-- SpeciesReader::readSpecies: read llocal -1 -->
+  <!-- SpeciesReader::readSpecies: read mesh_spacing 0.01000000 -->
+  <!-- SpeciesReader::readSpecies: read local_potential size=1510 -->
+  <!-- SpeciesReader::readSpecies: read projector l=0 i=0 size=1510 -->
+  <!-- SpeciesReader::readSpecies: read projector l=0 i=1 size=1510 -->
+  <!-- SpeciesReader::readSpecies: read projector l=1 i=0 size=1510 -->
+  <!-- SpeciesReader::readSpecies: read projector l=1 i=1 size=1510 -->
+  <!-- SpeciesReader::readSpecies: read projector l=2 i=0 size=1510 -->
+  <!-- SpeciesReader::readSpecies: read projector l=2 i=1 size=1510 -->
+  <!-- SpeciesReader::readSpecies: read d_ij l=0 -->
+  <!-- SpeciesReader::readSpecies: read d_ij l=1 -->
+  <!-- SpeciesReader::readSpecies: read d_ij l=2 -->
+<!-- Species projectile:  extending grid to rmax = 40.00000000 to increase vnlg resolution (4096 pts) -->
+SPECIES.ndft = 4096, np = 1510, rmax = 40.96000000, gmax = 314.08256632, hubbard_l = -1
+
+ species projectile:
+ name_ = projectile
+ description_ = 
+
+ This pseudopotential file has been produced using the code
+ ONCVPSP  (Optimized Norm-Conservinng Vanderbilt PSeudopotential)
+ scalar-relativistic version 3.3.0 08/16/2017 by D. R. Hamann
+ The code is available through a link at URL www.mat-simresearch.com.
+ Documentation with the package provides a full discription of the
+ input data below.
+
+
+ While it is not required under the terms of the GNU GPL, it is
+ suggested that you cite D. R. Hamann, Phys. Rev. B 88, 085117 (2013)
+ in any publication using these pseudopotentials.
+
+    
+ uri_ = Si-sp.upf
+ symbol_ = Si
+ atomic_number_ = 14
+ Kleinman-Bylander potential
+ valence charge = 12 / ionic mass_ = 28.08400000 (amu)
+ lmax_ =   2
+ llocal_ = -1
+ rcps_ =   1.50000000
+<!-- [qball] atom Si1 silicon 0.0000 0.0000 0.0000 bohr -->
+<!-- [qball] atom Si2 silicon 0.0000 5.1315 5.1315 bohr -->
+<!-- [qball] atom Si3 silicon 5.1315 0.0000 5.1315 bohr -->
+<!-- [qball] atom Si4 silicon 5.1315 5.1315 0.0000 bohr -->
+<!-- [qball] atom Si5 silicon 2.5658 2.5658 2.5658 bohr -->
+<!-- [qball] atom Si6 silicon 2.5658 7.6973 7.6973 bohr -->
+<!-- [qball] atom Si7 silicon 7.6973 2.5658 7.6973 bohr -->
+<!-- [qball] atom Si8 silicon 7.6973 7.6973 2.5658 bohr -->
+<!-- [qball] atom P projectile 0.6414 0.0000 4.4901 bohr 0.0 0.0 1.19817 atomicvelocity -->
+<!-- [qball] set xc LDA -->
+<!-- [qball] set ecut 45 rydberg -->
+<!-- [qball] set ecutprec 6 rydberg -->
+<!-- [qball] set force_complex_wf ON -->
+<!-- [qball] set nempty 8 -->
+<!-- [qball] set smearing fermi -->
+<!-- [qball] set smearing_width 0.01 hartree -->
+<!-- [qball] set wf_dyn PSDA -->
+<!-- [qball] set threshold_scf 1.E-8 5 -->
+<!-- [qball] randomize_wf -->
+<!-- Randomize_wf:  allocating wavefunction... -->
+<!-- Creating SlaterDet context 4x1 from spincontext, ispin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+<!-- Updated occupation of wf -->
+<!-- [qball] run 0 100 5 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+ChargeDensity:  vbasis = 48 48 48, resize to 56 56 56
+  <!-- EnergyFunctional: charge density basis: 21934 plane waves, ngloc = 5477 -->
+  <!-- EnergyFunctional: np0v,np1v,np2v: 56 56 56 -->
+  <!-- EnergyFunctional: vft->np012(): 175616 -->
+<!-- AtomSet.set_rcps:  Ewald width for species silicon is too small for reciprocal sum convergence, increasing rcps from 1.50000000 to 0.95000000 -->
+<!-- Species silicon:  extending grid to rmax = 40.00000000 to increase vnlg resolution (4096 pts) -->
+SPECIES.ndft = 4096, np = 1510, rmax = 40.96000000, gmax = 314.08256632, hubbard_l = -1
+<!-- AtomSet.set_rcps:  Ewald width for species silicon = 0.95000000 -->
+<!-- AtomSet.set_rcps:  Ewald width for species projectile is too small for reciprocal sum convergence, increasing rcps from 1.50000000 to 0.95000000 -->
+<!-- Species projectile:  extending grid to rmax = 40.00000000 to increase vnlg resolution (4096 pts) -->
+SPECIES.ndft = 4096, np = 1510, rmax = 40.96000000, gmax = 314.08256632, hubbard_l = -1
+<!-- AtomSet.set_rcps:  Ewald width for species projectile = 0.95000000 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<run niter_ionic="0" niter_scf="100" niter_nonscf="5">
+<wavefunction ecut="22.50000000" nspin="1" nel="108" nempty="8">
+<cell a0="10.263100 0.000000 0.000000"
+      a1="0.000000 10.263100 0.000000"
+      a2="0.000000 0.000000 10.263100"/>
+<reciprocal_lattice b0="0.612211 0.000000 0.000000"
+      b1="0.000000 0.612211 0.000000"
+      b2="0.000000 0.000000 0.612211"/>
+<refcell a0="0.000000 0.000000 0.000000"
+         a1="0.000000 0.000000 0.000000"
+         a2="0.000000 0.000000 0.000000"/>
+<slater_determinant kpoint="0.000000 0.000000 0.000000"  weight="1.000000" size="62">
+ <!-- sdcontext: 4x1 -->
+<grid nx="24" ny="24" nz="24"/>
+ <!-- basis size: 5497 -->
+ <!-- c dimensions: 5560x62   (1390x62 blocks) -->
+ <density_matrix form="diagonal" size="62">
+ </density_matrix>
+</slater_determinant>
+</wavefunction>
+<!-- BOSampleStepper:  fractional occupation detected. -->
+ <!-- Wavefunction::update_occ: sum = 108.000000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 0.2598 eV, ispin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+<iteration count="1">
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+  <eigenvalue_sum> 206.94331081 </eigenvalue_sum>
+  <etotal_int scf_iter="0">     55.38496732 </etotal_int>
+  <eharris>     55.38496732 </eharris>
+  <eigenvalue_sum> -21.58361822 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = -0.03909785 ( using -0.03909785 ) -->
+  <etotal_int scf_iter="0">   -246.76155233 </etotal_int>
+  <eigenvalue_sum> -133.76839619 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = -0.25278617 ( using -0.25278617 ) -->
+  <etotal_int scf_iter="0">   -294.94820893 </etotal_int>
+  <eigenvalue_sum> -204.90970355 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = -0.32262429 ( using -0.32262429 ) -->
+  <etotal_int scf_iter="0">   -291.71850175 </etotal_int>
+  <eigenvalue_sum> -268.56576541 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = -0.13853143 ( using -0.13853143 ) -->
+  <etotal_int scf_iter="0">   -275.84370346 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -357.39012  -337.57757  -331.70557  -329.20238  -326.48654  -326.08361  -318.69832  -307.75700
+  -286.03954  -256.58439  -252.52842  -249.54749  -235.27621  -233.76626  -230.80306  -228.56663
+  -227.74935  -225.78244  -223.77093  -221.61523  -220.46408  -218.00851  -216.47822  -214.75815
+  -209.33147  -207.58001  -205.52136  -201.14865  -198.92462  -193.34099  -191.38671  -184.00249
+  -177.26760  -170.40510  -165.33622  -156.82220   -45.44439   -43.50424   -41.09218   -35.18999
+   -30.06297   -25.96741   -22.50762   -19.76658   -18.80413   -15.15925   -13.96558   -12.35354
+   -10.51804    -8.63608    -4.34067    -2.25430     0.37928     2.59385     3.42222     5.21872
+     7.52134     9.58258    10.54933    14.88576    16.59186    20.97120
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 3.0081 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9091  0.0909  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.73981398 -->
+  <!-- Entropy contribution to free energy: -0.01479628 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+  <eigenvalue_sum> -250.41474843 </eigenvalue_sum>
+  <etotal_int scf_iter="1">   -518.05699711 </etotal_int>
+  <eharris>   -775.09321095 </eharris>
+  <eigenvalue_sum> -273.74384812 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.58001425 ( using 0.58001425 ) -->
+  <etotal_int scf_iter="1">   -499.19528626 </etotal_int>
+  <eigenvalue_sum> -289.84698436 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.06705574 ( using 0.06705574 ) -->
+  <etotal_int scf_iter="1">   -466.78991774 </etotal_int>
+  <eigenvalue_sum> -294.57953638 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.19779142 ( using 0.19779142 ) -->
+  <etotal_int scf_iter="1">   -456.01902874 </etotal_int>
+  <eigenvalue_sum> -297.97350770 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = -0.10894565 ( using -0.10894565 ) -->
+  <etotal_int scf_iter="1">   -446.59753285 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -274.51911  -264.57458  -260.70446  -259.67020  -259.57302  -258.94411  -254.74264  -249.19266
+  -238.38769  -211.15072  -210.66755  -209.92978  -200.75656  -199.76427  -199.66514  -196.93041
+  -196.14313  -195.95539  -195.69325  -195.41499  -195.06730  -194.99116  -194.84890  -194.72317
+  -194.51068  -194.08672  -194.01817  -190.33852  -190.07492  -189.95526  -184.57449  -184.48636
+  -184.46111  -179.88837  -178.84521  -178.78270   -57.92062   -42.53982   -40.61945   -37.68296
+   -35.42707   -33.68670   -30.20832   -28.67806   -26.82467   -25.44106   -24.73016   -22.70428
+   -20.31323   -19.80097   -17.83420   -17.11509   -15.81285   -15.45412   -14.01782   -13.04811
+   -12.36922   -12.01623   -10.98295    -9.83064    -8.45711    -6.75812
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -14.7314 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9993  1.9902  0.0105  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.13398567 -->
+  <!-- Entropy contribution to free energy: -0.00267971 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000001, spin = 0 -->
+ AndersonMixer: theta = -0.91389603 
+  <eigenvalue_sum> -118.29372228 </eigenvalue_sum>
+  <etotal_int scf_iter="2">   -755.67683482 </etotal_int>
+  <eharris>   -784.69301430 </eharris>
+  <eigenvalue_sum> -123.90442899 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.72927404 ( using 0.72927404 ) -->
+  <etotal_int scf_iter="2">   -781.43350788 </etotal_int>
+  <eigenvalue_sum> -128.54706904 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.45555995 ( using 0.45555995 ) -->
+  <etotal_int scf_iter="2">   -804.31392799 </etotal_int>
+  <eigenvalue_sum> -131.04001866 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.66081621 ( using 0.66081621 ) -->
+  <etotal_int scf_iter="2">   -814.91221780 </etotal_int>
+  <eigenvalue_sum> -132.86851537 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.58865324 ( using 0.58865324 ) -->
+  <etotal_int scf_iter="2">   -820.78112764 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -151.28078  -150.17980  -145.47892  -140.16024  -139.00625  -136.69526  -131.73393  -124.91044
+  -105.95886  -105.86275  -105.73871  -105.06280  -104.86626  -104.75732  -103.36604  -100.31508
+  -100.01393   -99.84297   -95.32150   -95.04643   -94.89269   -94.42136   -93.97403   -93.87173
+   -92.00147   -91.76161   -91.63771   -87.27815   -86.83161   -86.73713   -80.22263   -79.96830
+   -79.36680   -59.79106   -59.33123   -59.28818   -15.84180   -12.67867   -11.21173    -8.92994
+    -7.77113    -5.93755    -3.23245    -2.08051    -1.15364    -0.21859     0.04572     1.35919
+     1.88410     2.19765     2.80364     3.74548     4.36521     5.00525     5.88368     6.62975
+     7.61076     8.65073     9.98840    11.49088    12.01861    13.28266
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 5.4449 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9993  1.9240  0.0764  0.0003  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.65739086 -->
+  <!-- Entropy contribution to free energy: -0.01314782 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = 0.58339705 -0.46870638 
+  <eigenvalue_sum> -103.76764755 </eigenvalue_sum>
+  <etotal_int scf_iter="3">   -863.50460981 </etotal_int>
+  <eharris>   -819.46784927 </eharris>
+  <eigenvalue_sum> -104.48435515 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.41848796 ( using 1.41848796 ) -->
+  <etotal_int scf_iter="3">   -867.74730060 </etotal_int>
+  <eigenvalue_sum> -105.70984792 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.68547676 ( using 0.68547676 ) -->
+  <etotal_int scf_iter="3">   -873.86573033 </etotal_int>
+  <eigenvalue_sum> -106.61664076 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.97891877 ( using 0.97891877 ) -->
+  <etotal_int scf_iter="3">   -877.10837244 </etotal_int>
+  <eigenvalue_sum> -107.42050138 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.54620395 ( using 0.54620395 ) -->
+  <etotal_int scf_iter="3">   -879.06659124 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -128.28197  -123.65477  -122.40163  -116.22412  -114.98394  -113.75610  -110.47338  -106.64943
+   -88.12861   -86.10677   -85.95168   -85.76500   -80.52482   -80.33530   -80.28078   -80.23702
+   -80.12265   -80.06194   -74.35733   -74.11679   -73.84215   -73.15715   -72.94576   -72.67134
+   -71.88849   -71.71709   -71.65102   -68.77517   -68.46533   -68.31648   -64.80928   -64.56385
+   -64.06591   -46.86035   -46.57358   -46.46131   -13.11050    -9.45917    -7.89754    -6.63442
+    -5.82286    -5.43693    -4.19226    -2.10627    -0.82982    -0.65033     0.39163     0.52758
+     0.79151     1.18443     1.37878     2.13513     2.73518     3.08664     4.57825     5.47122
+     6.54872     7.82640     8.36547    10.89944    11.85210    12.73485
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 3.8374 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9994  1.9920  0.0086  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.11334007 -->
+  <!-- Entropy contribution to free energy: -0.00226680 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000001, spin = 0 -->
+ AndersonMixer: theta = -0.30936598 0.49426355 -0.21847413 
+  <eigenvalue_sum> -125.82709973 </eigenvalue_sum>
+  <etotal_int scf_iter="4">   -854.32225533 </etotal_int>
+  <eharris>   -819.43397423 </eharris>
+  <eigenvalue_sum> -126.12450949 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.97303257 ( using 0.97303257 ) -->
+  <etotal_int scf_iter="4">   -851.05222526 </etotal_int>
+  <eigenvalue_sum> -126.44942967 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.38985640 ( using 0.38985640 ) -->
+  <etotal_int scf_iter="4">   -847.49316259 </etotal_int>
+  <eigenvalue_sum> -126.64035866 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.41119662 ( using 1.41119662 ) -->
+  <etotal_int scf_iter="4">   -846.29418688 </etotal_int>
+  <eigenvalue_sum> -126.92689257 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.67592714 ( using 0.67592714 ) -->
+  <etotal_int scf_iter="4">   -845.08751665 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -134.11415  -134.04912  -132.71436  -131.14798  -130.77145  -129.59464  -128.77281  -126.25135
+  -116.24116   -89.26368   -89.16484   -89.07508   -88.83023   -88.79190   -88.72378   -87.88389
+   -87.83284   -87.73342   -86.37727   -86.27743   -86.17147   -86.01574   -85.86611   -85.77287
+   -84.78213   -84.75585   -84.70055   -84.10184   -83.88851   -83.75746   -81.50751   -81.36482
+   -81.26303   -71.74780   -71.55957   -71.46218   -12.01550    -8.46265    -7.99605    -7.77467
+    -7.57368    -7.02928    -6.67203    -2.49006    -2.08361    -1.83553    -1.53424    -1.11530
+    -0.87728    -0.16370     0.86616     1.05499     1.39902     1.54796     1.92202     2.32323
+     2.65279     4.90759     6.56021     7.88888     8.89625    10.45757
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.7588 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9972  1.9887  1.8673  1.6498  0.4631  0.0311  0.0028  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 2.77069639 -->
+  <!-- Entropy contribution to free energy: -0.05541393 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = 0.14696000 -0.48384678 0.11319457 
+  <eigenvalue_sum> -136.91022497 </eigenvalue_sum>
+  <etotal_int scf_iter="5">   -827.50429071 </etotal_int>
+  <eharris>   -824.87121154 </eharris>
+  <eigenvalue_sum> -137.04826897 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.85668335 ( using 0.85668335 ) -->
+  <etotal_int scf_iter="5">   -826.09881144 </etotal_int>
+  <eigenvalue_sum> -137.24139115 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.99522461 ( using 0.99522461 ) -->
+  <etotal_int scf_iter="5">   -824.85588976 </etotal_int>
+  <eigenvalue_sum> -137.47599980 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.43630344 ( using 1.43630344 ) -->
+  <etotal_int scf_iter="5">   -824.01246171 </etotal_int>
+  <eigenvalue_sum> -137.77849984 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.50515147 ( using 0.50515147 ) -->
+  <etotal_int scf_iter="5">   -823.25824591 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -139.55883  -139.21453  -139.00011  -138.61542  -138.55441  -137.94734  -137.39170  -136.36689
+  -134.27102   -93.10117   -93.01031   -92.87734   -92.72736   -92.64565   -92.58724   -92.55917
+   -92.40596   -92.33987   -92.08213   -92.04368   -91.95842   -91.94340   -91.87334   -91.71075
+   -91.42855   -91.39927   -91.36133   -91.03947   -90.89399   -90.84060   -89.88888   -89.88108
+   -89.83314   -87.91287   -87.85105   -87.84031   -14.41413   -10.12711    -9.60242    -8.69956
+    -8.15356    -7.58160    -6.95638    -3.90867    -3.31611    -3.01736    -2.60671    -2.17274
+    -1.79209    -1.47239     0.16317     0.41747     0.66166     1.72214     1.89858     2.21688
+     2.53057     3.17664     3.88508     6.52417     6.98822     7.62907
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.7960 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  1.9999  1.9995  1.2649  0.6399  0.0867  0.0090  0.0001  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 2.98996901 -->
+  <!-- Entropy contribution to free energy: -0.05979938 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 107.99999999, spin = 0 -->
+ AndersonMixer: theta = 0.39336465 0.01249824 -0.13200433 
+  <eigenvalue_sum> -134.55689866 </eigenvalue_sum>
+  <etotal_int scf_iter="6">   -826.84237129 </etotal_int>
+  <eharris>   -825.83124788 </eharris>
+  <eigenvalue_sum> -134.58818883 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.49951219 ( using 1.49951219 ) -->
+  <etotal_int scf_iter="6">   -827.45962157 </etotal_int>
+  <eigenvalue_sum> -134.64958606 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.57849686 ( using 0.57849686 ) -->
+  <etotal_int scf_iter="6">   -828.33426897 </etotal_int>
+  <eigenvalue_sum> -134.69775915 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.37027162 ( using 1.37027162 ) -->
+  <etotal_int scf_iter="6">   -828.68057930 </etotal_int>
+  <eigenvalue_sum> -134.76748970 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.62715464 ( using 0.62715464 ) -->
+  <etotal_int scf_iter="6">   -828.95507047 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.32916  -136.13226  -136.09893  -135.88542  -135.85134  -135.31977  -135.24793  -134.64462
+  -133.89794   -90.19798   -90.14539   -90.09691   -90.04093   -89.93887   -89.91588   -89.79367
+   -89.76655   -89.72758   -89.72055   -89.64066   -89.59789   -89.57413   -89.51824   -89.48586
+   -89.11637   -89.08702   -89.07890   -88.98508   -88.97302   -88.94605   -88.43856   -88.42898
+   -88.38869   -87.74223   -87.70159   -87.69001   -13.04957    -8.92938    -8.34686    -7.62530
+    -7.40251    -7.19961    -6.71367    -3.59417    -2.67378    -2.56660    -2.27173    -1.63191
+    -1.43729    -1.14622     0.53398     0.70904     0.96087     1.74035     1.88134     2.04060
+     2.21230     2.49310     3.74226     4.76728     6.91939     7.25726
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.7656 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9998  1.9992  1.9946  1.0924  0.5984  0.2339  0.0723  0.0095  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 3.73798216 -->
+  <!-- Entropy contribution to free energy: -0.07475964 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 107.99999999, spin = 0 -->
+ AndersonMixer: theta = -0.76348131 0.43463511 -0.18435766 
+  <eigenvalue_sum> -134.90090440 </eigenvalue_sum>
+  <etotal_int scf_iter="7">   -828.19136692 </etotal_int>
+  <eharris>   -826.09853032 </eharris>
+  <eigenvalue_sum> -134.91387812 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.57768466 ( using 1.57768466 ) -->
+  <etotal_int scf_iter="7">   -827.99088124 </etotal_int>
+  <eigenvalue_sum> -134.94273218 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.85882173 ( using 0.85882173 ) -->
+  <etotal_int scf_iter="7">   -827.70848265 </etotal_int>
+  <eigenvalue_sum> -134.97308462 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.26935996 ( using 1.26935996 ) -->
+  <etotal_int scf_iter="7">   -827.56901110 </etotal_int>
+  <eigenvalue_sum> -135.01250815 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.65929331 ( using 0.65929331 ) -->
+  <etotal_int scf_iter="7">   -827.50710018 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.09257  -136.02209  -135.95409  -135.93170  -135.89300  -135.71323  -135.68737  -135.64432
+  -135.07320   -89.93294   -89.91617   -89.89749   -89.87333   -89.85229   -89.82514   -89.67748
+   -89.65429   -89.63623   -89.60883   -89.58220   -89.51971   -89.48763   -89.46320   -89.41397
+   -89.38081   -89.36705   -89.34096   -89.31170   -89.24889   -89.23271   -89.21882   -89.18334
+   -89.17968   -88.72494   -88.69426   -88.63402   -12.19664    -8.48910    -7.64018    -7.55600
+    -7.11393    -6.95455    -6.88540    -3.38320    -2.46241    -2.37396    -2.01038    -1.27427
+    -1.19539    -1.03400     0.80970     0.99000     1.13529     1.63601     1.74815     1.80633
+     1.86881     2.04170     3.44407     3.60545     6.53647     7.20026
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.6037 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9942  1.9782  1.9380  0.8816  0.5138  0.3679  0.2493  0.0769  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 4.98092865 -->
+  <!-- Entropy contribution to free energy: -0.09961857 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.18608336 -0.02260779 -0.03239088 
+  <eigenvalue_sum> -135.31796510 </eigenvalue_sum>
+  <etotal_int scf_iter="8">   -826.74379138 </etotal_int>
+  <eharris>   -826.31142773 </eharris>
+  <eigenvalue_sum> -135.32369809 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.29188459 ( using 1.29188459 ) -->
+  <etotal_int scf_iter="8">   -826.71697607 </etotal_int>
+  <eigenvalue_sum> -135.33643414 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.73642396 ( using 1.73642396 ) -->
+  <etotal_int scf_iter="8">   -826.71333557 </etotal_int>
+  <eigenvalue_sum> -135.36304602 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.23411969 ( using 1.23411969 ) -->
+  <etotal_int scf_iter="8">   -826.74435673 </etotal_int>
+  <eigenvalue_sum> -135.39892777 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.65318621 ( using 0.65318621 ) -->
+  <etotal_int scf_iter="8">   -826.79488615 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.58770  -136.24445  -136.22223  -136.17746  -136.14673  -136.07145  -136.00014  -135.87434
+  -135.41723   -90.29272   -90.28247   -90.25771   -90.02548   -90.01280   -90.01128   -89.90631
+   -89.88212   -89.87397   -89.79860   -89.77530   -89.74153   -89.71510   -89.66926   -89.63435
+   -89.61443   -89.59339   -89.58260   -89.50403   -89.47932   -89.47397   -89.40993   -89.38585
+   -89.37647   -89.01745   -89.00639   -88.95784   -12.05734    -8.42582    -7.54345    -7.45401
+    -7.01029    -6.91398    -6.84328    -3.35297    -2.37463    -2.31376    -1.90755    -1.19537
+    -1.13523    -0.99673     0.85271     1.11858     1.15395     1.62799     1.70878     1.76030
+     1.80467     1.86571     3.24152     3.52942     5.28259     6.48460
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5660 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9895  1.9280  1.9077  0.7758  0.5185  0.3867  0.2949  0.1989  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.69647873 -->
+  <!-- Entropy contribution to free energy: -0.11392957 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 107.99999999, spin = 0 -->
+ AndersonMixer: theta = -0.23174954 0.05910429 0.05329783 
+  <eigenvalue_sum> -135.70509948 </eigenvalue_sum>
+  <etotal_int scf_iter="9">   -826.53063482 </etotal_int>
+  <eharris>   -826.32726748 </eharris>
+  <eigenvalue_sum> -135.70980380 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.61063341 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="9">   -826.49095154 </etotal_int>
+  <eigenvalue_sum> -135.72362222 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.20690970 ( using 1.20690970 ) -->
+  <etotal_int scf_iter="9">   -826.41676764 </etotal_int>
+  <eigenvalue_sum> -135.74421735 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.74445616 ( using 0.74445616 ) -->
+  <etotal_int scf_iter="9">   -826.35018446 </etotal_int>
+  <eigenvalue_sum> -135.76313762 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.13831141 ( using 1.13831141 ) -->
+  <etotal_int scf_iter="9">   -826.32276408 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.54351  -136.48577  -136.47847  -136.40830  -136.28523  -136.26942  -136.23105  -135.98523
+  -135.89214   -90.31733   -90.30342   -90.27532   -90.24617   -90.21476   -90.20974   -90.06122
+   -90.04167   -89.98906   -89.97233   -89.96560   -89.92278   -89.88138   -89.85141   -89.83289
+   -89.80938   -89.78888   -89.76185   -89.71163   -89.66752   -89.66479   -89.53964   -89.51570
+   -89.49839   -89.45338   -89.43038   -89.37652   -12.16632    -8.41830    -7.56653    -7.53429
+    -7.07354    -6.98349    -6.86681    -3.41569    -2.39542    -2.32565    -1.97189    -1.26195
+    -1.19111    -1.03909     0.82138     1.05346     1.06363     1.62065     1.70173     1.77770
+     1.82937     1.83574     3.20398     3.50689     4.22920     5.48843
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5594 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9912  1.9526  1.9490  0.7787  0.5200  0.3347  0.2417  0.2320  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.35946871 -->
+  <!-- Entropy contribution to free energy: -0.10718937 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = 0.27856760 -0.15948575 0.00418843 
+  <eigenvalue_sum> -135.75066236 </eigenvalue_sum>
+  <etotal_int scf_iter="10">   -826.21778321 </etotal_int>
+  <eharris>   -826.33640084 </eharris>
+  <eigenvalue_sum> -135.75432086 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.64496997 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="10">   -826.22735540 </etotal_int>
+  <eigenvalue_sum> -135.76487953 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.28624720 ( using 1.28624720 ) -->
+  <etotal_int scf_iter="10">   -826.25530372 </etotal_int>
+  <eigenvalue_sum> -135.78079809 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.52160755 ( using 0.52160755 ) -->
+  <etotal_int scf_iter="10">   -826.29161510 </etotal_int>
+  <eigenvalue_sum> -135.79132780 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.78842717 ( using 1.78842717 ) -->
+  <etotal_int scf_iter="10">   -826.30621589 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.53001  -136.48432  -136.46725  -136.45334  -136.24729  -136.23485  -136.21365  -136.00777
+  -135.85312   -90.31354   -90.30449   -90.28293   -90.21179   -90.19112   -90.18829   -90.04585
+   -90.02742   -90.00949   -89.99399   -89.96609   -89.93201   -89.86742   -89.82621   -89.81388
+   -89.78383   -89.76540   -89.74523   -89.69281   -89.64068   -89.63537   -89.54250   -89.51918
+   -89.50797   -89.41927   -89.40626   -89.36046   -12.11671    -8.36969    -7.51518    -7.50095
+    -7.04969    -6.96739    -6.85425    -3.38619    -2.35617    -2.28719    -1.93451    -1.24398
+    -1.17861    -1.02963     0.84999     1.07640     1.09614     1.62748     1.68419     1.76151
+     1.80978     1.81191     3.17844     3.48824     3.69832     4.59897
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5510 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9885  1.9407  1.9318  0.7260  0.5461  0.3509  0.2597  0.2562  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.58521599 -->
+  <!-- Entropy contribution to free energy: -0.11170432 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.29311663 -0.17897461 0.08552286 
+  <eigenvalue_sum> -135.81965870 </eigenvalue_sum>
+  <etotal_int scf_iter="11">   -826.35581264 </etotal_int>
+  <eharris>   -826.34041356 </eharris>
+  <eigenvalue_sum> -135.82165602 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.60460138 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="11">   -826.34908707 </etotal_int>
+  <eigenvalue_sum> -135.82730872 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.25816621 ( using 1.25816621 ) -->
+  <etotal_int scf_iter="11">   -826.33263032 </etotal_int>
+  <eigenvalue_sum> -135.83539137 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.47487445 ( using 0.47487445 ) -->
+  <etotal_int scf_iter="11">   -826.31312778 </etotal_int>
+  <eigenvalue_sum> -135.84019938 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.89359354 ( using 1.89359354 ) -->
+  <etotal_int scf_iter="11">   -826.30644080 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.53039  -136.48865  -136.47792  -136.45529  -136.27061  -136.24274  -136.17345  -136.08463
+  -135.81014   -90.31924   -90.30079   -90.28836   -90.21993   -90.20448   -90.20062   -90.05817
+   -90.04396   -90.02389   -90.00700   -89.97416   -89.94391   -89.87001   -89.82891   -89.82473
+   -89.77442   -89.75743   -89.72198   -89.71862   -89.64458   -89.64317   -89.58796   -89.57051
+   -89.55399   -89.39092   -89.38002   -89.34162   -12.11847    -8.35746    -7.52493    -7.48895
+    -7.06201    -6.97347    -6.86472    -3.37893    -2.34884    -2.27804    -1.93228    -1.24988
+    -1.18952    -1.04382     0.85228     1.07541     1.08648     1.62643     1.68325     1.75582
+     1.80822     1.81223     3.14485     3.40797     3.57764     4.06432
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5490 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9881  1.9403  1.9354  0.7228  0.5431  0.3589  0.2590  0.2524  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.57513315 -->
+  <!-- Entropy contribution to free energy: -0.11150266 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000001, spin = 0 -->
+ AndersonMixer: theta = 0.07007511 -0.14706065 -0.00992972 
+  <eigenvalue_sum> -135.83032495 </eigenvalue_sum>
+  <etotal_int scf_iter="12">   -826.30153207 </etotal_int>
+  <eharris>   -826.34133460 </eharris>
+  <eigenvalue_sum> -135.83116405 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.95201977 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="12">   -826.30591439 </etotal_int>
+  <eigenvalue_sum> -135.83350877 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.06486057 ( using 1.06486057 ) -->
+  <etotal_int scf_iter="12">   -826.31646054 </etotal_int>
+  <eigenvalue_sum> -135.83640749 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.34057231 ( using 0.34057231 ) -->
+  <etotal_int scf_iter="12">   -826.32712008 </etotal_int>
+  <eigenvalue_sum> -135.83784546 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.72237134 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="12">   -826.32973678 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.52406  -136.48338  -136.47400  -136.44627  -136.25444  -136.22651  -136.15637  -136.06801
+  -135.80239   -90.31484   -90.29296   -90.28429   -90.20876   -90.19600   -90.19160   -90.05013
+   -90.03648   -90.01989   -89.99934   -89.96797   -89.93811   -89.85867   -89.81758   -89.81524
+   -89.76063   -89.74434   -89.70795   -89.70459   -89.62911   -89.62827   -89.57378   -89.55501
+   -89.53966   -89.38336   -89.37200   -89.33581   -12.11050    -8.34365    -7.51715    -7.48049
+    -7.05815    -6.96928    -6.85896    -3.37199    -2.33846    -2.27010    -1.92384    -1.24609
+    -1.18797    -1.04357     0.85775     1.08361     1.09499     1.62798     1.68434     1.75893
+     1.80933     1.81108     3.13036     3.37021     3.56867     3.86784
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5508 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9878  1.9375  1.9322  0.7237  0.5452  0.3561  0.2602  0.2573  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.60696056 -->
+  <!-- Entropy contribution to free energy: -0.11213921 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.01265382 -0.05864601 0.01674658 
+  <eigenvalue_sum> -135.84044409 </eigenvalue_sum>
+  <etotal_int scf_iter="13">   -826.34357803 </etotal_int>
+  <eharris>   -826.34152496 </eharris>
+  <eigenvalue_sum> -135.84080328 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.85033956 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="13">   -826.34245649 </etotal_int>
+  <eigenvalue_sum> -135.84180407 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.49233582 ( using 1.49233582 ) -->
+  <etotal_int scf_iter="13">   -826.33951055 </etotal_int>
+  <eigenvalue_sum> -135.84338564 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.34702497 ( using 0.34702497 ) -->
+  <etotal_int scf_iter="13">   -826.33528880 </etotal_int>
+  <eigenvalue_sum> -135.84407367 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.00581254 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="13">   -826.33429389 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.51983  -136.47922  -136.46930  -136.44725  -136.25496  -136.22697  -136.17021  -136.07147
+  -135.79115   -90.31190   -90.29034   -90.28203   -90.20954   -90.19664   -90.19232   -90.04746
+   -90.03403   -90.01709   -89.99680   -89.96543   -89.93559   -89.85991   -89.81847   -89.81595
+   -89.76530   -89.74822   -89.71568   -89.70445   -89.63340   -89.63304   -89.57684   -89.55825
+   -89.54460   -89.37429   -89.36313   -89.32651   -12.10939    -8.34404    -7.51709    -7.48119
+    -7.05794    -6.96855    -6.86070    -3.37086    -2.33868    -2.27041    -1.92337    -1.24505
+    -1.18791    -1.04446     0.85675     1.08259     1.09484     1.62797     1.68405     1.75837
+     1.80894     1.81065     3.11938     3.34949     3.56213     3.77049
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5505 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9378  1.9321  0.7227  0.5451  0.3566  0.2603  0.2575  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.60658715 -->
+  <!-- Entropy contribution to free energy: -0.11213174 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.04156253 -0.11751429 -0.00322166 
+  <eigenvalue_sum> -135.84127119 </eigenvalue_sum>
+  <etotal_int scf_iter="14">   -826.33556747 </etotal_int>
+  <eharris>   -826.34156688 </eharris>
+  <eigenvalue_sum> -135.84139173 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.85305264 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="14">   -826.33660731 </etotal_int>
+  <eigenvalue_sum> -135.84172678 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.05254064 ( using 1.05254064 ) -->
+  <etotal_int scf_iter="14">   -826.33888030 </etotal_int>
+  <eigenvalue_sum> -135.84213338 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.34773237 ( using 0.34773237 ) -->
+  <etotal_int scf_iter="14">   -826.34097400 </etotal_int>
+  <eigenvalue_sum> -135.84233565 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.73657443 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="14">   -826.34140233 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.51752  -136.47689  -136.46706  -136.44432  -136.25066  -136.22262  -136.16663  -136.06901
+  -135.79065   -90.30976   -90.28801   -90.27993   -90.20666   -90.19375   -90.18939   -90.04474
+   -90.03154   -90.01491   -89.99438   -89.96306   -89.93346   -89.85685   -89.81538   -89.81299
+   -89.76202   -89.74503   -89.71283   -89.70045   -89.63026   -89.62941   -89.57468   -89.55575
+   -89.54225   -89.37349   -89.36207   -89.32592   -12.10856    -8.34221    -7.51592    -7.47983
+    -7.05789    -6.96781    -6.86057    -3.37006    -2.33738    -2.26938    -1.92285    -1.24388
+    -1.18785    -1.04487     0.85724     1.08331     1.09540     1.62857     1.68469     1.75920
+     1.80963     1.81120     3.11733     3.34397     3.56131     3.74224
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5512 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9378  1.9322  0.7229  0.5452  0.3562  0.2602  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.60624936 -->
+  <!-- Entropy contribution to free energy: -0.11212499 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.11140441 -0.19186924 0.05212219 
+  <eigenvalue_sum> -135.84255085 </eigenvalue_sum>
+  <etotal_int scf_iter="15">   -826.34356831 </etotal_int>
+  <eharris>   -826.34157349 </eharris>
+  <eigenvalue_sum> -135.84259877 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.19329099 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="15">   -826.34336275 </etotal_int>
+  <eigenvalue_sum> -135.84273195 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.27545523 ( using 1.27545523 ) -->
+  <etotal_int scf_iter="15">   -826.34279522 </etotal_int>
+  <eigenvalue_sum> -135.84291809 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.37684800 ( using 0.37684800 ) -->
+  <etotal_int scf_iter="15">   -826.34206759 </etotal_int>
+  <eigenvalue_sum> -135.84300842 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.72231780 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="15">   -826.34185876 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.51694  -136.47647  -136.46605  -136.44552  -136.25006  -136.22203  -136.16933  -136.06760
+  -135.78951   -90.30917   -90.28773   -90.27954   -90.20727   -90.19410   -90.18981   -90.04399
+   -90.03074   -90.01430   -89.99378   -89.96258   -89.93284   -89.85698   -89.81542   -89.81294
+   -89.76270   -89.74556   -89.71414   -89.69979   -89.63062   -89.62950   -89.57414   -89.55475
+   -89.54207   -89.37256   -89.36097   -89.32467   -12.10867    -8.34264    -7.51599    -7.48024
+    -7.05786    -6.96767    -6.86070    -3.37011    -2.33755    -2.26970    -1.92303    -1.24366
+    -1.18786    -1.04492     0.85686     1.08301     1.09530     1.62853     1.68463     1.75928
+     1.80970     1.81117     3.11607     3.34140     3.56035     3.72934
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5511 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9322  0.7229  0.5453  0.3560  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.60508621 -->
+  <!-- Entropy contribution to free energy: -0.11210172 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.10797198 -0.08846685 0.03090507 
+  <eigenvalue_sum> -135.84298415 </eigenvalue_sum>
+  <etotal_int scf_iter="16">   -826.34134149 </etotal_int>
+  <eharris>   -826.34157498 </eharris>
+  <eigenvalue_sum> -135.84300081 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.56731197 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="16">   -826.34146510 </etotal_int>
+  <eigenvalue_sum> -135.84304712 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.23188031 ( using 1.23188031 ) -->
+  <etotal_int scf_iter="16">   -826.34176058 </etotal_int>
+  <eigenvalue_sum> -135.84311020 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.31118548 ( using 0.31118548 ) -->
+  <etotal_int scf_iter="16">   -826.34209585 </etotal_int>
+  <eigenvalue_sum> -135.84313772 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.55766245 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="16">   -826.34215962 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.51692  -136.47649  -136.46595  -136.44529  -136.25001  -136.22199  -136.16874  -136.06750
+  -135.78956   -90.30906   -90.28766   -90.27942   -90.20709   -90.19390   -90.18960   -90.04391
+   -90.03064   -90.01424   -89.99373   -89.96249   -89.93272   -89.85680   -89.81525   -89.81277
+   -89.76245   -89.74534   -89.71377   -89.69973   -89.63038   -89.62931   -89.57401   -89.55462
+   -89.54187   -89.37253   -89.36093   -89.32465   -12.10862    -8.34258    -7.51594    -7.48012
+    -7.05789    -6.96767    -6.86074    -3.37008    -2.33753    -2.26965    -1.92304    -1.24358
+    -1.18787    -1.04496     0.85693     1.08303     1.09525     1.62858     1.68470     1.75922
+     1.80971     1.81122     3.11574     3.34064     3.56010     3.72510
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5512 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5451  0.3562  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.60508060 -->
+  <!-- Entropy contribution to free energy: -0.11210161 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = 0.03432678 -0.11638163 0.00844883 
+  <eigenvalue_sum> -135.84334111 </eigenvalue_sum>
+  <etotal_int scf_iter="17">   -826.34209364 </etotal_int>
+  <eharris>   -826.34157522 </eharris>
+  <eigenvalue_sum> -135.84334745 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.72172016 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="17">   -826.34203073 </etotal_int>
+  <eigenvalue_sum> -135.84336506 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.34397575 ( using 1.34397575 ) -->
+  <etotal_int scf_iter="17">   -826.34189158 </etotal_int>
+  <eigenvalue_sum> -135.84339068 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.32570552 ( using 0.32570552 ) -->
+  <etotal_int scf_iter="17">   -826.34173082 </etotal_int>
+  <eigenvalue_sum> -135.84340178 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.43133357 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="17">   -826.34170472 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.51703  -136.47661  -136.46606  -136.44564  -136.25011  -136.22208  -136.16885  -136.06759
+  -135.78947   -90.30914   -90.28777   -90.27950   -90.20733   -90.19412   -90.18983   -90.04399
+   -90.03071   -90.01432   -89.99382   -89.96257   -89.93281   -89.85691   -89.81538   -89.81290
+   -89.76255   -89.74543   -89.71387   -89.69980   -89.63046   -89.62938   -89.57407   -89.55468
+   -89.54193   -89.37248   -89.36085   -89.32457   -12.10868    -8.34265    -7.51597    -7.48018
+    -7.05795    -6.96766    -6.86078    -3.37010    -2.33754    -2.26970    -1.92307    -1.24358
+    -1.18791    -1.04498     0.85689     1.08299     1.09522     1.62856     1.68466     1.75924
+     1.80971     1.81123     3.11562     3.34033     3.55995     3.72333
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5511 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.60486871 -->
+  <!-- Entropy contribution to free energy: -0.11209737 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.03266443 -0.11637079 0.01856366 
+  <eigenvalue_sum> -135.84344707 </eigenvalue_sum>
+  <etotal_int scf_iter="18">   -826.34155020 </etotal_int>
+  <eharris>   -826.34157528 </eharris>
+  <eigenvalue_sum> -135.84344934 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.90099763 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="18">   -826.34156395 </etotal_int>
+  <eigenvalue_sum> -135.84345564 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.36319925 ( using 1.36319925 ) -->
+  <etotal_int scf_iter="18">   -826.34160420 </etotal_int>
+  <eigenvalue_sum> -135.84346492 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.31044937 ( using 0.31044937 ) -->
+  <etotal_int scf_iter="18">   -826.34166016 </etotal_int>
+  <eigenvalue_sum> -135.84346879 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.76531636 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="18">   -826.34167290 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.51707  -136.47665  -136.46607  -136.44565  -136.25017  -136.22215  -136.16882  -136.06761
+  -135.78946   -90.30916   -90.28779   -90.27951   -90.20735   -90.19414   -90.18985   -90.04402
+   -90.03074   -90.01435   -89.99385   -89.96260   -89.93283   -89.85693   -89.81540   -89.81293
+   -89.76256   -89.74545   -89.71386   -89.69986   -89.63047   -89.62941   -89.57408   -89.55470
+   -89.54194   -89.37247   -89.36084   -89.32456   -12.10867    -8.34264    -7.51596    -7.48017
+    -7.05795    -6.96766    -6.86078    -3.37010    -2.33753    -2.26970    -1.92307    -1.24358
+    -1.18791    -1.04498     0.85689     1.08300     1.09523     1.62856     1.68467     1.75923
+     1.80971     1.81122     3.11558     3.34024     3.55991     3.72270
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5511 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.60492685 -->
+  <!-- Entropy contribution to free energy: -0.11209854 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.21319598 -0.12601223 0.02882645 
+  <eigenvalue_sum> -135.84352211 </eigenvalue_sum>
+  <etotal_int scf_iter="19">   -826.34163221 </etotal_int>
+  <eharris>   -826.34157529 </eharris>
+  <eigenvalue_sum> -135.84352293 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.52017081 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="19">   -826.34161784 </etotal_int>
+  <eigenvalue_sum> -135.84352522 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.30946714 ( using 1.30946714 ) -->
+  <etotal_int scf_iter="19">   -826.34158815 </etotal_int>
+  <eigenvalue_sum> -135.84352848 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.33120031 ( using 0.33120031 ) -->
+  <etotal_int scf_iter="19">   -826.34155653 </etotal_int>
+  <eigenvalue_sum> -135.84352992 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.34119840 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="19">   -826.34155223 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.51710  -136.47669  -136.46611  -136.44570  -136.25022  -136.22219  -136.16885  -136.06768
+  -135.78944   -90.30919   -90.28782   -90.27955   -90.20739   -90.19418   -90.18989   -90.04405
+   -90.03077   -90.01439   -89.99389   -89.96263   -89.93286   -89.85697   -89.81544   -89.81297
+   -89.76259   -89.74548   -89.71389   -89.69990   -89.63051   -89.62944   -89.57412   -89.55475
+   -89.54198   -89.37246   -89.36084   -89.32456   -12.10867    -8.34265    -7.51597    -7.48018
+    -7.05796    -6.96766    -6.86079    -3.37010    -2.33753    -2.26970    -1.92307    -1.24357
+    -1.18791    -1.04498     0.85689     1.08299     1.09522     1.62856     1.68467     1.75923
+     1.80971     1.81122     3.11557     3.34021     3.55988     3.72246
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5511 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.60490075 -->
+  <!-- Entropy contribution to free energy: -0.11209802 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 107.99999999, spin = 0 -->
+ AndersonMixer: theta = -0.03938120 -0.14340354 0.03981449 
+  <eigenvalue_sum> -135.84352871 </eigenvalue_sum>
+  <etotal_int scf_iter="20">   -826.34154164 </etotal_int>
+  <eharris>   -826.34157529 </eharris>
+  <eigenvalue_sum> -135.84352901 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.99798763 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="20">   -826.34154580 </etotal_int>
+  <eigenvalue_sum> -135.84352984 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.33905471 ( using 1.33905471 ) -->
+  <etotal_int scf_iter="20">   -826.34155605 </etotal_int>
+  <eigenvalue_sum> -135.84353104 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.29157197 ( using 0.29157197 ) -->
+  <etotal_int scf_iter="20">   -826.34156871 </etotal_int>
+  <eigenvalue_sum> -135.84353153 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.14293191 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="20">   -826.34157076 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.51710  -136.47669  -136.46610  -136.44569  -136.25022  -136.22219  -136.16884  -136.06767
+  -135.78945   -90.30919   -90.28782   -90.27954   -90.20739   -90.19418   -90.18988   -90.04405
+   -90.03077   -90.01439   -89.99389   -89.96263   -89.93286   -89.85697   -89.81544   -89.81296
+   -89.76259   -89.74548   -89.71388   -89.69990   -89.63050   -89.62944   -89.57411   -89.55474
+   -89.54198   -89.37247   -89.36084   -89.32456   -12.10867    -8.34264    -7.51596    -7.48018
+    -7.05795    -6.96766    -6.86079    -3.37010    -2.33753    -2.26970    -1.92307    -1.24357
+    -1.18791    -1.04498     0.85689     1.08300     1.09523     1.62856     1.68467     1.75923
+     1.80971     1.81122     3.11557     3.34020     3.55988     3.72238
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5511 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.60491498 -->
+  <!-- Entropy contribution to free energy: -0.11209830 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 107.99999999, spin = 0 -->
+ AndersonMixer: theta = -0.02046803 -0.07331693 -0.00202194 
+  <eigenvalue_sum> -135.84353451 </eigenvalue_sum>
+  <etotal_int scf_iter="21">   -826.34157546 </etotal_int>
+  <eharris>   -826.34157529 </eharris>
+  <eigenvalue_sum> -135.84353462 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 5.26655059 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="21">   -826.34157369 </etotal_int>
+  <eigenvalue_sum> -135.84353493 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.52519835 ( using 1.52519835 ) -->
+  <etotal_int scf_iter="21">   -826.34156952 </etotal_int>
+  <eigenvalue_sum> -135.84353543 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.30590658 ( using 0.30590658 ) -->
+  <etotal_int scf_iter="21">   -826.34156386 </etotal_int>
+  <eigenvalue_sum> -135.84353563 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.86312612 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="21">   -826.34156299 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.51710  -136.47669  -136.46610  -136.44569  -136.25022  -136.22219  -136.16884  -136.06767
+  -135.78945   -90.30919   -90.28782   -90.27955   -90.20739   -90.19418   -90.18988   -90.04406
+   -90.03077   -90.01439   -89.99389   -89.96263   -89.93286   -89.85697   -89.81544   -89.81297
+   -89.76259   -89.74548   -89.71388   -89.69990   -89.63051   -89.62945   -89.57412   -89.55475
+   -89.54198   -89.37246   -89.36084   -89.32456   -12.10867    -8.34264    -7.51596    -7.48018
+    -7.05795    -6.96766    -6.86079    -3.37010    -2.33753    -2.26970    -1.92307    -1.24357
+    -1.18791    -1.04498     0.85689     1.08300     1.09523     1.62856     1.68467     1.75923
+     1.80971     1.81122     3.11557     3.34020     3.55988     3.72234
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5511 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.60491306 -->
+  <!-- Entropy contribution to free energy: -0.11209826 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = 0.12201056 -0.13620704 0.01306537 
+  <eigenvalue_sum> -135.84353271 </eigenvalue_sum>
+  <etotal_int scf_iter="22">   -826.34156574 </etotal_int>
+  <eharris>   -826.34157529 </eharris>
+  <eigenvalue_sum> -135.84353275 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.69693105 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="22">   -826.34156693 </etotal_int>
+  <eigenvalue_sum> -135.84353286 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.27875343 ( using 1.27875343 ) -->
+  <etotal_int scf_iter="22">   -826.34156950 </etotal_int>
+  <eigenvalue_sum> -135.84353301 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.28973747 ( using 0.28973747 ) -->
+  <etotal_int scf_iter="22">   -826.34157225 </etotal_int>
+  <eigenvalue_sum> -135.84353307 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.03194279 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="22">   -826.34157257 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.51710  -136.47669  -136.46610  -136.44569  -136.25021  -136.22219  -136.16884  -136.06767
+  -135.78945   -90.30919   -90.28782   -90.27954   -90.20738   -90.19418   -90.18988   -90.04405
+   -90.03077   -90.01439   -89.99389   -89.96263   -89.93286   -89.85697   -89.81543   -89.81296
+   -89.76259   -89.74548   -89.71388   -89.69990   -89.63050   -89.62944   -89.57412   -89.55474
+   -89.54198   -89.37247   -89.36084   -89.32456   -12.10867    -8.34264    -7.51596    -7.48018
+    -7.05795    -6.96766    -6.86079    -3.37010    -2.33753    -2.26970    -1.92307    -1.24357
+    -1.18791    -1.04498     0.85689     1.08300     1.09523     1.62856     1.68467     1.75923
+     1.80971     1.81122     3.11557     3.34020     3.55988     3.72233
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5511 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.60491518 -->
+  <!-- Entropy contribution to free energy: -0.11209830 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.14585773 -0.15023978 0.02739079 
+  <eigenvalue_sum> -135.84353232 </eigenvalue_sum>
+  <etotal_int scf_iter="23">   -826.34157515 </etotal_int>
+  <eharris>   -826.34157529 </eharris>
+  <eigenvalue_sum> -135.84353233 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.90425169 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="23">   -826.34157497 </etotal_int>
+  <eigenvalue_sum> -135.84353237 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.58701333 ( using 1.58701333 ) -->
+  <etotal_int scf_iter="23">   -826.34157441 </etotal_int>
+  <eigenvalue_sum> -135.84353244 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.33676802 ( using 0.33676802 ) -->
+  <etotal_int scf_iter="23">   -826.34157349 </etotal_int>
+  <eigenvalue_sum> -135.84353247 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.26789398 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="23">   -826.34157327 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.51710  -136.47669  -136.46610  -136.44569  -136.25021  -136.22219  -136.16884  -136.06767
+  -135.78945   -90.30919   -90.28782   -90.27954   -90.20738   -90.19418   -90.18988   -90.04405
+   -90.03077   -90.01439   -89.99389   -89.96263   -89.93286   -89.85697   -89.81543   -89.81296
+   -89.76259   -89.74548   -89.71388   -89.69990   -89.63050   -89.62944   -89.57411   -89.55474
+   -89.54198   -89.37247   -89.36084   -89.32456   -12.10866    -8.34264    -7.51596    -7.48018
+    -7.05795    -6.96766    -6.86079    -3.37010    -2.33753    -2.26970    -1.92307    -1.24357
+    -1.18791    -1.04498     0.85689     1.08300     1.09523     1.62856     1.68467     1.75923
+     1.80971     1.81122     3.11557     3.34019     3.55988     3.72233
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5511 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.60491515 -->
+  <!-- Entropy contribution to free energy: -0.11209830 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+ AndersonMixer: theta = 0.00969674 -0.14219282 0.01675970 
+  <eigenvalue_sum> -135.84353173 </eigenvalue_sum>
+  <etotal_int scf_iter="24">   -826.34157395 </etotal_int>
+  <eharris>   -826.34157529 </eharris>
+  <eigenvalue_sum> -135.84353174 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.16687597 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="24">   -826.34157420 </etotal_int>
+  <eigenvalue_sum> -135.84353175 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.15903155 ( using 1.15903155 ) -->
+  <etotal_int scf_iter="24">   -826.34157473 </etotal_int>
+  <eigenvalue_sum> -135.84353177 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.29412998 ( using 0.29412998 ) -->
+  <etotal_int scf_iter="24">   -826.34157524 </etotal_int>
+  <eigenvalue_sum> -135.84353177 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.60628332 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="24">   -826.34157530 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  -136.51710  -136.47669  -136.46610  -136.44569  -136.25021  -136.22219  -136.16884  -136.06767
+  -135.78945   -90.30919   -90.28782   -90.27954   -90.20738   -90.19418   -90.18988   -90.04405
+   -90.03077   -90.01439   -89.99389   -89.96263   -89.93286   -89.85697   -89.81543   -89.81296
+   -89.76259   -89.74548   -89.71388   -89.69990   -89.63050   -89.62944   -89.57411   -89.55474
+   -89.54197   -89.37247   -89.36084   -89.32456   -12.10866    -8.34264    -7.51596    -7.48018
+    -7.05795    -6.96766    -6.86079    -3.37010    -2.33753    -2.26970    -1.92307    -1.24357
+    -1.18791    -1.04498     0.85689     1.08300     1.09523     1.62856     1.68467     1.75923
+     1.80971     1.81122     3.11557     3.34019     3.55988     3.72233
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 108.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 1.5511 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 5.60491545 -->
+  <!-- Entropy contribution to free energy: -0.11209831 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: scf convergence at itscf = 25, Harris-Foulkes energy varied by less than 1.00e-08 a.u. over 5 scf steps. -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+  <ekin>      399.22636118 </ekin>
+  <econf>       0.00000000 </econf>
+  <eps>      -375.32125384 </eps>
+  <enl>      -243.39793067 </enl>
+  <ecoul>    -521.60928788 </ecoul>
+  <exc>       -85.21143950 </exc>
+  <evdw>        0.00000000 </evdw>
+  <esr>         0.00490831 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -826.34157529 </etotal>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.00187247 -0.00043665 -0.02738821 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.00095473 0.01239194 0.00095353 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.02738863 -0.00043767 0.00187142 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.01974116 0.00220112 0.01974051 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.06363441 0.08919968 -0.06362891 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.01070160 0.00091106 -0.00154951 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.02431068 -0.02982914 -0.02431053 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.00154624 0.00090893 0.01070141 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.49010000 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.08361045 -0.07490977 0.08361070 </force>
+  </atom>
+</atomset>
+<timing where="run"                name=" iteration"       min="6.762    " max="6.762    " count="1        "/>
+</iteration>
+<!-- memory nlp.twnl    :    1.510 MB  (0.376 MB local) -->
+<!-- memory sd.psi      :    5.200 MB  (1.295 MB local) -->
+<!-- memory sd.hpsi     :    5.200 MB  (1.295 MB local) -->
+<!-- memory cd.rhor     :    1.340 MB  (0.335 MB local) -->
+<!-- memory cd.rhog     :    0.335 MB  (0.084 MB local) -->
+<!-- memory total       :   13.585 MB  (3.385 MB local) -->
+</run>
+<!-- [qball]  -->
+<!-- [qball] # 2) the projectile moves at constant velocity, traveling pseudopotentials -->
+<!-- [qball] set atoms_dyn IMPULSIVE -->
+<!-- [qball] set traveling_pseudo ON -->
+<!-- [qball] set wf_dyn ETRS -->
+<!-- [qball] set TD_dt 0.02 atomictime -->
+<!-- [qball] set dt 0.02 atomictime -->
+<!-- [qball] run 20 1 -->
+<INFO> s->hamil_wf has not been initialized, calling constructor. </INFO>
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+ChargeDensity:  vbasis = 48 48 48, resize to 56 56 56
+ChargeDensity:  vbasis = 48 48 48, resize to 56 56 56
+  <!-- EnergyFunctional: charge density basis: 21934 plane waves, ngloc = 5477 -->
+  <!-- EnergyFunctional: np0v,np1v,np2v: 56 56 56 -->
+  <!-- EnergyFunctional: vft->np012(): 175616 -->
+ChargeDensity:  vbasis = 48 48 48, resize to 56 56 56
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+<!-- AtomSet.set_rcps:  Ewald width for species silicon = 0.95000000 -->
+<!-- AtomSet.set_rcps:  Ewald width for species projectile = 0.95000000 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+<run niter_ionic="20" niter_scf="1" niter_nonscf="0">
+<wavefunction ecut="22.50000000" nspin="1" nel="108" nempty="8">
+<cell a0="10.263100 0.000000 0.000000"
+      a1="0.000000 10.263100 0.000000"
+      a2="0.000000 0.000000 10.263100"/>
+<reciprocal_lattice b0="0.612211 0.000000 0.000000"
+      b1="0.000000 0.612211 0.000000"
+      b2="0.000000 0.000000 0.612211"/>
+<refcell a0="0.000000 0.000000 0.000000"
+         a1="0.000000 0.000000 0.000000"
+         a2="0.000000 0.000000 0.000000"/>
+<slater_determinant kpoint="0.000000 0.000000 0.000000"  weight="1.000000" size="62">
+ <!-- sdcontext: 4x1 -->
+<grid nx="24" ny="24" nz="24"/>
+ <!-- basis size: 5497 -->
+ <!-- c dimensions: 5560x62   (1390x62 blocks) -->
+ <density_matrix form="diagonal" size="62">
+ </density_matrix>
+</slater_determinant>
+</wavefunction>
+<!-- EhrenSampleStepper:  fractional occupation detected. -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+<iteration count="1">
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+  <!-- total_electronic_charge: 108.00000000, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.000000041738	0.000000023803	-0.000000054268
+  <ekin>      399.22636118 </ekin>
+  <eps>      -375.32125384 </eps>
+  <enl>      -241.36388802 </enl>
+  <ecoul>    -521.64737526 </ecoul>
+  <exc>       -85.22403575 </exc>
+  <esr>         0.00490831 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -824.35821627 </etotal>
+  <anl_velocity> P 0.0019013775 -0.0033621659 -3.0692144940 </anl_velocity>
+  <anl_dot_v> P -3.6774407303 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.00187247 -0.00043665 -0.02738821 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.00095473 0.01239194 0.00095353 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.02738863 -0.00043767 0.00187142 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.01974116 0.00220112 0.01974051 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.06363441 0.08919968 -0.06362891 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.01070160 0.00091106 -0.00154951 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.02431068 -0.02982914 -0.02431053 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.00154624 0.00090893 0.01070141 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.49010000 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.07737438 -0.06570163 0.06150153 </force>
+  </atom>
+</atomset>
+  <econst> 35923.01617490 </econst>
+  <ekin_ion> 36747.37439116 </ekin_ion>
+  <temp_ion> 859590819.91578043 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999998, spin = 0 -->
+  <etotal_int>   -824.23486410 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999998, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.719    " max="0.719    " count="1        "/>
+</iteration>
+<iteration count="2">
+  <!-- total_electronic_charge: 107.99999998, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999998, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.000896367820	-0.002132184592	-0.107756846879
+  <ekin>      399.27291830 </ekin>
+  <eps>      -375.26707740 </eps>
+  <enl>      -241.36421758 </enl>
+  <ecoul>    -521.61817280 </ecoul>
+  <exc>       -85.22499467 </exc>
+  <esr>         0.00472695 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -824.22956874 </etotal>
+  <anl_velocity> P 0.0019771427 -0.0029286568 -2.9891781466 </anl_velocity>
+  <anl_dot_v> P -3.5815435799 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.00753589 0.00094591 0.10614371 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.00515256 0.01248241 -0.03296300 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.03907282 0.00094143 -0.03824374 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.02160018 0.00312459 0.03578127 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.00735556 0.01272893 -0.06733002 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.02406882 -0.04342534 0.04178445 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.00237315 -0.01133540 -0.00442017 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.03432194 0.02791659 0.00036800 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.51406340 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.07584592 -0.06752491 -10.68735869 </force>
+  </atom>
+</atomset>
+  <econst> 35923.14482242 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999997, spin = 0 -->
+  <etotal_int>   -823.89469172 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999997, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.727    " max="0.727    " count="1        "/>
+</iteration>
+<iteration count="3">
+  <!-- total_electronic_charge: 107.99999996, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999997, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.001904470797	-0.005683913527	-0.423347350113
+  <ekin>      399.41671290 </ekin>
+  <eps>      -375.11353474 </eps>
+  <enl>      -241.36108289 </enl>
+  <ecoul>    -521.53501650 </ecoul>
+  <exc>       -85.22716890 </exc>
+  <esr>         0.00455509 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -823.84811471 </etotal>
+  <anl_velocity> P 0.0020022141 -0.0024899772 -2.7554516665 </anl_velocity>
+  <anl_dot_v> P -3.3014995232 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.01285880 0.00503051 0.23208352 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.01319881 0.01271402 -0.06144690 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.05112371 0.00502491 -0.07324269 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.02486371 0.00579198 0.05268739 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.04266966 -0.05997481 -0.07355719 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.06056853 -0.08804183 0.08383885 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.01590525 0.00356254 0.01154436 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.06486937 0.05198115 -0.01195841 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.53802680 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.07543345 -0.06852657 -20.90899567 </force>
+  </atom>
+</atomset>
+  <econst> 35923.52627646 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999995, spin = 0 -->
+  <etotal_int>   -823.30155211 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999995, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.767    " max="0.768    " count="1        "/>
+</iteration>
+<iteration count="4">
+  <!-- total_electronic_charge: 107.99999994, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999995, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.003008755167	-0.010523410260	-0.931467552243
+  <ekin>      399.66138078 </ekin>
+  <eps>      -374.87429850 </eps>
+  <enl>      -241.34651558 </enl>
+  <ecoul>    -521.41760740 </ecoul>
+  <exc>       -85.22747362 </exc>
+  <esr>         0.00439245 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -823.23253889 </etotal>
+  <anl_velocity> P 0.0019851028 -0.0020905609 -2.3892670705 </anl_velocity>
+  <anl_dot_v> P -2.8627481258 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.01398814 0.01158289 0.34534238 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.02464869 0.01306941 -0.08336117 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.06301486 0.01157880 -0.10167356 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.02935283 0.01004683 0.06971671 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.08449207 -0.12594940 -0.08186909 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.09717452 -0.13100252 0.12278733 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.02979340 0.01428984 0.02296574 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.09194483 0.07212932 -0.02566335 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.56199020 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.07611405 -0.06843143 -30.11784867 </force>
+  </atom>
+</atomset>
+  <econst> 35924.14185227 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999992, spin = 0 -->
+  <etotal_int>   -822.47614086 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999992, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.760    " max="0.760    " count="1        "/>
+</iteration>
+<iteration count="5">
+  <!-- total_electronic_charge: 107.99999992, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999992, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.004190346074	-0.016465423027	-1.607938200896
+  <ekin>      400.01000519 </ekin>
+  <eps>      -374.56968255 </eps>
+  <enl>      -241.30999440 </enl>
+  <ecoul>    -521.29269202 </ecoul>
+  <exc>       -85.22195230 </exc>
+  <esr>         0.00423873 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -822.41234065 </etotal>
+  <anl_velocity> P 0.0019398094 -0.0017817356 -1.9232351742 </anl_velocity>
+  <anl_dot_v> P -2.3043626887 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.01104231 0.02023713 0.44176750 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.03887448 0.01352370 -0.09800769 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.07422452 0.02023706 -0.12253240 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.03482758 0.01564875 0.08615130 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.11670224 -0.18273844 -0.09172856 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.13230776 -0.17053098 0.15701866 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.03885168 0.02054315 0.02951834 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.11457330 0.08765325 -0.04007340 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.58595360 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.07779448 -0.06712432 -37.90737466 </force>
+  </atom>
+</atomset>
+  <econst> 35924.96205051 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999990, spin = 0 -->
+  <etotal_int>   -821.45490647 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999989, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.743    " max="0.743    " count="1        "/>
+</iteration>
+<iteration count="6">
+  <!-- total_electronic_charge: 107.99999989, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999989, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.005427623014	-0.023285998719	-2.421588797579
+  <ekin>      400.46191602 </ekin>
+  <eps>      -374.22346291 </eps>
+  <enl>      -241.24169418 </enl>
+  <ecoul>    -521.18718656 </ecoul>
+  <exc>       -85.20705091 </exc>
+  <esr>         0.00409366 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -821.42550311 </etotal>
+  <anl_velocity> P 0.0018848043 -0.0016091541 -1.3973856676 </anl_velocity>
+  <anl_dot_v> P -1.6743055853 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.00433826 0.03053106 0.51839873 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.05512270 0.01404634 -0.10516196 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.08427595 0.03053695 -0.13532322 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.04100891 0.02229505 0.10135196 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.13851023 -0.22855183 -0.10255305 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.16454917 -0.20513416 0.18524660 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.04295098 0.02229949 0.03117636 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.13210853 0.09815235 -0.05451105 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.60991700 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.08032380 -0.06469050 -43.98129149 </force>
+  </atom>
+</atomset>
+  <econst> 35925.94888806 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999986, spin = 0 -->
+  <etotal_int>   -820.28706003 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999986, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.742    " max="0.742    " count="1        "/>
+</iteration>
+<iteration count="7">
+  <!-- total_electronic_charge: 107.99999986, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999986, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.006696803286	-0.030739784120	-3.336661012640
+  <ekin>      401.00996180 </ekin>
+  <eps>      -373.85929548 </eps>
+  <enl>      -241.13549193 </enl>
+  <ecoul>    -521.12208703 </ecoul>
+  <exc>       -85.18060092 </exc>
+  <esr>         0.00395700 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -820.31553813 </etotal>
+  <anl_velocity> P 0.0018412237 -0.0016005066 -0.8542153527 </anl_velocity>
+  <anl_dot_v> P -1.0234952092 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.00564943 0.04194898 0.57359997 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.07258082 0.01460324 -0.10505685 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.09277575 0.04196209 -0.14006181 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.04760244 0.02964708 0.11480088 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.14976238 -0.26235359 -0.11376841 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.19273538 -0.23369378 0.20658744 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.04226062 0.01979753 0.02819408 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.14425666 0.10354240 -0.06834872 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.63388040 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.08350777 -0.06140954 -48.17410837 </force>
+  </atom>
+</atomset>
+  <econst> 35927.05885304 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999983, spin = 0 -->
+  <etotal_int>   -819.02927596 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999982, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.747    " max="0.747    " count="1        "/>
+</iteration>
+<iteration count="8">
+  <!-- total_electronic_charge: 107.99999982, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999982, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.007972791779	-0.038577528240	-4.315483622525
+  <ekin>      401.63917906 </ekin>
+  <eps>      -373.49744715 </eps>
+  <enl>      -240.99084193 </enl>
+  <ecoul>    -521.10887386 </ecoul>
+  <exc>       -85.14221076 </exc>
+  <esr>         0.00382847 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -819.12821922 </etotal>
+  <anl_velocity> P 0.0018304004 -0.0017572388 -0.3334915916 </anl_velocity>
+  <anl_dot_v> P -0.3995796203 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.01833533 0.05396621 0.60705974 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.09044561 0.01515907 -0.09832001 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.09944636 0.05398715 -0.13722553 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.05432114 0.03735810 0.12612804 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.15089544 -0.28386985 -0.12486254 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.21602573 -0.25551799 0.22060010 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.03720903 0.01349578 0.02106369 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.15106244 0.10403231 -0.08105756 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.65784380 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.08712274 -0.05770247 -50.45749896 </force>
+  </atom>
+</atomset>
+  <econst> 35928.24617194 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999979, spin = 0 -->
+  <etotal_int>   -817.73923926 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999979, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.743    " max="0.743    " count="1        "/>
+</iteration>
+<iteration count="9">
+  <!-- total_electronic_charge: 107.99999978, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999979, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.009230482154	-0.046561625758	-5.321119189409
+  <ekin>      402.32728405 </ekin>
+  <eps>      -373.15250924 </eps>
+  <enl>      -240.81304333 </enl>
+  <ecoul>    -521.14899308 </ecoul>
+  <exc>       -85.09308480 </exc>
+  <esr>         0.00370785 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -817.90837098 </etotal>
+  <anl_velocity> P 0.0018710231 -0.0020529871 0.1322655286 </anl_velocity>
+  <anl_dot_v> P 0.1584765884 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.03307023 0.06608997 0.61967319 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.10798526 0.01567958 -0.08587628 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.10414820 0.06611914 -0.12765985 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.06090456 0.04509959 0.13512011 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.14283850 -0.29352279 -0.13543239 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.23393546 -0.27035187 0.22728744 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.02842419 0.00401447 0.01045753 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.15286330 0.10007423 -0.09224568 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.68180720 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.09092822 -0.05404512 -50.93099228 </force>
+  </atom>
+</atomset>
+  <econst> 35929.46602018 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999974, spin = 0 -->
+  <etotal_int>   -816.46950944 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999974, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.749    " max="0.749    " count="1        "/>
+</iteration>
+<iteration count="10">
+  <!-- total_electronic_charge: 107.99999974, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999974, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.010446568874	-0.054478100518	-6.319680493679
+  <ekin>      403.04680774 </ekin>
+  <eps>      -372.83253357 </eps>
+  <enl>      -240.61196719 </enl>
+  <ecoul>    -521.23584121 </ecoul>
+  <exc>       -85.03551938 </exc>
+  <esr>         0.00359489 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -816.69707819 </etotal>
+  <anl_velocity> P 0.0019763859 -0.0024393099 0.5207716652 </anl_velocity>
+  <anl_dot_v> P 0.6239729861 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.04918473 0.07789203 0.61333247 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.12458822 0.01613387 -0.06883233 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.10688786 0.07793023 -0.11245913 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.06713308 0.05258320 0.14171339 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.12688097 -0.29230771 -0.14521655 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.24633498 -0.27834971 0.22706094 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.01666261 -0.00793040 -0.00283791 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.15022144 0.09229666 -0.10168094 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.70577060 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.09467800 -0.05086979 -49.79840013 </force>
+  </atom>
+</atomset>
+  <econst> 35930.67731297 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999970, spin = 0 -->
+  <etotal_int>   -815.26300485 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999970, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.749    " max="0.749    " count="1        "/>
+</iteration>
+<iteration count="11">
+  <!-- total_electronic_charge: 107.99999970, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999970, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.011601730529	-0.062144249610	-7.282074255439
+  <ekin>      403.76821339 </ekin>
+  <eps>      -372.53966375 </eps>
+  <enl>      -240.39978138 </enl>
+  <ecoul>    -521.35799236 </ecoul>
+  <exc>       -84.97234946 </exc>
+  <esr>         0.00348939 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -815.52959815 </etotal>
+  <anl_velocity> P 0.0021522657 -0.0028568221 0.8209432349 </anl_velocity>
+  <anl_dot_v> P 0.9836295557 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.06602713 0.08903019 0.59066118 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.13979394 0.01649641 -0.04836152 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.10781036 0.08907929 -0.09284152 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.07283653 0.05957624 0.14597470 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.10452827 -0.28163744 -0.15410646 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.25341844 -0.28001677 0.22067469 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.00273633 -0.02159249 -0.01798916 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.14384627 0.08143213 -0.10929471 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.72973400 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.09813080 -0.04847982 -47.33440221 </force>
+  </atom>
+</atomset>
+  <econst> 35931.84479302 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999966, spin = 0 -->
+  <etotal_int>   -814.15082142 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999966, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.757    " max="0.757    " count="1        "/>
+</iteration>
+<iteration count="12">
+  <!-- total_electronic_charge: 107.99999966, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999966, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.012682882037	-0.069412036214	-8.185038607024
+  <ekin>      404.46314899 </ekin>
+  <eps>      -372.27193256 </eps>
+  <enl>      -240.18844573 </enl>
+  <ecoul>    -521.50237346 </ecoul>
+  <exc>       -84.90649785 </exc>
+  <esr>         0.00339113 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -814.43412518 </etotal>
+  <anl_velocity> P 0.0023958825 -0.0032480546 1.0318767539 </anl_velocity>
+  <anl_dot_v> P 1.2363637702 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.08299399 0.09925746 0.55473088 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.15330363 0.01674867 -0.02560548 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.10717594 0.09932092 -0.07003681 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.07789717 0.06590981 0.14807506 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.07736632 -0.26317971 -0.16213329 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.25564849 -0.27612992 0.20913771 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.01255360 -0.03625252 -0.03417754 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.13451932 0.06824999 -0.11516620 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.75369740 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.10106182 -0.04699606 -43.84763579 </force>
+  </atom>
+</atomset>
+  <econst> 35932.94026598 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999961, spin = 0 -->
+  <etotal_int>   -813.15233394 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999961, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.746    " max="0.746    " count="1        "/>
+</iteration>
+<iteration count="13">
+  <!-- total_electronic_charge: 107.99999961, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999961, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.013685057877	-0.076167978408	-9.011468746429
+  <ekin>      405.10712709 </ekin>
+  <eps>      -372.02559605 </eps>
+  <enl>      -239.98769289 </enl>
+  <ecoul>    -521.65656157 </ecoul>
+  <exc>       -84.84065534 </exc>
+  <esr>         0.00329991 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -813.43140333 </etotal>
+  <anl_velocity> P 0.0026962045 -0.0035680162 1.1603831913 </anl_velocity>
+  <anl_dot_v> P 1.3903363283 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.09955214 0.10841959 0.50879362 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.16497185 0.01688019 -0.00160315 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.10532480 0.10850270 -0.04520058 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.08224784 0.07147943 0.14826082 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.04695066 -0.23870926 -0.16943278 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.25368559 -0.26764783 0.19361588 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.02847072 -0.05126253 -0.05064983 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.12303086 0.05350229 -0.11949041 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.77766080 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.10327619 -0.04634392 -39.64677205 </force>
+  </atom>
+</atomset>
+  <econst> 35933.94298784 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999957, spin = 0 -->
+  <etotal_int>   -812.27691422 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999957, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.776    " max="0.776    " count="1        "/>
+</iteration>
+<iteration count="14">
+  <!-- total_electronic_charge: 107.99999957, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999957, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.014612460108	-0.082330650964	-9.750141380972
+  <ekin>      405.68126749 </ekin>
+  <eps>      -371.79728467 </eps>
+  <enl>      -239.80393434 </enl>
+  <ecoul>    -521.80999773 </ecoul>
+  <exc>       -84.77708279 </exc>
+  <esr>         0.00321555 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -812.53505662 </etotal>
+  <anl_velocity> P 0.0030356230 -0.0037896236 1.2179038154 </anl_velocity>
+  <anl_dot_v> P 1.4592558145 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.11525127 0.11644333 0.45605581 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.17478310 0.01688886 0.02274843 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.10263529 0.11655307 -0.01936108 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.08586635 0.07623921 0.14682607 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.01472893 -0.20998928 -0.17619519 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.24831086 -0.25562066 0.17533495 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.04437994 -0.06607413 -0.06675400 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.11013296 0.03788617 -0.12253583 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.80162420 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.10462383 -0.04627782 -35.01445943 </force>
+  </atom>
+</atomset>
+  <econst> 35934.83933455 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999953, spin = 0 -->
+  <etotal_int>   -811.52638454 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999953, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.748    " max="0.748    " count="1        "/>
+</iteration>
+<iteration count="15">
+  <!-- total_electronic_charge: 107.99999953, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999953, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.015478381582	-0.087846923153	-10.395021324876
+  <ekin>      406.17306607 </ekin>
+  <eps>      -371.58539633 </eps>
+  <enl>      -239.64017723 </enl>
+  <ecoul>    -521.95436859 </ecoul>
+  <exc>       -84.71752092 </exc>
+  <esr>         0.00313786 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -811.75242158 </etotal>
+  <anl_velocity> P 0.0033927428 -0.0039033141 1.2176254044 </anl_velocity>
+  <anl_dot_v> P 1.4589222307 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.12972780 0.12331883 0.39950737 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.18281862 0.01678040 0.04670425 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.09948175 0.12346337 0.00660191 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.08876748 0.08019122 0.14408855 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.01800274 -0.17868825 -0.18261049 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.24035091 -0.24110722 0.15549392 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.05976672 -0.08025088 -0.08195870 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.09651007 0.02202288 -0.12459925 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.82558760 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.10501360 -0.04643083 -30.19137319 </force>
+  </atom>
+</atomset>
+  <econst> 35935.62196959 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999949, spin = 0 -->
+  <etotal_int>   -810.89748742 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999949, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.749    " max="0.749    " count="1        "/>
+</iteration>
+<iteration count="16">
+  <!-- total_electronic_charge: 107.99999948, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999949, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.016303934962	-0.092687876668	-10.944350510769
+  <ekin>      406.57633963 </ekin>
+  <eps>      -371.39047241 </eps>
+  <enl>      -239.49673938 </enl>
+  <ecoul>    -522.08356218 </ecoul>
+  <exc>       -84.66318640 </exc>
+  <esr>         0.00306668 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -811.08564532 </etotal>
+  <anl_velocity> P 0.0037457809 -0.0039123400 1.1723626769 </anl_velocity>
+  <anl_dot_v> P 1.4046897886 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.14270190 0.12907981 0.34180817 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.18921998 0.01656712 0.06965958 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.09619786 0.12926774 0.03195297 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.09099381 0.08337218 0.14036993 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.05011495 -0.14632991 -0.18881855 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.23061150 -0.22510539 0.13519513 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.07424043 -0.09346698 -0.09585766 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.08276411 0.00644998 -0.12596461 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.84955100 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.10442340 -0.04637379 -25.36993967 </force>
+  </atom>
+</atomset>
+  <econst> 35936.28874585 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999945, spin = 0 -->
+  <etotal_int>   -810.38393781 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999945, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.740    " max="0.740    " count="1        "/>
+</iteration>
+<iteration count="17">
+  <!-- total_electronic_charge: 107.99999945, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999945, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.017115625604	-0.096844959523	-11.399690992077
+  <ekin>      406.89055177 </ekin>
+  <eps>      -371.21465712 </eps>
+  <enl>      -239.37238039 </enl>
+  <ecoul>    -522.19350998 </ecoul>
+  <exc>       -84.61482165 </exc>
+  <esr>         0.00300186 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -810.53284196 </etotal>
+  <anl_velocity> P 0.0040758907 -0.0038266256 1.0934148289 </anl_velocity>
+  <anl_dot_v> P 1.3100968456 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.15397064 0.13378494 0.28522485 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.19415504 0.01626599 0.09112694 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.09304978 0.13402438 0.05608203 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.09260638 0.08583972 0.13598043 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.08064180 -0.11426881 -0.19487287 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.21982474 -0.20849930 0.11539339 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.08752519 -0.10549598 -0.10816259 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.06940974 -0.00837819 -0.12687141 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.87351440 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.10290378 -0.04567004 -20.69543937 </force>
+  </atom>
+</atomset>
+  <econst> 35936.84154921 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999941, spin = 0 -->
+  <etotal_int>   -809.97789566 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999941, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.747    " max="0.747    " count="1        "/>
+</iteration>
+<iteration count="18">
+  <!-- total_electronic_charge: 107.99999941, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999941, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.017942122276	-0.100326552111	-11.765039087682
+  <ekin>      407.11971959 </ekin>
+  <eps>      -371.06061449 </eps>
+  <enl>      -239.26544028 </enl>
+  <ecoul>    -522.28203679 </ecoul>
+  <exc>       -84.57276836 </exc>
+  <esr>         0.00294325 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -810.08916490 </etotal>
+  <anl_velocity> P 0.0043697010 -0.0036582154 0.9902710894 </anl_velocity>
+  <anl_dot_v> P 1.1865131112 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.16340043 0.13750318 0.23160611 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.19779087 0.01589642 0.11071132 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.09022164 0.13780088 0.07848073 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.09367621 0.08766010 0.13120683 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.10876996 -0.08368118 -0.20072323 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.20861294 -0.19202468 0.09686427 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.09944251 -0.11619357 -0.11868875 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.05687468 -0.02208654 -0.12749574 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.89747780 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.10057315 -0.04391849 -16.27147901 </force>
+  </atom>
+</atomset>
+  <econst> 35937.28522626 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999937, spin = 0 -->
+  <etotal_int>   -809.67086995 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999937, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.749    " max="0.749    " count="1        "/>
+</iteration>
+<iteration count="19">
+  <!-- total_electronic_charge: 107.99999937, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999937, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.018810670304	-0.103154975313	-12.046069737365
+  <ekin>      407.27108943 </ekin>
+  <eps>      -370.93038348 </eps>
+  <enl>      -239.17466639 </enl>
+  <ecoul>    -522.34869266 </ecoul>
+  <exc>       -84.53704401 </exc>
+  <esr>         0.00289072 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -809.74772169 </etotal>
+  <anl_velocity> P 0.0046205294 -0.0034202516 0.8708376621 </anl_velocity>
+  <anl_dot_v> P 1.0434115617 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.17092104 0.14030417 0.18238420 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.20027637 0.01547808 0.12809164 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.08781382 0.14066484 0.09872316 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.09427718 0.08889889 0.12630346 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.13382878 -0.05556181 -0.20621963 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.19746982 -0.17625259 0.08018977 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.10988981 -0.12547833 -0.12733762 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.04550141 -0.03437567 -0.12794513 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.92144120 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.09760480 -0.04078531 -12.16711509 </force>
+  </atom>
+</atomset>
+  <econst> 35937.62666948 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999933, spin = 0 -->
+  <etotal_int>   -809.45417322 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999934, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.749    " max="0.749    " count="1        "/>
+</iteration>
+<iteration count="20">
+  <!-- total_electronic_charge: 107.99999933, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999934, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+SlaterDet.resize:  new c dimensions = 5560x62   (1390x62 blocks, local data size on pe 0 = 1390x62) -->
+  total_electronic_current:	      0.019743617277	-0.105363869180	-12.249523826678
+  <ekin>      407.35376847 </ekin>
+  <eps>      -370.82458041 </eps>
+  <enl>      -239.09956642 </enl>
+  <ecoul>    -522.39449918 </ecoul>
+  <exc>       -84.50741366 </exc>
+  <esr>         0.00284415 </esr>
+  <eself>     544.24125832 </eself>
+  <ets>        -0.02802458 </ets>
+  <etotal>   -809.50031578 </etotal>
+  <anl_velocity> P 0.0048280886 -0.0031295743 0.7418192571 </anl_velocity>
+  <anl_dot_v> P 0.8888255793 </anl_dot_v>
+<atomset>
+<unit_cell 
+    a=" 10.26310000   0.00000000   0.00000000"
+    b="  0.00000000  10.26310000   0.00000000"
+    c="  0.00000000   0.00000000  10.26310000" />
+  <atom name="Si1" species="silicon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.17652199 0.14225414 0.13859333 </force>
+  </atom>
+  <atom name="Si2" species="silicon">
+    <position> 0.00000000 5.13150000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.20173505 0.01502901 0.14301189 </force>
+  </atom>
+  <atom name="Si3" species="silicon">
+    <position> 5.13150000 0.00000000 5.13150000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.08585273 0.14268012 0.11645570 </force>
+  </atom>
+  <atom name="Si4" species="silicon">
+    <position> 5.13150000 5.13150000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.09448055 0.08961535 0.12148563 </force>
+  </atom>
+  <atom name="Si5" species="silicon">
+    <position> 2.56580000 2.56580000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.15528667 -0.03072065 -0.21113641 </force>
+  </atom>
+  <atom name="Si6" species="silicon">
+    <position> 2.56580000 7.69730000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.18675838 -0.16159015 0.06575904 </force>
+  </atom>
+  <atom name="Si7" species="silicon">
+    <position> 7.69730000 2.56580000 7.69730000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.11881825 -0.13331319 -0.13407966 </force>
+  </atom>
+  <atom name="Si8" species="silicon">
+    <position> 7.69730000 7.69730000 2.56580000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.03554839 -0.04502030 -0.12826574 </force>
+  </atom>
+  <atom name="P" species="projectile">
+    <position> 0.64140000 0.00000000 4.94540460 </position>
+    <velocity> 0.00000000 0.00000000 1.19817000 </velocity>
+    <force> -0.09420741 -0.03602906 -8.42379296 </force>
+  </atom>
+</atomset>
+  <econst> 35937.87407539 </econst>
+  <ekin_ion> 36747.37439117 </ekin_ion>
+  <temp_ion> 859590819.91580987 </temp_ion>
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 0 for rckj = 1.34350288 -->
+  <!-- total_electronic_charge: 107.99999930, spin = 0 -->
+  <etotal_int>   -809.31908006 </etotal_int>
+  <occupation spin="0" kpoint="0.00000000 0.00000000 0.00000000" n="62">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  1.9879  1.9379  1.9323  0.7229  0.5452  0.3561  0.2601  0.2576  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 107.99999930, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.746    " max="0.746    " count="1        "/>
+</iteration>
+<!-- memory nlp.twnl    :    1.510 MB  (0.376 MB local) -->
+<!-- memory sd.psi      :    5.200 MB  (1.295 MB local) -->
+<!-- memory sd.hpsi     :    5.200 MB  (1.295 MB local) -->
+<!-- memory cd.rhor     :    1.340 MB  (0.335 MB local) -->
+<!-- memory cd.rhog     :    0.335 MB  (0.084 MB local) -->
+<!-- memory total       :   13.585 MB  (3.385 MB local) -->
+  <!-- total_electronic_charge: 107.99999930, spin = 0 -->
+  <!-- total_electronic_charge: 107.99999930, spin = 0 -->
+</run>
+<!-- [qball]  -->
+<!-- end of command stream -->
+<real_time> 21.85784912 </real_time>
+<end_time> 2026-11-09T13:07:47Z </end_time>
+</qbox:simulation>

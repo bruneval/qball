@@ -824,6 +824,41 @@ void ChargeDensity::update_usfns() {
   tmap["charge_usupdate"].stop();
 }
 ////////////////////////////////////////////////////////////////////////////////
+D3vector ChargeDensity::dipole(void) {
+  // electronic dipole -int r n(r) d3r, with r = (i0/np0) a0 + (i1/np1) a1 + (i2/np2) a2
+  // on the real-space grid of the cell. Meaningful only for an isolated system
+  // whose density is negligible at the cell boundaries.
+  assert(wf_.nspin() == 1);
+  const UnitCell& cell = vbasis_->cell();
+  const int np0 = vft_->np0();
+  const int np1 = vft_->np1();
+  const int np2 = vft_->np2();
+  const int np2first = vft_->np2_first(vcontext_.myrow());
+  const int np2loc = vft_->np2_loc(vcontext_.myrow());
+  double d[3] = { 0.0, 0.0, 0.0 };
+  if ( wf_.spinactive(0) ) {
+    const double *const rh = &rhor[0][0];
+    for ( int k = 0; k < np2loc; k++ ) {
+      const double fk = (double) (k + np2first) / np2;
+      for ( int j = 0; j < np1; j++ ) {
+        const double fj = (double) j / np1;
+        for ( int i = 0; i < np0; i++ ) {
+          const double fi = (double) i / np0;
+          const double rho = rh[k*np1*np0 + j*np0 + i];
+          const D3vector r = fi * cell.a(0) + fj * cell.a(1) + fk * cell.a(2);
+          d[0] += r.x * rho;
+          d[1] += r.y * rho;
+          d[2] += r.z * rho;
+        }
+      }
+    }
+    wf_.spincontext(0)->dsum('c',3,1,&d[0],3);
+  }
+  const double fac = - cell.volume() / vft_->np012();
+  return D3vector(fac * d[0], fac * d[1], fac * d[2]);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ChargeDensity::update_nlcc() {
   // sum up nlcc core density*sfact(ia)
 
