@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+                   ___________________________
+                   |                         |
+                   | qball alsos             |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |      Lawrence Livermore |
+                   |     National Laboratory |
+                   |                         |
+                   | Copyright (c) 2003-2016 |
+                   |_________________________|
+
+-->
+<qbox:simulation xmlns:qbox="http://www.quantum-simulation.org/ns/fpmd/fpmd-1.0">
+<release> qball alsos </release>
+<npes> 4 </npes>
+<nthreads> 1 </nthreads>
+<user> bruneval </user>
+<sysname> Linux </sysname>
+<nodename> localhost </nodename>
+<start_time> 2026-11-09T10:08:37Z </start_time>
+<!-- [qball] # Diamond with a UPF2 pseudopotential that has a model core charge (NLCC) -->
+<!-- [qball] # on a logarithmic radial grid that does not start at r=0 (as written by -->
+<!-- [qball] # Quantum ESPRESSO's ld1.x). -->
+<!-- [qball] # C_loggrid.upf is the PseudoDojo C.upf shipped with QBALL -->
+<!-- [qball] # (share/pseudopotentials/pseudo-dojo.org/nc-sr-04_pbe_standard/C.upf), -->
+<!-- [qball] # with all radial functions interpolated onto the grid -->
+<!-- [qball] # r_i = exp(xmin + i*dx)/zmesh, xmin=-7, dx=0.0125, zmesh=6. -->
+<!-- [qball] # Regression test for a bug where reading the core charge on such a grid -->
+<!-- [qball] # wrote past the end of an array (crash or wrong results). -->
+<!-- [qball] set cell 0.000 3.37 3.37 3.37 0.000 3.37 3.37 3.37 0.000 bohr -->
+  <unitcell>
+<unit_cell 
+    a="0.00000000   3.37000000   3.37000000  "
+    b="3.37000000   0.00000000   3.37000000  "
+    c="3.37000000   3.37000000   0.00000000  " />
+  </unitcell>
+<!-- [qball] species carbon C_loggrid.upf -->
+  <!-- SpeciesCmd: defining species carbon as C_loggrid.upf -->
+  <!-- SpeciesReader opening file C_loggrid.upf -->
+  <!--   format: UPF2 -->
+  <!--   size:   195154 -->
+  <!-- SpeciesReader::readSpecies: potential type:  Kleinman-Bylander norm-conserving -->
+  <!-- SpeciesReader::readSpecies: read description This pseudopotential file has been produced using the code
+ONCVPSP (Optimized Norm-Conservinng Vanderbilt PSeudopotential)
+scalar-relativistic version 3.3.0 08/16/2017 by D. R. Hamann
+The code is available through a link at URL www.mat-simresearch.com.
+Documentation with the package provides a full discription of the
+input data below.
+While it is not required under the terms of the GNU GPL, it is
+suggested that you cite D. R. Hamann, Phys. Rev. B 88, 085117 (2013)
+in any publication using these pseudopotentials. -->
+  <!-- SpeciesReader::readSpecies: read symbol C -->
+  <!-- SpeciesReader::readSpecies: read atomic_number 6 -->
+  <!-- SpeciesReader::readSpecies: read mass 12.00960000 -->
+  <!-- SpeciesReader::readSpecies: read valence_charge 4 -->
+  <!-- SpeciesReader::readSpecies: read lmax 1 -->
+  <!-- SpeciesReader::readSpecies: read llocal -1 -->
+  <!-- SpeciesReader::readSpecies: read mesh_spacing 0.01000000 -->
+  <!-- SpeciesReader::readSpecies: read local_potential size=1244 -->
+  <!-- SpeciesReader::readSpecies: read projector l=0 i=0 size=1244 -->
+  <!-- SpeciesReader::readSpecies: read projector l=0 i=1 size=1244 -->
+  <!-- SpeciesReader::readSpecies: read projector l=1 i=0 size=1244 -->
+  <!-- SpeciesReader::readSpecies: read projector l=1 i=1 size=1244 -->
+  <!-- SpeciesReader::readSpecies: read d_ij l=0 -->
+  <!-- SpeciesReader::readSpecies: read d_ij l=1 -->
+  <!-- SpeciesReader::readSpecies: nlcc found. -->
+  <!-- SpeciesReader::readSpecies: read rho_nlcc size=1244 -->
+<!-- Species carbon:  extending grid to rmax = 40.00000000 to increase vnlg resolution (4096 pts) -->
+SPECIES.ndft = 4096, np = 1244, rmax = 40.96000000, gmax = 314.08256632, hubbard_l = -1
+
+ species carbon:
+ name_ = carbon
+ description_ = This pseudopotential file has been produced using the code
+ONCVPSP (Optimized Norm-Conservinng Vanderbilt PSeudopotential)
+scalar-relativistic version 3.3.0 08/16/2017 by D. R. Hamann
+The code is available through a link at URL www.mat-simresearch.com.
+Documentation with the package provides a full discription of the
+input data below.
+While it is not required under the terms of the GNU GPL, it is
+suggested that you cite D. R. Hamann, Phys. Rev. B 88, 085117 (2013)
+in any publication using these pseudopotentials.
+ uri_ = C_loggrid.upf
+ symbol_ = C
+ atomic_number_ = 6
+ Kleinman-Bylander potential
+ valence charge = 4 / ionic mass_ = 12.00960000 (amu)
+ lmax_ =   1
+ llocal_ = -1
+ rcps_ =   1.50000000
+<!-- [qball] atom C1 carbon 0.0000 0.0000 0.0000 bohr -->
+<!-- [qball] atom C2 carbon 1.6850 1.6850 1.6850 bohr -->
+<!-- [qball] set xc PBE -->
+<!-- [qball] set ecut 40 rydberg -->
+<!-- [qball] set ecutprec 8 rydberg -->
+<!-- [qball] set wf_dyn PSDA -->
+<!-- [qball] set threshold_scf 1.E-8 5 -->
+<!-- [qball]  -->
+<!-- [qball] set nkpoints 2 -->
+<!-- [qball] kpoint 0.25 0.25  0.25 0.25 -->
+Adding kpoint = 0.25000000 0.25000000 0.25000000, weight = 0.25000000
+<!-- [qball] kpoint 0.25 0.25 -0.25 0.75 -->
+Adding kpoint = 0.25000000 0.25000000 -0.25000000, weight = 0.75000000
+<!-- [qball]  -->
+<!-- [qball] randomize_wf -->
+<!-- Randomize_wf:  allocating wavefunction... -->
+<!-- Creating subcontext 4x1 at row 0, col 0 of spincontext 4x1 -->
+<!-- creating SlaterDet for kp = 0 -->
+<!-- creating SlaterDet for kp = 1 -->
+SlaterDet.resize:  new c dimensions = 336x4   (84x4 blocks, local data size on pe 0 = 84x4) -->
+SlaterDet.resize:  new c dimensions = 344x4   (86x4 blocks, local data size on pe 0 = 86x4) -->
+<!-- Updated occupation of wf -->
+<!-- [qball] run 0 100 5 -->
+SlaterDet.resize:  new c dimensions = 336x4   (84x4 blocks, local data size on pe 0 = 84x4) -->
+SlaterDet.resize:  new c dimensions = 344x4   (86x4 blocks, local data size on pe 0 = 86x4) -->
+ChargeDensity:  vbasis = 22 22 22, resize to 24 24 24
+  <!-- EnergyFunctional: charge density basis: 1343 plane waves, ngloc = 330 -->
+  <!-- EnergyFunctional: np0v,np1v,np2v: 24 24 24 -->
+  <!-- EnergyFunctional: vft->np012(): 13824 -->
+<!-- AtomSet.set_rcps:  Ewald width for species carbon is too small for reciprocal sum convergence, increasing rcps from 1.50000000 to 0.95000000 -->
+<!-- AtomSet.set_rcps:  species carbon Ewald width larger than reciprocal grid spacing, decreasing rcps from 0.95000000 to 0.75851650 -->
+<!-- Species carbon:  extending grid to rmax = 40.00000000 to increase vnlg resolution (4096 pts) -->
+SPECIES.ndft = 4096, np = 1244, rmax = 40.96000000, gmax = 314.08256632, hubbard_l = -1
+<!-- AtomSet.set_rcps:  Ewald width for species carbon = 0.75851650 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 1 for rckj = 1.07270432 -->
+<run niter_ionic="0" niter_scf="100" niter_nonscf="5">
+<wavefunction ecut="20.00000000" nspin="1" nel="8" nempty="0">
+<cell a0="0.000000 3.370000 3.370000"
+      a1="3.370000 0.000000 3.370000"
+      a2="3.370000 3.370000 0.000000"/>
+<reciprocal_lattice b0="-0.932223 0.932223 0.932223"
+      b1="0.932223 -0.932223 0.932223"
+      b2="0.932223 0.932223 -0.932223"/>
+<refcell a0="0.000000 0.000000 0.000000"
+         a1="0.000000 0.000000 0.000000"
+         a2="0.000000 0.000000 0.000000"/>
+<slater_determinant kpoint="0.250000 0.250000 0.250000"  weight="1.000000" size="4">
+ <!-- sdcontext: 4x1 -->
+<grid nx="12" ny="12" nz="12"/>
+ <!-- basis size: 323 -->
+ <!-- c dimensions: 336x4   (84x4 blocks) -->
+ <density_matrix form="diagonal" size="4">
+ </density_matrix>
+</slater_determinant>
+</wavefunction>
+<!-- BOSampleStepper:  fractional occupation not detected. -->
+SlaterDet.resize:  new c dimensions = 336x4   (84x4 blocks, local data size on pe 0 = 84x4) -->
+SlaterDet.resize:  new c dimensions = 344x4   (86x4 blocks, local data size on pe 0 = 86x4) -->
+SlaterDet.resize:  new c dimensions = 336x4   (84x4 blocks, local data size on pe 0 = 84x4) -->
+SlaterDet.resize:  new c dimensions = 344x4   (86x4 blocks, local data size on pe 0 = 86x4) -->
+<iteration count="1">
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+  <eigenvalue_sum> 5.51456596 </eigenvalue_sum>
+  <etotal_int scf_iter="0">      0.10852063 </etotal_int>
+  <eigenvalue_sum> 2.17736621 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.42519247 ( using 0.42519247 ) -->
+  <etotal_int scf_iter="0">     -7.03994740 </etotal_int>
+  <eigenvalue_sum> 0.97068204 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.09345184 ( using 0.09345184 ) -->
+  <etotal_int scf_iter="0">     -8.96666360 </etotal_int>
+  <eigenvalue_sum> 0.72350326 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.85415184 ( using 1.85415184 ) -->
+  <etotal_int scf_iter="0">     -8.81681614 </etotal_int>
+  <eigenvalue_sum> 0.35145240 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.42662055 ( using 0.42662055 ) -->
+  <etotal_int scf_iter="0">     -8.13835082 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+  <eigenvalue_sum> 0.35533860 </eigenvalue_sum>
+  <etotal_int scf_iter="1">     -8.84946228 </etotal_int>
+  <eigenvalue_sum> 0.29844958 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.25846663 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="1">     -8.86347122 </etotal_int>
+  <eigenvalue_sum> 0.18108291 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.55668743 ( using 0.55668743 ) -->
+  <etotal_int scf_iter="1">     -8.87204461 </etotal_int>
+  <eigenvalue_sum> 0.10548819 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.54697902 ( using 1.54697902 ) -->
+  <etotal_int scf_iter="1">     -8.87929185 </etotal_int>
+  <eigenvalue_sum> 0.00208050 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.66943990 ( using 0.66943990 ) -->
+  <etotal_int scf_iter="1">     -8.90475534 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.83872007 
+  <eigenvalue_sum> 0.32496908 </eigenvalue_sum>
+  <etotal_int scf_iter="2">    -10.58667848 </etotal_int>
+  <eigenvalue_sum> 0.28565410 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.82802677 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="2">    -10.74756266 </etotal_int>
+  <eigenvalue_sum> 0.18294472 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.76512176 ( using 0.76512176 ) -->
+  <etotal_int scf_iter="2">    -11.14106928 </etotal_int>
+  <eigenvalue_sum> 0.09439626 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.64093248 ( using 0.64093248 ) -->
+  <etotal_int scf_iter="2">    -11.45241494 </etotal_int>
+  <eigenvalue_sum> -0.02142594 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.14422189 ( using 1.14422189 ) -->
+  <etotal_int scf_iter="2">    -11.85064814 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = 0.55253487 -0.26028206 
+  <eigenvalue_sum> -0.08159779 </eigenvalue_sum>
+  <etotal_int scf_iter="3">    -11.99758691 </etotal_int>
+  <eigenvalue_sum> -0.08760798 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.12733404 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="3">    -11.97709364 </etotal_int>
+  <eigenvalue_sum> -0.10014195 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.05292524 ( using 1.05292524 ) -->
+  <etotal_int scf_iter="3">    -11.92765828 </etotal_int>
+  <eigenvalue_sum> -0.10986583 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.36986619 ( using 0.36986619 ) -->
+  <etotal_int scf_iter="3">    -11.87689397 </etotal_int>
+  <eigenvalue_sum> -0.11288211 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.29531918 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="3">    -11.87057072 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.26995707 0.36319131 -0.23669090 
+  <eigenvalue_sum> -0.07439368 </eigenvalue_sum>
+  <etotal_int scf_iter="4">    -11.98082551 </etotal_int>
+  <eigenvalue_sum> -0.07490587 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.23866867 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="4">    -12.00224599 </etotal_int>
+  <eigenvalue_sum> -0.07573302 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.70069028 ( using 0.70069028 ) -->
+  <etotal_int scf_iter="4">    -12.05077440 </etotal_int>
+  <eigenvalue_sum> -0.07602588 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.48273677 ( using 0.48273677 ) -->
+  <etotal_int scf_iter="4">    -12.07578654 </etotal_int>
+  <eigenvalue_sum> -0.07615602 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.51998768 ( using 1.51998768 ) -->
+  <etotal_int scf_iter="4">    -12.08474427 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.60826346 -0.31293363 0.15153476 
+  <eigenvalue_sum> -0.10883693 </eigenvalue_sum>
+  <etotal_int scf_iter="5">    -11.91461604 </etotal_int>
+  <eigenvalue_sum> -0.10902942 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.77492732 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="5">    -11.90425967 </etotal_int>
+  <eigenvalue_sum> -0.10935000 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.59046830 ( using 0.59046830 ) -->
+  <etotal_int scf_iter="5">    -11.88103978 </etotal_int>
+  <eigenvalue_sum> -0.10947361 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.55490565 ( using 0.55490565 ) -->
+  <etotal_int scf_iter="5">    -11.86966977 </etotal_int>
+  <eigenvalue_sum> -0.10954822 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.22250486 ( using 1.22250486 ) -->
+  <etotal_int scf_iter="5">    -11.86312323 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = 0.10336675 -0.05487853 -0.08349102 
+  <eigenvalue_sum> -0.10647564 </eigenvalue_sum>
+  <etotal_int scf_iter="6">    -11.84962691 </etotal_int>
+  <eigenvalue_sum> -0.10649230 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.80454664 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="6">    -11.85140481 </etotal_int>
+  <eigenvalue_sum> -0.10652633 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.19020204 ( using 1.19020204 ) -->
+  <etotal_int scf_iter="6">    -11.85541210 </etotal_int>
+  <eigenvalue_sum> -0.10655272 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.65067761 ( using 0.65067761 ) -->
+  <etotal_int scf_iter="6">    -11.85810483 </etotal_int>
+  <eigenvalue_sum> -0.10656970 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.52202600 ( using 1.52202600 ) -->
+  <etotal_int scf_iter="6">    -11.85944669 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.30198430 -0.01632338 0.07934546 
+  <eigenvalue_sum> -0.10855099 </eigenvalue_sum>
+  <etotal_int scf_iter="7">    -11.85043564 </etotal_int>
+  <eigenvalue_sum> -0.10855418 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.99378606 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="7">    -11.84911888 </etotal_int>
+  <eigenvalue_sum> -0.10855946 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.57732410 ( using 0.57732410 ) -->
+  <etotal_int scf_iter="7">    -11.84611353 </etotal_int>
+  <eigenvalue_sum> -0.10856148 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.48160138 ( using 0.48160138 ) -->
+  <etotal_int scf_iter="7">    -11.84450376 </etotal_int>
+  <eigenvalue_sum> -0.10856247 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.37151722 ( using 1.37151722 ) -->
+  <etotal_int scf_iter="7">    -11.84377948 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.17989930 -0.11126390 -0.01569178 
+  <eigenvalue_sum> -0.10923867 </eigenvalue_sum>
+  <etotal_int scf_iter="8">    -11.83673157 </etotal_int>
+  <eigenvalue_sum> -0.10923900 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.61611813 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="8">    -11.83666726 </etotal_int>
+  <eigenvalue_sum> -0.10923957 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.61552041 ( using 0.61552041 ) -->
+  <etotal_int scf_iter="8">    -11.83652664 </etotal_int>
+  <eigenvalue_sum> -0.10923983 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.09362935 ( using 1.09362935 ) -->
+  <etotal_int scf_iter="8">    -11.83644867 </etotal_int>
+  <eigenvalue_sum> -0.10924010 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.01002403 ( using 1.01002403 ) -->
+  <etotal_int scf_iter="8">    -11.83630312 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.00811465 0.06684856 -0.01536191 
+  <eigenvalue_sum> -0.10926293 </eigenvalue_sum>
+  <etotal_int scf_iter="9">    -11.83595179 </etotal_int>
+  <eigenvalue_sum> -0.10926300 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.21550078 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="9">    -11.83592843 </etotal_int>
+  <eigenvalue_sum> -0.10926312 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.68821967 ( using 0.68821967 ) -->
+  <etotal_int scf_iter="9">    -11.83587381 </etotal_int>
+  <eigenvalue_sum> -0.10926318 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.53303611 ( using 0.53303611 ) -->
+  <etotal_int scf_iter="9">    -11.83583549 </etotal_int>
+  <eigenvalue_sum> -0.10926322 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.95985427 ( using 1.95985427 ) -->
+  <etotal_int scf_iter="9">    -11.83581542 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.33529069 0.06207338 -0.04895334 
+  <eigenvalue_sum> -0.10933742 </eigenvalue_sum>
+  <etotal_int scf_iter="10">    -11.83553579 </etotal_int>
+  <eigenvalue_sum> -0.10933742 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.47309864 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="10">    -11.83551910 </etotal_int>
+  <eigenvalue_sum> -0.10933743 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.83335879 ( using 0.83335879 ) -->
+  <etotal_int scf_iter="10">    -11.83548076 </etotal_int>
+  <eigenvalue_sum> -0.10933744 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.61058731 ( using 0.61058731 ) -->
+  <etotal_int scf_iter="10">    -11.83546190 </etotal_int>
+  <eigenvalue_sum> -0.10933745 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.82700846 ( using 1.82700846 ) -->
+  <etotal_int scf_iter="10">    -11.83544136 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.12226382 -0.02904878 0.01027916 
+  <eigenvalue_sum> -0.10934880 </eigenvalue_sum>
+  <etotal_int scf_iter="11">    -11.83542666 </etotal_int>
+  <eigenvalue_sum> -0.10934880 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.39489138 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="11">    -11.83542611 </etotal_int>
+  <eigenvalue_sum> -0.10934880 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.66113147 ( using 0.66113147 ) -->
+  <etotal_int scf_iter="11">    -11.83542461 </etotal_int>
+  <eigenvalue_sum> -0.10934880 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.48742523 ( using 0.48742523 ) -->
+  <etotal_int scf_iter="11">    -11.83542285 </etotal_int>
+  <eigenvalue_sum> -0.10934881 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.33163229 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="11">    -11.83542158 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.48791934 -0.05086677 0.04075585 
+  <eigenvalue_sum> -0.10935672 </eigenvalue_sum>
+  <etotal_int scf_iter="12">    -11.83540538 </etotal_int>
+  <eigenvalue_sum> -0.10935672 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.19236951 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="12">    -11.83540351 </etotal_int>
+  <eigenvalue_sum> -0.10935672 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.73057922 ( using 0.73057922 ) -->
+  <etotal_int scf_iter="12">    -11.83539921 </etotal_int>
+  <eigenvalue_sum> -0.10935672 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.55102921 ( using 0.55102921 ) -->
+  <etotal_int scf_iter="12">    -11.83539683 </etotal_int>
+  <eigenvalue_sum> -0.10935672 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.53190473 ( using 1.53190473 ) -->
+  <etotal_int scf_iter="12">    -11.83539480 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = 0.16953863 -0.11888113 0.00875026 
+  <eigenvalue_sum> -0.10935706 </eigenvalue_sum>
+  <etotal_int scf_iter="13">    -11.83538841 </etotal_int>
+  <eigenvalue_sum> -0.10935706 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.07930900 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="13">    -11.83538842 </etotal_int>
+  <eigenvalue_sum> -0.10935706 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.01609167 ( using 1.01609167 ) -->
+  <etotal_int scf_iter="13">    -11.83538838 </etotal_int>
+  <eigenvalue_sum> -0.10935706 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.40796851 ( using 0.40796851 ) -->
+  <etotal_int scf_iter="13">    -11.83538804 </etotal_int>
+  <eigenvalue_sum> -0.10935706 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.49150285 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="13">    -11.83538785 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.80658222 -0.22481649 0.09907170 
+  <eigenvalue_sum> -0.10935689 </eigenvalue_sum>
+  <etotal_int scf_iter="14">    -11.83538111 </etotal_int>
+  <eigenvalue_sum> -0.10935689 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.93272752 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="14">    -11.83538096 </etotal_int>
+  <eigenvalue_sum> -0.10935689 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.73809541 ( using 0.73809541 ) -->
+  <etotal_int scf_iter="14">    -11.83538065 </etotal_int>
+  <eigenvalue_sum> -0.10935689 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.82762276 ( using 0.82762276 ) -->
+  <etotal_int scf_iter="14">    -11.83538042 </etotal_int>
+  <eigenvalue_sum> -0.10935689 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.15184852 ( using 1.15184852 ) -->
+  <etotal_int scf_iter="14">    -11.83538019 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.11879115 0.05523708 -0.00130632 
+  <eigenvalue_sum> -0.10935677 </eigenvalue_sum>
+  <etotal_int scf_iter="15">    -11.83537983 </etotal_int>
+  <eigenvalue_sum> -0.10935677 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.78307560 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="15">    -11.83537985 </etotal_int>
+  <eigenvalue_sum> -0.10935677 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.19694013 ( using 1.19694013 ) -->
+  <etotal_int scf_iter="15">    -11.83537987 </etotal_int>
+  <eigenvalue_sum> -0.10935677 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.32964672 ( using 0.32964672 ) -->
+  <etotal_int scf_iter="15">    -11.83537985 </etotal_int>
+  <eigenvalue_sum> -0.10935677 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.52409794 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="15">    -11.83537984 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = 0.01521299 -0.17958676 0.08846903 
+  <eigenvalue_sum> -0.10935667 </eigenvalue_sum>
+  <etotal_int scf_iter="16">    -11.83537976 </etotal_int>
+  <eigenvalue_sum> -0.10935667 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.96040671 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="16">    -11.83537976 </etotal_int>
+  <eigenvalue_sum> -0.10935667 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.85538688 ( using 0.85538688 ) -->
+  <etotal_int scf_iter="16">    -11.83537974 </etotal_int>
+  <eigenvalue_sum> -0.10935667 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.29098987 ( using 0.29098987 ) -->
+  <etotal_int scf_iter="16">    -11.83537971 </etotal_int>
+  <eigenvalue_sum> -0.10935667 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.25105955 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="16">    -11.83537971 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.33590271 0.01126146 -0.00172368 
+  <eigenvalue_sum> -0.10935661 </eigenvalue_sum>
+  <etotal_int scf_iter="17">    -11.83537981 </etotal_int>
+  <eigenvalue_sum> -0.10935661 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.63503923 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="17">    -11.83537982 </etotal_int>
+  <eigenvalue_sum> -0.10935661 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.78223147 ( using 1.78223147 ) -->
+  <etotal_int scf_iter="17">    -11.83537984 </etotal_int>
+  <eigenvalue_sum> -0.10935661 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.51624090 ( using 0.51624090 ) -->
+  <etotal_int scf_iter="17">    -11.83537984 </etotal_int>
+  <eigenvalue_sum> -0.10935661 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.49429836 ( using 1.49429836 ) -->
+  <etotal_int scf_iter="17">    -11.83537984 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.45926840 0.07840163 0.01742953 
+  <eigenvalue_sum> -0.10935660 </eigenvalue_sum>
+  <etotal_int scf_iter="18">    -11.83537990 </etotal_int>
+  <eigenvalue_sum> -0.10935660 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.71140907 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="18">    -11.83537990 </etotal_int>
+  <eigenvalue_sum> -0.10935660 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.69261018 ( using 0.69261018 ) -->
+  <etotal_int scf_iter="18">    -11.83537990 </etotal_int>
+  <eigenvalue_sum> -0.10935660 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.21171607 ( using 0.21171607 ) -->
+  <etotal_int scf_iter="18">    -11.83537990 </etotal_int>
+  <eigenvalue_sum> -0.10935660 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.30186641 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="18">    -11.83537990 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.09081018 -0.14958531 0.01793985 
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <etotal_int scf_iter="19">    -11.83537994 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.52328173 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="19">    -11.83537994 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.78744729 ( using 0.78744729 ) -->
+  <etotal_int scf_iter="19">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.62937611 ( using 1.62937611 ) -->
+  <etotal_int scf_iter="19">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.77767040 ( using 0.77767040 ) -->
+  <etotal_int scf_iter="19">    -11.83537995 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.00481357 -0.01246452 -0.00425330 
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <etotal_int scf_iter="20">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.71683675 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="20">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.76900653 ( using 0.76900653 ) -->
+  <etotal_int scf_iter="20">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.38250105 ( using 0.38250105 ) -->
+  <etotal_int scf_iter="20">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.61747879 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="20">    -11.83537995 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.00055842 -0.00265816 -0.00649549 
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <etotal_int scf_iter="21">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.43005788 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="21">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.18200068 ( using 1.18200068 ) -->
+  <etotal_int scf_iter="21">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.42098255 ( using 0.42098255 ) -->
+  <etotal_int scf_iter="21">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.70043041 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="21">    -11.83537995 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.00017362 -0.00051452 -0.00177426 
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <etotal_int scf_iter="22">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.16770854 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="22">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.96286773 ( using 0.96286773 ) -->
+  <etotal_int scf_iter="22">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.33926545 ( using 0.33926545 ) -->
+  <etotal_int scf_iter="22">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.20468877 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="22">    -11.83537995 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.00004298 -0.00015222 -0.00032922 
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <etotal_int scf_iter="23">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 4.17258192 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="23">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.14469453 ( using 1.14469453 ) -->
+  <etotal_int scf_iter="23">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.45917953 ( using 0.45917953 ) -->
+  <etotal_int scf_iter="23">    -11.83537995 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.30295285 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="23">    -11.83537995 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.00001361 -0.00003734 -0.00009036 
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <etotal_int scf_iter="24">    -11.83537996 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.45229408 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="24">    -11.83537996 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.76811699 ( using 0.76811699 ) -->
+  <etotal_int scf_iter="24">    -11.83537996 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.44660384 ( using 0.44660384 ) -->
+  <etotal_int scf_iter="24">    -11.83537996 </etotal_int>
+  <eigenvalue_sum> -0.10935659 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.03094497 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="24">    -11.83537995 </etotal_int>
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: scf convergence at itscf = 25, scf energy varied by less than 1.00e-08 a.u. over 5 scf steps. -->
+  <!-- total_electronic_charge: 8.00000000, spin = 0 -->
+  <ekin>        8.18993964 </ekin>
+  <econf>       0.00000000 </econf>
+  <eps>        -1.24355293 </eps>
+  <enl>        -0.43234283 </enl>
+  <ecoul>     -14.18340074 </ecoul>
+  <exc>        -4.16602309 </exc>
+  <evdw>        0.00000000 </evdw>
+  <esr>         0.00261518 </esr>
+  <eself>      16.83042232 </eself>
+  <ets>         0.00000000 </ets>
+  <etotal>    -11.83537996 </etotal>
+<atomset>
+<unit_cell 
+    a="  0.00000000   3.37000000   3.37000000"
+    b="  3.37000000   0.00000000   3.37000000"
+    c="  3.37000000   3.37000000   0.00000000" />
+  <atom name="C1" species="carbon">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.03657272 0.03704877 -0.06417861 </force>
+  </atom>
+  <atom name="C2" species="carbon">
+    <position> 1.68500000 1.68500000 1.68500000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.03657272 -0.03704877 0.06417861 </force>
+  </atom>
+</atomset>
+<timing where="run"                name=" iteration"       min="0.087    " max="0.087    " count="1        "/>
+</iteration>
+<!-- memory nlp.twnl    :    0.039 MB  (0.010 MB local) -->
+<!-- memory sd.psi      :    0.039 MB  (0.010 MB local) -->
+<!-- memory sd.hpsi     :    0.039 MB  (0.010 MB local) -->
+<!-- memory cd.rhor     :    0.105 MB  (0.026 MB local) -->
+<!-- memory cd.rhog     :    0.020 MB  (0.005 MB local) -->
+<!-- memory cd.nlccrhor :    0.105 MB  (0.026 MB local) -->
+<!-- memory cd.nlccrhog :    0.020 MB  (0.005 MB local) -->
+<!-- memory total       :    0.370 MB  (0.092 MB local) -->
+</run>
+<!-- [qball]  -->
+<!-- end of command stream -->
+<real_time> 0.108 </real_time>
+<end_time> 2026-11-09T10:08:37Z </end_time>
+</qbox:simulation>

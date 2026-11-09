@@ -111,8 +111,8 @@ namespace pseudopotential {
       lmax_ = 0;
       nchannels_ = 0;
 
-      std::vector<int> proj_l(nprojectors());
-      std::vector<int> proj_c(nprojectors());
+      proj_l_.resize(nprojectors());
+      proj_c_.resize(nprojectors());
 
       //projector info
       for(int iproj = 0; iproj < nprojectors(); iproj++){
@@ -125,14 +125,14 @@ namespace pseudopotential {
 	int read_l = value<int>(node->first_attribute("angular_momentum"));
 
 	lmax_ = std::max(lmax_, read_l);
-	proj_l[iproj] = read_l;
+	proj_l_[iproj] = read_l;
 	has_l[read_l] = true;
  
 	//now calculate the channel index, by counting previous projectors with the same l
-	proj_c[iproj] = 0;
-	for(int jproj = 0; jproj < iproj; jproj++) if(read_l == proj_l[jproj]) proj_c[iproj]++;
+	proj_c_[iproj] = 0;
+	for(int jproj = 0; jproj < iproj; jproj++) if(read_l == proj_l_[jproj]) proj_c_[iproj]++;
 
-	nchannels_ = std::max(nchannels_, proj_c[iproj] + 1);
+	nchannels_ = std::max(nchannels_, proj_c_[iproj] + 1);
 
       }
 
@@ -158,13 +158,13 @@ namespace pseudopotential {
 	    double val;
 	    stst >> val;
 
-	    if(proj_l[ii] != proj_l[jj]) {
+	    if(proj_l_[ii] != proj_l_[jj]) {
 	      assert(fabs(val) < 1.0e-10);
 	      continue;
 	    }
 	    
 	    val *= 0.5; //convert from Rydberg to Hartree
-	    d_ij(proj_l[ii], proj_c[ii], proj_c[jj]) = val;
+	    d_ij(proj_l_[ii], proj_c_[ii], proj_c_[jj]) = val;
 	  }
 	}
 	
@@ -242,19 +242,21 @@ namespace pseudopotential {
     void projector(int l, int i, std::vector<double> & proj) const {
       rapidxml::xml_node<> * node = NULL;
 
-      for(int iproj = 1; iproj <= nprojectors(); iproj++){
+      // find the projector with this l and channel, using the same
+      // numbering as for d_ij (counting previous projectors with the same l)
+      for(int iproj = 0; iproj < nprojectors(); iproj++){
+	if(proj_l_[iproj] != l || proj_c_[iproj] != i) continue;
 	std::stringstream tag;
-	tag << "PP_BETA." << iproj;
+	tag << "PP_BETA." << iproj + 1;
 	node = root_node_->first_node("PP_NONLOCAL")->first_node(tag.str().c_str());
-
-	assert(node);
-	
-	int read_l = value<int>(node->first_attribute("angular_momentum"));
-	int read_i = (value<int>(node->first_attribute("index")) - 1)%nchannels();
-	if(l == read_l && i == read_i) break;
+	break;
       }
 
-      assert(node);
+      // no projector for this channel (it has a zero d_ij)
+      if(!node){
+	proj.clear();
+	return;
+      }
 
       int size = value<int>(node->first_attribute("size"));
       proj.resize(size + start_point_);
@@ -289,7 +291,7 @@ namespace pseudopotential {
       assert(node);
       
       int size = value<int>(node->first_attribute("size"));
-      density.resize(size);
+      density.resize(size + start_point_);
 
       std::istringstream stst(node->value());
       for(int ii = 0; ii < size; ii++) stst >> density[start_point_ + ii];
@@ -396,6 +398,8 @@ namespace pseudopotential {
     std::vector<char> buffer_;
     rapidxml::xml_document<> doc_;
     rapidxml::xml_node<> * root_node_;
+    std::vector<int> proj_l_;
+    std::vector<int> proj_c_;
     
     
   };

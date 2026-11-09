@@ -1,0 +1,15 @@
+Test       : RT-TDDFT Germanium NLCC
+Program    : qball
+TestGroups : short-run
+Enabled    : Yes
+
+ExtraFile  : Ge.upf
+Input      : germanium_td.inp
+Reference  : germanium_td_reference.xml
+
+# ground state (first values in the output)
+match ; exc_gs     ; GREPFIELD(out, '<exc>', 2)    ; -36.40181442
+match ; etotal_gs  ; GREPFIELD(out, '<etotal>', 2) ; -151.79172172
+# after 10 RT-TDDFT steps (last values in the output): must stay close to the ground state
+match ; exc_td     ; SHELL(grep -a '<exc>' out | tail -1 | awk '{printf $2}')    ; -36.40277461
+match ; etotal_td  ; SHELL(grep -a '<etotal>' out | tail -1 | awk '{printf $2}') ; -151.79175513

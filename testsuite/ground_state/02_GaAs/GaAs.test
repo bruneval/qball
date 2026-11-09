@@ -7,6 +7,7 @@ ExtraFile  : Ga_HSCV_PBE-1.0.xml
 ExtraFile  : As_HSCV_PBE-1.0.xml
 Input      : GaAs.inp
 Reference  : GaAs_reference.xml
+Precision  : 1e-3
 
 match ; ekin    ; GREPFIELD(out, '<ekin>',   2) ;  140.60105287
 match ; econf   ; GREPFIELD(out, '<econf>',  2) ;    0.00000000

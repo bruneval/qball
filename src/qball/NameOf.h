@@ -42,7 +42,7 @@ class NameOf
   public:
   string name;
 
-  NameOf<T>(string s) : name(s) {};
+  NameOf(string s) : name(s) {};
   bool operator() (T t) const
   {
     return t->name() == name;

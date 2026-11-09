@@ -1,0 +1,1597 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+                   ___________________________
+                   |                         |
+                   | qball alsos             |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |                         |
+                   |      Lawrence Livermore |
+                   |     National Laboratory |
+                   |                         |
+                   | Copyright (c) 2003-2016 |
+                   |_________________________|
+
+-->
+<qbox:simulation xmlns:qbox="http://www.quantum-simulation.org/ns/fpmd/fpmd-1.0">
+<release> qball alsos </release>
+<npes> 4 </npes>
+<nthreads> 1 </nthreads>
+<user> bruneval </user>
+<sysname> Linux </sysname>
+<nodename> localhost </nodename>
+<start_time> 2026-11-09T09:57:26Z </start_time>
+<!-- [qball] # Bulk Ge with a pseudopotential that has a model core charge (NLCC): -->
+<!-- [qball] # ground state, then 10 real-time TDDFT steps without any perturbation. -->
+<!-- [qball] # The total energy must stay at its ground-state value. -->
+<!-- [qball] # Regression test for a bug where the exchange-correlation energy during -->
+<!-- [qball] # RT-TDDFT ignored the core charge (energy jumped by about 17.8 Ha). -->
+<!-- [qball] set cell 0.000 5.345 5.345 5.345 0.000 5.345 5.345 5.345 0.000 bohr -->
+  <unitcell>
+<unit_cell 
+    a="0.00000000   5.34500000   5.34500000  "
+    b="5.34500000   0.00000000   5.34500000  "
+    c="5.34500000   5.34500000   0.00000000  " />
+  </unitcell>
+<!-- [qball] species germanium Ge.upf -->
+  <!-- SpeciesCmd: defining species germanium as Ge.upf -->
+  <!-- SpeciesReader opening file Ge.upf -->
+  <!--   format: UPF2 -->
+  <!--   size:   262558 -->
+  <!-- SpeciesReader::readSpecies: potential type:  Kleinman-Bylander norm-conserving -->
+  <!-- SpeciesReader::readSpecies: read description 
+
+This pseudopotential file has been produced using the code
+ONCVPSP  (Optimized Norm-Conservinng Vanderbilt PSeudopotential)
+scalar-relativistic version 3.3.0 08/16/2017 by D. R. Hamann
+The code is available through a link at URL www.mat-simresearch.com.
+Documentation with the package provides a full discription of the
+input data below.
+
+
+While it is not required under the terms of the GNU GPL, it is
+suggested that you cite D. R. Hamann, Phys. Rev. B 88, 085117 (2013)
+in any publication using these pseudopotentials.
+
+ -->
+  <!-- SpeciesReader::readSpecies: read symbol Ge -->
+  <!-- SpeciesReader::readSpecies: read atomic_number 32 -->
+  <!-- SpeciesReader::readSpecies: read mass 72.63080000 -->
+  <!-- SpeciesReader::readSpecies: read valence_charge 14 -->
+  <!-- SpeciesReader::readSpecies: read lmax 2 -->
+  <!-- SpeciesReader::readSpecies: read llocal -1 -->
+  <!-- SpeciesReader::readSpecies: read mesh_spacing 0.01000000 -->
+  <!-- SpeciesReader::readSpecies: read local_potential size=1560 -->
+  <!-- SpeciesReader::readSpecies: read projector l=0 i=0 size=1560 -->
+  <!-- SpeciesReader::readSpecies: read projector l=0 i=1 size=1560 -->
+  <!-- SpeciesReader::readSpecies: read projector l=1 i=0 size=1560 -->
+  <!-- SpeciesReader::readSpecies: read projector l=1 i=1 size=1560 -->
+  <!-- SpeciesReader::readSpecies: read projector l=2 i=0 size=1560 -->
+  <!-- SpeciesReader::readSpecies: read projector l=2 i=1 size=1560 -->
+  <!-- SpeciesReader::readSpecies: read d_ij l=0 -->
+  <!-- SpeciesReader::readSpecies: read d_ij l=1 -->
+  <!-- SpeciesReader::readSpecies: read d_ij l=2 -->
+  <!-- SpeciesReader::readSpecies: nlcc found. -->
+  <!-- SpeciesReader::readSpecies: read rho_nlcc size=1560 -->
+<!-- Species germanium:  extending grid to rmax = 40.00000000 to increase vnlg resolution (4096 pts) -->
+SPECIES.ndft = 4096, np = 1560, rmax = 40.96000000, gmax = 314.08256632, hubbard_l = -1
+
+ species germanium:
+ name_ = germanium
+ description_ = 
+
+This pseudopotential file has been produced using the code
+ONCVPSP  (Optimized Norm-Conservinng Vanderbilt PSeudopotential)
+scalar-relativistic version 3.3.0 08/16/2017 by D. R. Hamann
+The code is available through a link at URL www.mat-simresearch.com.
+Documentation with the package provides a full discription of the
+input data below.
+
+
+While it is not required under the terms of the GNU GPL, it is
+suggested that you cite D. R. Hamann, Phys. Rev. B 88, 085117 (2013)
+in any publication using these pseudopotentials.
+
+
+ uri_ = Ge.upf
+ symbol_ = Ge
+ atomic_number_ = 32
+ Kleinman-Bylander potential
+ valence charge = 14 / ionic mass_ = 72.63080000 (amu)
+ lmax_ =   2
+ llocal_ = -1
+ rcps_ =   1.50000000
+<!-- [qball] atom Ge1 germanium 0.0000 0.0000 0.0000 bohr -->
+<!-- [qball] atom Ge2 germanium 2.6725 2.6725 2.6725 bohr -->
+<!-- [qball] set xc PBE -->
+<!-- [qball] set ecut 20 rydberg -->
+<!-- [qball] set ecutprec 8 rydberg -->
+<!-- [qball] set wf_dyn PSDA -->
+<!-- [qball] set nempty 8 -->
+<!-- [qball] set smearing fermi -->
+<!-- [qball] set smearing_width 0.01 hartree -->
+<!-- [qball] set threshold_scf 1.E-7 5 -->
+<!-- [qball]  -->
+<!-- [qball] set nkpoints 2 -->
+<!-- [qball] kpoint 0.25 0.25  0.25 0.25 -->
+Adding kpoint = 0.25000000 0.25000000 0.25000000, weight = 0.25000000
+<!-- [qball] kpoint 0.25 0.25 -0.25 0.75 -->
+Adding kpoint = 0.25000000 0.25000000 -0.25000000, weight = 0.75000000
+<!-- [qball]  -->
+<!-- [qball] randomize_wf -->
+<!-- Randomize_wf:  allocating wavefunction... -->
+<!-- Creating subcontext 4x1 at row 0, col 0 of spincontext 4x1 -->
+<!-- creating SlaterDet for kp = 0 -->
+<!-- creating SlaterDet for kp = 1 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+<!-- Updated occupation of wf -->
+<!-- [qball] run 0 100 5 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+ChargeDensity:  vbasis = 24 24 24, resize to 28 28 28
+  <!-- EnergyFunctional: charge density basis: 1848 plane waves, ngloc = 469 -->
+  <!-- EnergyFunctional: np0v,np1v,np2v: 28 28 28 -->
+  <!-- EnergyFunctional: vft->np012(): 21952 -->
+<!-- AtomSet.set_rcps:  Ewald width for species germanium is too small for reciprocal sum convergence, increasing rcps from 1.50000000 to 1.40000000 -->
+<!-- AtomSet.set_rcps:  species germanium Ewald width larger than reciprocal grid spacing, decreasing rcps from 1.40000000 to 1.20304768 -->
+<!-- Species germanium:  extending grid to rmax = 40.00000000 to increase vnlg resolution (4096 pts) -->
+SPECIES.ndft = 4096, np = 1560, rmax = 40.96000000, gmax = 314.08256632, hubbard_l = -1
+<!-- AtomSet.set_rcps:  Ewald width for species germanium = 1.20304768 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 1 for rckj = 1.70136634 -->
+<run niter_ionic="0" niter_scf="100" niter_nonscf="5">
+<wavefunction ecut="10.00000000" nspin="1" nel="28" nempty="8">
+<cell a0="0.000000 5.345000 5.345000"
+      a1="5.345000 0.000000 5.345000"
+      a2="5.345000 5.345000 0.000000"/>
+<reciprocal_lattice b0="-0.587763 0.587763 0.587763"
+      b1="0.587763 -0.587763 0.587763"
+      b2="0.587763 0.587763 -0.587763"/>
+<refcell a0="0.000000 0.000000 0.000000"
+         a1="0.000000 0.000000 0.000000"
+         a2="0.000000 0.000000 0.000000"/>
+<slater_determinant kpoint="0.250000 0.250000 0.250000"  weight="1.000000" size="22">
+ <!-- sdcontext: 4x1 -->
+<grid nx="12" ny="12" nz="12"/>
+ <!-- basis size: 477 -->
+ <!-- c dimensions: 492x22   (123x22 blocks) -->
+ <density_matrix form="diagonal" size="22">
+ </density_matrix>
+</slater_determinant>
+</wavefunction>
+<!-- BOSampleStepper:  fractional occupation detected. -->
+ <!-- Wavefunction::update_occ: sum = 28.000000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = 0.0761 eV, ispin = 0 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+<iteration count="1">
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000001, spin = 0 -->
+  <eigenvalue_sum> 12.35416386 </eigenvalue_sum>
+  <etotal_int scf_iter="0">    -86.02046168 </etotal_int>
+  <eharris>    -86.02046168 </eharris>
+  <eigenvalue_sum> 1.31762116 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.13242333 ( using 0.13242333 ) -->
+  <etotal_int scf_iter="0">    -88.36898791 </etotal_int>
+  <eigenvalue_sum> -8.77909019 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = -0.02287704 ( using -0.02287704 ) -->
+  <etotal_int scf_iter="0">    -87.40503340 </etotal_int>
+  <eigenvalue_sum> -16.58251381 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = -0.11311771 ( using -0.11311771 ) -->
+  <etotal_int scf_iter="0">    -85.04420196 </etotal_int>
+  <eigenvalue_sum> -23.26921046 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = -0.01877851 ( using -0.01877851 ) -->
+  <etotal_int scf_iter="0">    -82.34308669 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -84.97491   -79.57971   -77.55059   -70.96246   -66.40964   -64.00631   -62.90591   -60.31861
+   -58.62272   -56.63848   -55.40908   -53.72900   -50.04433   -46.57284   -30.83867   -23.16211
+    -8.52309     6.64437    14.36951    21.15485    21.67212    34.63343
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -80.11764   -77.63405   -73.06967   -69.46612   -66.91041   -63.80204   -61.21851   -59.81147
+   -57.68031   -55.83457   -53.07430   -51.09230   -49.05001   -41.46315   -33.60826   -20.32341
+   -10.13936    11.95162    16.49545    20.80943    24.44137    36.89545
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -37.5000 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.00000000 -->
+  <!-- Entropy contribution to free energy: -0.00000000 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <eigenvalue_sum> -19.38114009 </eigenvalue_sum>
+  <etotal_int scf_iter="1">   -104.47011640 </etotal_int>
+  <eharris>   -138.88815344 </eharris>
+  <eigenvalue_sum> -23.23251755 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.99089979 ( using 1.99089979 ) -->
+  <etotal_int scf_iter="1">   -103.41955923 </etotal_int>
+  <eigenvalue_sum> -30.84507676 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.14791517 ( using 0.14791517 ) -->
+  <etotal_int scf_iter="1">    -98.85349814 </etotal_int>
+  <eigenvalue_sum> -32.58554232 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.55419187 ( using 0.55419187 ) -->
+  <etotal_int scf_iter="1">    -97.37736765 </etotal_int>
+  <eigenvalue_sum> -33.62831056 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.20599934 ( using 0.20599934 ) -->
+  <etotal_int scf_iter="1">    -96.57358008 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -72.58924   -70.51863   -70.33265   -69.13172   -68.75718   -68.22100   -66.64099   -66.33326
+   -64.60238   -62.91016   -52.76812   -50.95667   -38.69461   -36.89051   -36.15295   -34.45455
+   -33.46815   -28.07934     6.28486    12.63482    13.24497    23.34255
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -70.61829   -69.31594   -68.20124   -66.87467   -66.46241   -65.79220   -65.00913   -64.36918
+   -63.28472   -62.70803   -52.41633   -51.55484   -38.82300   -36.70717   -36.09883   -34.91818
+   -33.24416   -32.11684     8.09812    12.78155    14.64005    20.19388
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -36.4259 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9365  0.2376  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.7758  0.1661  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 1.20848096 -->
+  <!-- Entropy contribution to free energy: -0.02416962 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.56814287 
+  <eigenvalue_sum> -9.65285784 </eigenvalue_sum>
+  <etotal_int scf_iter="2">   -134.53557027 </etotal_int>
+  <eharris>   -147.63386300 </eharris>
+  <eigenvalue_sum> -10.44973416 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.88549941 ( using 1.88549941 ) -->
+  <etotal_int scf_iter="2">   -137.08327928 </etotal_int>
+  <eigenvalue_sum> -11.46024765 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.15656631 ( using 0.15656631 ) -->
+  <etotal_int scf_iter="2">   -141.69596841 </etotal_int>
+  <eigenvalue_sum> -11.64037445 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.50538567 ( using 1.50538567 ) -->
+  <etotal_int scf_iter="2">   -142.53060738 </etotal_int>
+  <eigenvalue_sum> -11.86847090 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.15354410 ( using 0.15354410 ) -->
+  <etotal_int scf_iter="2">   -143.68946519 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -31.50403   -30.37817   -30.04211   -29.67568   -29.22893   -28.49063   -28.06682   -27.74887
+   -26.86403   -26.25693   -24.52423   -19.50066   -12.25361   -11.23825   -10.50902    -6.45495
+    -5.75145    -4.74023     6.20810    11.43984    12.07533    19.96180
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -30.24188   -29.63675   -28.57841   -28.10742   -27.61068   -27.18837   -26.06326   -25.74261
+   -25.50477   -25.17820   -23.34903   -21.04335   -12.78145   -12.05627    -9.91956    -7.14652
+    -4.52422    -3.48230     7.62467     9.78827    13.37313    15.71611
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -10.8761 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9999  1.8695  0.1263  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9997  0.0018  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.25167730 -->
+  <!-- Entropy contribution to free energy: -0.00503355 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000001, spin = 0 -->
+ AndersonMixer: theta = 0.36268453 -0.54069184 
+  <eigenvalue_sum> 0.29603726 </eigenvalue_sum>
+  <etotal_int scf_iter="3">   -157.47035002 </etotal_int>
+  <eharris>   -151.45222394 </eharris>
+  <eigenvalue_sum> -0.07148353 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.35059950 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="3">   -158.66349201 </etotal_int>
+  <eigenvalue_sum> -0.71584542 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.40019345 ( using 0.40019345 ) -->
+  <etotal_int scf_iter="3">   -161.22826924 </etotal_int>
+  <eigenvalue_sum> -0.94919066 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.83571543 ( using 0.83571543 ) -->
+  <etotal_int scf_iter="3">   -162.35827158 </etotal_int>
+  <eigenvalue_sum> -1.11050860 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.48527813 ( using 0.48527813 ) -->
+  <etotal_int scf_iter="3">   -163.23130830 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -13.90923    -9.61133    -9.03350    -8.52299    -8.26622    -7.97030    -7.35694    -6.69928
+    -6.42923    -5.13496    -4.78534    -4.30701    -1.08788    -0.79734    -0.38722     3.63448
+     4.17862     5.34061     5.90539     8.39126     9.36986    14.48350
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -12.72003    -9.66539    -8.78932    -8.03895    -7.17929    -6.76951    -6.68057    -5.30416
+    -4.95295    -4.59839    -4.26227    -3.86741    -3.14342    -2.22313    -0.47597     3.76966
+     4.71045     7.50003     8.45249     9.88339    12.34367    13.26593
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -0.7358 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.8602  1.2225  0.1433  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  2.0000  0.2581  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 1.16688658 -->
+  <!-- Entropy contribution to free energy: -0.02333773 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000001, spin = 0 -->
+ AndersonMixer: theta = -0.32983611 0.61140115 -0.16764975 
+  <eigenvalue_sum> -7.79029766 </eigenvalue_sum>
+  <etotal_int scf_iter="4">   -158.25550456 </etotal_int>
+  <eharris>   -150.02638701 </eharris>
+  <eigenvalue_sum> -7.98354312 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.67605086 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="4">   -157.41860245 </etotal_int>
+  <eigenvalue_sum> -8.26121296 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.37028539 ( using 0.37028539 ) -->
+  <etotal_int scf_iter="4">   -155.34094304 </etotal_int>
+  <eigenvalue_sum> -8.32279108 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.41218694 ( using 0.41218694 ) -->
+  <etotal_int scf_iter="4">   -154.43319460 </etotal_int>
+  <eigenvalue_sum> -8.34740541 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.71892569 ( using 0.71892569 ) -->
+  <etotal_int scf_iter="4">   -154.10457291 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -24.48309   -23.26058   -23.01216   -22.50282   -22.32144   -21.45314   -21.10134   -20.66201
+   -20.17592   -19.24369   -18.92477   -13.72160    -7.59842    -6.71110    -6.33594    -2.41350
+    -1.44261    -0.46931     4.81885     8.68059     9.45519    15.59575
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -23.19957   -22.73772   -21.61547   -21.02290   -20.68758   -20.25159   -19.30269   -18.76527
+   -18.64963   -18.08891   -17.69024   -15.52689    -8.61802    -7.91732    -5.45293    -2.70116
+     0.14405     1.26656     5.79125     7.06478    11.13059    12.30968
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -6.5239 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9993  1.5969  0.4018  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0008  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.50942453 -->
+  <!-- Entropy contribution to free energy: -0.01018849 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+ AndersonMixer: theta = 0.30566230 -0.72826791 0.20377512 
+  <eigenvalue_sum> -8.04123484 </eigenvalue_sum>
+  <etotal_int scf_iter="5">   -149.89860697 </etotal_int>
+  <eharris>   -151.75326830 </eharris>
+  <eigenvalue_sum> -8.04796994 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.71257373 ( using 1.71257373 ) -->
+  <etotal_int scf_iter="5">   -149.87627376 </etotal_int>
+  <eigenvalue_sum> -8.06284274 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.22623905 ( using 0.22623905 ) -->
+  <etotal_int scf_iter="5">   -149.83399025 </etotal_int>
+  <eigenvalue_sum> -8.07011672 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.50325091 ( using 1.50325091 ) -->
+  <etotal_int scf_iter="5">   -149.82175409 </etotal_int>
+  <eigenvalue_sum> -8.08434785 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.21330190 ( using 0.21330190 ) -->
+  <etotal_int scf_iter="5">   -149.79973800 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -24.19829   -22.91954   -22.67871   -22.01791   -21.94326   -20.99686   -20.75744   -20.25496
+   -19.71650   -18.80015   -18.29254   -13.03824    -6.88220    -6.04662    -5.77626    -1.79216
+    -0.91306     0.10799     4.58070     8.34699     9.31562    14.15681
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -22.87100   -22.36450   -21.19001   -20.59158   -20.25225   -19.80277   -18.96282   -18.28814
+   -18.20932   -17.59903   -17.06966   -14.85930    -7.97681    -7.25606    -4.93245    -2.07775
+     0.70185     1.83095     5.47483     6.91599    10.85907    11.81073
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -5.9119 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9984  1.4583  0.5391  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0015  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.59674458 -->
+  <!-- Entropy contribution to free energy: -0.01193489 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.16879484 0.09224771 -0.10503815 
+  <eigenvalue_sum> -6.90595299 </eigenvalue_sum>
+  <etotal_int scf_iter="6">   -150.84376250 </etotal_int>
+  <eharris>   -151.76269682 </eharris>
+  <eigenvalue_sum> -6.91189970 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.69881030 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="6">   -150.94774768 </etotal_int>
+  <eigenvalue_sum> -6.92516030 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.42860804 ( using 0.42860804 ) -->
+  <etotal_int scf_iter="6">   -151.18344029 </etotal_int>
+  <eigenvalue_sum> -6.93274806 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.47562394 ( using 0.47562394 ) -->
+  <etotal_int scf_iter="6">   -151.29060120 </etotal_int>
+  <eigenvalue_sum> -6.93847921 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.67762058 ( using 0.67762058 ) -->
+  <etotal_int scf_iter="6">   -151.33446516 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -21.95143   -20.72191   -20.45870   -19.83781   -19.74983   -18.86330   -18.56238   -18.05164
+   -17.84254   -16.64438   -16.45253   -11.40448    -5.65323    -4.96027    -4.72870    -0.69925
+     0.31756     1.22511     4.66732     8.10875     9.30484    12.66363
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -20.68775   -20.23760   -19.02465   -18.41734   -18.13760   -17.64340   -16.80684   -16.21422
+   -16.07501   -15.45856   -15.34094   -13.24778    -6.94668    -6.19849    -3.98292    -0.95067
+     2.00744     2.97001     5.50453     7.16710    10.77407    11.75584
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -4.8453 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9947  1.3990  0.5959  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0035  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.63954289 -->
+  <!-- Entropy contribution to free energy: -0.01279086 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.09312912 0.00283661 -0.00029112 
+  <eigenvalue_sum> -6.85277986 </eigenvalue_sum>
+  <etotal_int scf_iter="7">   -151.74210368 </etotal_int>
+  <eharris>   -151.79116730 </eharris>
+  <eigenvalue_sum> -6.85501342 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 3.67928563 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="7">   -151.74666943 </etotal_int>
+  <eigenvalue_sum> -6.86126514 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.96573920 ( using 0.96573920 ) -->
+  <etotal_int scf_iter="7">   -151.75842541 </etotal_int>
+  <eigenvalue_sum> -6.86818522 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.37388126 ( using 0.37388126 ) -->
+  <etotal_int scf_iter="7">   -151.76965212 </etotal_int>
+  <eigenvalue_sum> -6.87209351 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.96296682 ( using 0.96296682 ) -->
+  <etotal_int scf_iter="7">   -151.77442850 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -21.75224   -20.54396   -20.27857   -19.66502   -19.55509   -18.69514   -18.37739   -17.87045
+   -17.70734   -16.47492   -16.27532   -11.27547    -5.56040    -4.88888    -4.66484    -0.63041
+     0.40741     1.30589     4.61802     8.00675     9.24251    11.23211
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -20.50667   -20.05813   -18.84073   -18.24115   -17.96464   -17.46682   -16.62206   -16.04681
+   -15.90770   -15.30223   -15.18159   -13.10538    -6.86878    -6.12750    -3.95379    -0.86953
+     2.10342     3.04701     5.48091     7.16239    10.61593    11.61909
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -4.7781 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9937  1.3862  0.6064  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0047  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.65131350 -->
+  <!-- Entropy contribution to free energy: -0.01302627 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000001, spin = 0 -->
+ AndersonMixer: theta = -0.61547820 0.03283866 0.02456794 
+  <eigenvalue_sum> -6.90540518 </eigenvalue_sum>
+  <etotal_int scf_iter="8">   -151.80636561 </etotal_int>
+  <eharris>   -151.79169696 </eharris>
+  <eigenvalue_sum> -6.90662274 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.76076578 ( using 1.76076578 ) -->
+  <etotal_int scf_iter="8">   -151.80627146 </etotal_int>
+  <eigenvalue_sum> -6.90974395 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.14635670 ( using 0.14635670 ) -->
+  <etotal_int scf_iter="8">   -151.80577298 </etotal_int>
+  <eigenvalue_sum> -6.91115954 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.97654598 ( using 1.97654598 ) -->
+  <etotal_int scf_iter="8">   -151.80544189 </etotal_int>
+  <eigenvalue_sum> -6.91462137 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.21400516 ( using 0.21400516 ) -->
+  <etotal_int scf_iter="8">   -151.80468762 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -21.78068   -20.58080   -20.31689   -19.71151   -19.58656   -18.74014   -18.41654   -17.91163
+   -17.75126   -16.51855   -16.30907   -11.31528    -5.59776    -4.92311    -4.70830    -0.67532
+     0.37553     1.27368     4.58479     7.96081     9.18579    10.50755
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -20.54081   -20.09296   -18.87849   -18.28241   -18.00423   -17.50645   -16.65759   -16.08661
+   -15.95316   -15.34330   -15.22440   -13.14327    -6.89890    -6.16447    -3.99564    -0.91494
+     2.07001     3.01681     5.44537     7.13657    10.53376    11.54320
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -4.8169 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9936  1.3716  0.6208  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0048  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.65772563 -->
+  <!-- Entropy contribution to free energy: -0.01315451 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+ AndersonMixer: theta = 0.35320072 -0.27858894 0.02268532 
+  <eigenvalue_sum> -6.91694129 </eigenvalue_sum>
+  <etotal_int scf_iter="9">   -151.79596391 </etotal_int>
+  <eharris>   -151.79171059 </eharris>
+  <eigenvalue_sum> -6.91766203 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.08326887 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="9">   -151.79554602 </etotal_int>
+  <eigenvalue_sum> -6.91966281 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.17203910 ( using 0.17203910 ) -->
+  <etotal_int scf_iter="9">   -151.79471297 </etotal_int>
+  <eigenvalue_sum> -6.92053601 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.76412262 ( using 1.76412262 ) -->
+  <etotal_int scf_iter="9">   -151.79462153 </etotal_int>
+  <eigenvalue_sum> -6.92250206 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.32113831 ( using 0.32113831 ) -->
+  <etotal_int scf_iter="9">   -151.79449672 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -21.78028   -20.58238   -20.31811   -19.71203   -19.58582   -18.74104   -18.41702   -17.91152
+   -17.75316   -16.51926   -16.30675   -11.31418    -5.59758    -4.92363    -4.71031    -0.67565
+     0.37494     1.27380     4.57255     7.93526     9.15402    10.06862
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -20.54165   -20.09367   -18.87808   -18.28315   -18.00471   -17.50661   -16.65720   -16.08706
+   -15.95406   -15.34317   -15.22520   -13.13939    -6.89774    -6.16501    -4.00324    -0.91435
+     2.06948     3.01678     5.43514     7.13314    10.49208    11.50901
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -4.8183 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3690  0.6229  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0050  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.65976718 -->
+  <!-- Entropy contribution to free energy: -0.01319534 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.32436828 0.02496859 0.00513969 
+  <eigenvalue_sum> -6.92259542 </eigenvalue_sum>
+  <etotal_int scf_iter="10">   -151.79249278 </etotal_int>
+  <eharris>   -151.79172120 </eharris>
+  <eigenvalue_sum> -6.92298421 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.83184259 ( using 1.83184259 ) -->
+  <etotal_int scf_iter="10">   -151.79230936 </etotal_int>
+  <eigenvalue_sum> -6.92398542 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.26335814 ( using 0.26335814 ) -->
+  <etotal_int scf_iter="10">   -151.79199893 </etotal_int>
+  <eigenvalue_sum> -6.92452256 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.05892373 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="10">   -151.79195430 </etotal_int>
+  <eigenvalue_sum> -6.92574336 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.34964754 ( using 0.34964754 ) -->
+  <etotal_int scf_iter="10">   -151.79190838 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -21.77942   -20.58110   -20.31666   -19.71038   -19.58471   -18.73931   -18.41586   -17.90999
+   -17.75119   -16.51730   -16.30497   -11.31179    -5.59554    -4.92206    -4.70831    -0.67390
+     0.37634     1.27478     4.56851     7.92196     9.12819     9.81910
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -20.54035   -20.09250   -18.87663   -18.28143   -18.00311   -17.50503   -16.65593   -16.08560
+   -15.95210   -15.34109   -15.22353   -13.13681    -6.89570    -6.16306    -4.00267    -0.91315
+     2.07095     3.01750     5.43179     7.13190    10.47132    11.49051
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -4.8165 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3696  0.6221  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0050  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.65971523 -->
+  <!-- Entropy contribution to free energy: -0.01319430 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.32809187 -0.07596748 0.02282407 
+  <eigenvalue_sum> -6.92538500 </eigenvalue_sum>
+  <etotal_int scf_iter="11">   -151.79132078 </etotal_int>
+  <eharris>   -151.79172159 </eharris>
+  <eigenvalue_sum> -6.92557715 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.70108430 ( using 1.70108430 ) -->
+  <etotal_int scf_iter="11">   -151.79126467 </etotal_int>
+  <eigenvalue_sum> -6.92605536 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.17858119 ( using 0.17858119 ) -->
+  <etotal_int scf_iter="11">   -151.79118332 </etotal_int>
+  <eigenvalue_sum> -6.92628628 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.02216070 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="11">   -151.79118485 </etotal_int>
+  <eigenvalue_sum> -6.92683708 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.29717492 ( using 0.29717492 ) -->
+  <etotal_int scf_iter="11">   -151.79120177 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -21.77830   -20.57974   -20.31522   -19.70865   -19.58339   -18.73754   -18.41435   -17.90839
+   -17.74941   -16.51555   -16.30337   -11.30986    -5.59386    -4.92082    -4.70674    -0.67228
+     0.37744     1.27593     4.56704     7.91642     9.11397     9.71237
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -20.53900   -20.09115   -18.87510   -18.27972   -18.00149   -17.50352   -16.65450   -16.08395
+   -15.95031   -15.33932   -15.22199   -13.13477    -6.89420    -6.16161    -4.00195    -0.91157
+     2.07218     3.01838     5.43060     7.13172    10.46061    11.48123
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -4.8151 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3701  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.65964344 -->
+  <!-- Entropy contribution to free energy: -0.01319287 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.06480618 -0.01519594 0.01051058 
+  <eigenvalue_sum> -6.92709947 </eigenvalue_sum>
+  <etotal_int scf_iter="12">   -151.79162129 </etotal_int>
+  <eharris>   -151.79172171 </eharris>
+  <eigenvalue_sum> -6.92720185 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.04155290 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="12">   -151.79163219 </etotal_int>
+  <eigenvalue_sum> -6.92748075 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.24199178 ( using 0.24199178 ) -->
+  <etotal_int scf_iter="12">   -151.79165691 </etotal_int>
+  <eigenvalue_sum> -6.92762011 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 2.11710676 ( using 2.00000000 ) -->
+  <etotal_int scf_iter="12">   -151.79166459 </etotal_int>
+  <eigenvalue_sum> -6.92794168 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.40968921 ( using 0.40968921 ) -->
+  <etotal_int scf_iter="12">   -151.79167989 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -21.77831   -20.57970   -20.31520   -19.70863   -19.58337   -18.73750   -18.41429   -17.90839
+   -17.74933   -16.51552   -16.30336   -11.30985    -5.59382    -4.92083    -4.70674    -0.67227
+     0.37738     1.27588     4.56682     7.91413     9.10447     9.65035
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -20.53897   -20.09110   -18.87508   -18.27967   -18.00146   -17.50352   -16.65448   -16.08387
+   -15.95028   -15.33930   -15.22199   -13.13476    -6.89421    -6.16164    -4.00191    -0.91160
+     2.07215     3.01833     5.43045     7.13145    10.45417    11.47535
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -4.8151 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3701  0.6215  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.65963277 -->
+  <!-- Entropy contribution to free energy: -0.01319266 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.65058913 -0.06076404 0.02520966 
+  <eigenvalue_sum> -6.92820819 </eigenvalue_sum>
+  <etotal_int scf_iter="13">   -151.79176191 </etotal_int>
+  <eharris>   -151.79172171 </eharris>
+  <eigenvalue_sum> -6.92825854 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.48092547 ( using 1.48092547 ) -->
+  <etotal_int scf_iter="13">   -151.79176094 </etotal_int>
+  <eigenvalue_sum> -6.92837488 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.13359434 ( using 0.13359434 ) -->
+  <etotal_int scf_iter="13">   -151.79175884 </etotal_int>
+  <eigenvalue_sum> -6.92843049 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.79696349 ( using 1.79696349 ) -->
+  <etotal_int scf_iter="13">   -151.79175829 </etotal_int>
+  <eigenvalue_sum> -6.92856313 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.19164569 ( using 0.19164569 ) -->
+  <etotal_int scf_iter="13">   -151.79175754 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -21.77844   -20.57982   -20.31533   -19.70875   -19.58348   -18.73761   -18.41438   -17.90851
+   -17.74943   -16.51566   -16.30348   -11.30995    -5.59390    -4.92094    -4.70685    -0.67235
+     0.37723     1.27579     4.56667     7.91332     9.10063     9.62638
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -20.53910   -20.09122   -18.87520   -18.27979   -18.00158   -17.50366   -16.65459   -16.08396
+   -15.95040   -15.33943   -15.22212   -13.13488    -6.89430    -6.16176    -4.00203    -0.91167
+     2.07202     3.01823     5.43030     7.13130    10.45112    11.47259
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -4.8153 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3701  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.65963842 -->
+  <!-- Entropy contribution to free energy: -0.01319277 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.07861780 -0.11687231 0.02305979 
+  <eigenvalue_sum> -6.92868943 </eigenvalue_sum>
+  <etotal_int scf_iter="14">   -151.79176874 </etotal_int>
+  <eharris>   -151.79172171 </eharris>
+  <eigenvalue_sum> -6.92871940 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.59366213 ( using 1.59366213 ) -->
+  <etotal_int scf_iter="14">   -151.79176889 </etotal_int>
+  <eigenvalue_sum> -6.92879200 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.13573153 ( using 0.13573153 ) -->
+  <etotal_int scf_iter="14">   -151.79176853 </etotal_int>
+  <eigenvalue_sum> -6.92882567 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.81797348 ( using 1.81797348 ) -->
+  <etotal_int scf_iter="14">   -151.79176805 </etotal_int>
+  <eigenvalue_sum> -6.92890457 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.20831204 ( using 0.20831204 ) -->
+  <etotal_int scf_iter="14">   -151.79176703 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -21.77853   -20.57991   -20.31543   -19.70886   -19.58357   -18.73771   -18.41448   -17.90861
+   -17.74952   -16.51576   -16.30357   -11.31004    -5.59399    -4.92102    -4.70694    -0.67243
+     0.37715     1.27570     4.56662     7.91290     9.09835     9.61169
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -20.53919   -20.09131   -18.87530   -18.27989   -18.00168   -17.50376   -16.65469   -16.08406
+   -15.95050   -15.33953   -15.22222   -13.13497    -6.89438    -6.16184    -4.00210    -0.91177
+     2.07194     3.01816     5.43023     7.13120    10.44931    11.47098
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -4.8153 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3701  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.65964459 -->
+  <!-- Entropy contribution to free energy: -0.01319289 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.32971764 -0.16967085 0.09932961 
+  <eigenvalue_sum> -6.92897346 </eigenvalue_sum>
+  <etotal_int scf_iter="15">   -151.79174639 </etotal_int>
+  <eharris>   -151.79172171 </eharris>
+  <eigenvalue_sum> -6.92899142 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.66395008 ( using 1.66395008 ) -->
+  <etotal_int scf_iter="15">   -151.79174535 </etotal_int>
+  <eigenvalue_sum> -6.92903611 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.18533571 ( using 0.18533571 ) -->
+  <etotal_int scf_iter="15">   -151.79174308 </etotal_int>
+  <eigenvalue_sum> -6.92905829 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.83159586 ( using 1.83159586 ) -->
+  <etotal_int scf_iter="15">   -151.79174236 </etotal_int>
+  <eigenvalue_sum> -6.92910911 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.19455089 ( using 0.19455089 ) -->
+  <etotal_int scf_iter="15">   -151.79174099 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -21.77857   -20.57996   -20.31548   -19.70891   -19.58362   -18.73777   -18.41453   -17.90866
+   -17.74958   -16.51581   -16.30362   -11.31009    -5.59403    -4.92105    -4.70699    -0.67247
+     0.37711     1.27566     4.56659     7.91267     9.09700     9.60245
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -20.53924   -20.09136   -18.87534   -18.27994   -18.00173   -17.50380   -16.65473   -16.08411
+   -15.95055   -15.33958   -15.22226   -13.13501    -6.89442    -6.16188    -4.00215    -0.91181
+     2.07190     3.01812     5.43019     7.13115    10.44817    11.46998
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -4.8154 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3700  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.65964921 -->
+  <!-- Entropy contribution to free energy: -0.01319298 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.52070202 0.10735922 -0.00740844 
+  <eigenvalue_sum> -6.92913639 </eigenvalue_sum>
+  <etotal_int scf_iter="16">   -151.79172790 </etotal_int>
+  <eharris>   -151.79172171 </eharris>
+  <eigenvalue_sum> -6.92914705 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.77462799 ( using 1.77462799 ) -->
+  <etotal_int scf_iter="16">   -151.79172721 </etotal_int>
+  <eigenvalue_sum> -6.92917474 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.21080906 ( using 0.21080906 ) -->
+  <etotal_int scf_iter="16">   -151.79172585 </etotal_int>
+  <eigenvalue_sum> -6.92918879 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.84934387 ( using 1.84934387 ) -->
+  <etotal_int scf_iter="16">   -151.79172553 </etotal_int>
+  <eigenvalue_sum> -6.92922036 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.22691741 ( using 0.22691741 ) -->
+  <etotal_int scf_iter="16">   -151.79172501 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -21.77858   -20.57997   -20.31548   -19.70892   -19.58363   -18.73777   -18.41454   -17.90867
+   -17.74958   -16.51582   -16.30362   -11.31009    -5.59404    -4.92106    -4.70699    -0.67248
+     0.37711     1.27565     4.56657     7.91255     9.09622     9.59667
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -20.53925   -20.09137   -18.87535   -18.27995   -18.00173   -17.50381   -16.65474   -16.08412
+   -15.95056   -15.33958   -15.22227   -13.13501    -6.89442    -6.16189    -4.00216    -0.91182
+     2.07190     3.01811     5.43017     7.13113    10.44747    11.46936
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -4.8154 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3700  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.65965052 -->
+  <!-- Entropy contribution to free energy: -0.01319301 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: start scf iteration -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+ AndersonMixer: theta = -0.57984042 0.04729744 0.02638336 
+  <eigenvalue_sum> -6.92923202 </eigenvalue_sum>
+  <etotal_int scf_iter="17">   -151.79172122 </etotal_int>
+  <eharris>   -151.79172172 </eharris>
+  <eigenvalue_sum> -6.92923827 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.79171777 ( using 1.79171777 ) -->
+  <etotal_int scf_iter="17">   -151.79172102 </etotal_int>
+  <eigenvalue_sum> -6.92925458 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.19788274 ( using 0.19788274 ) -->
+  <etotal_int scf_iter="17">   -151.79172067 </etotal_int>
+  <eigenvalue_sum> -6.92926268 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 1.94328131 ( using 1.94328131 ) -->
+  <etotal_int scf_iter="17">   -151.79172063 </etotal_int>
+  <eigenvalue_sum> -6.92928146 </eigenvalue_sum>
+  <!-- Anderson extrapolation: theta = 0.27949807 ( using 0.27949807 ) -->
+  <etotal_int scf_iter="17">   -151.79172061 </etotal_int>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+   -21.77858   -20.57997   -20.31548   -19.70891   -19.58362   -18.73777   -18.41454   -17.90866
+   -17.74958   -16.51581   -16.30362   -11.31009    -5.59404    -4.92106    -4.70699    -0.67248
+     0.37711     1.27566     4.56657     7.91249     9.09579     9.59316
+  </eigenvalues>
+  <eigenvalues spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+   -20.53925   -20.09137   -18.87535   -18.27994   -18.00173   -17.50381   -16.65474   -16.08411
+   -15.95055   -15.33958   -15.22227   -13.13501    -6.89442    -6.16189    -4.00216    -0.91182
+     2.07190     3.01812     5.43017     7.13113    10.44706    11.46899
+  </eigenvalues>
+ <!-- Wavefunction::update_occ: sum = 28.00000 -->
+ <!-- Wavefunction::update_occ: using Fermi smearing, mu = -4.8154 eV, ispin = 0 -->
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3700  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- Wavefunction entropy: 0.65965050 -->
+  <!-- Entropy contribution to free energy: -0.01319301 -->
+  <!-- BOSampleStepper: end scf iteration -->
+  <!-- BOSampleStepper: scf convergence at itscf = 18, Harris-Foulkes energy varied by less than 1.00e-07 a.u. over 5 scf steps. -->
+  <!-- total_electronic_charge: 28.00000001, spin = 0 -->
+  <ekin>       79.71233719 </ekin>
+  <econf>       0.00000000 </econf>
+  <eps>       -33.33971416 </eps>
+  <enl>       -33.82116486 </enl>
+  <ecoul>    -127.93806722 </ecoul>
+  <exc>       -36.40181442 </exc>
+  <evdw>        0.00000000 </evdw>
+  <esr>         0.02019853 </esr>
+  <eself>     129.99100272 </eself>
+  <ets>        -0.00329825 </ets>
+  <etotal>   -151.79172172 </etotal>
+<atomset>
+<unit_cell 
+    a="  0.00000000   5.34500000   5.34500000"
+    b="  5.34500000   0.00000000   5.34500000"
+    c="  5.34500000   5.34500000   0.00000000" />
+  <atom name="Ge1" species="germanium">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.16372628 -0.26110549 -0.59212308 </force>
+  </atom>
+  <atom name="Ge2" species="germanium">
+    <position> 2.67250000 2.67250000 2.67250000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.16372590 0.26110597 0.59212211 </force>
+  </atom>
+</atomset>
+<timing where="run"                name=" iteration"       min="0.368    " max="0.368    " count="1        "/>
+</iteration>
+<!-- memory nlp.twnl    :    0.131 MB  (0.033 MB local) -->
+<!-- memory sd.psi      :    0.320 MB  (0.080 MB local) -->
+<!-- memory sd.hpsi     :    0.320 MB  (0.080 MB local) -->
+<!-- memory cd.rhor     :    0.167 MB  (0.042 MB local) -->
+<!-- memory cd.rhog     :    0.028 MB  (0.007 MB local) -->
+<!-- memory cd.nlccrhor :    0.167 MB  (0.042 MB local) -->
+<!-- memory cd.nlccrhog :    0.028 MB  (0.007 MB local) -->
+<!-- memory total       :    1.163 MB  (0.291 MB local) -->
+</run>
+<!-- [qball]  -->
+<!-- [qball] set wf_dyn ETRS -->
+WfDyn::wave functions must be complex to propagate them in time
+WfDyn::wf_dyn will NOT be set to ETRS and remains PSDA instead!
+<!-- [qball] set TD_dt 0.1 atomictime -->
+<!-- [qball] run 10 1 -->
+<INFO> s->hamil_wf has not been initialized, calling constructor. </INFO>
+WfDyn::wave functions must be complex to propagate them in time
+WfDyn::wf_dyn will NOT be set to ETRS and remains PSDA instead!
+WfDyn::wave functions must be complex to propagate them in time
+WfDyn::wf_dyn will NOT be set to ETRS and remains PSDA instead!
+WfDyn::wave functions must be complex to propagate them in time
+WfDyn::wf_dyn will NOT be set to ETRS and remains PSDA instead!
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+ChargeDensity:  vbasis = 24 24 24, resize to 28 28 28
+ChargeDensity:  vbasis = 24 24 24, resize to 28 28 28
+  <!-- EnergyFunctional: charge density basis: 1848 plane waves, ngloc = 469 -->
+  <!-- EnergyFunctional: np0v,np1v,np2v: 28 28 28 -->
+  <!-- EnergyFunctional: vft->np012(): 21952 -->
+ChargeDensity:  vbasis = 24 24 24, resize to 28 28 28
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+<!-- AtomSet.set_rcps:  Ewald width for species germanium is too small for reciprocal sum convergence, increasing rcps from 1.20304768 to 1.40000000 -->
+<!-- AtomSet.set_rcps:  species germanium Ewald width larger than reciprocal grid spacing, decreasing rcps from 1.40000000 to 1.20304768 -->
+<!-- AtomSet.set_rcps:  Ewald width for species germanium = 1.20304768 -->
+<!-- EnergyFunctional:  number of images in real-space ewald sum = 1 for rckj = 1.70136634 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+<run niter_ionic="10" niter_scf="1" niter_nonscf="0">
+<wavefunction ecut="10.00000000" nspin="1" nel="28" nempty="8">
+<cell a0="0.000000 5.345000 5.345000"
+      a1="5.345000 0.000000 5.345000"
+      a2="5.345000 5.345000 0.000000"/>
+<reciprocal_lattice b0="-0.587763 0.587763 0.587763"
+      b1="0.587763 -0.587763 0.587763"
+      b2="0.587763 0.587763 -0.587763"/>
+<refcell a0="0.000000 0.000000 0.000000"
+         a1="0.000000 0.000000 0.000000"
+         a2="0.000000 0.000000 0.000000"/>
+<slater_determinant kpoint="0.250000 0.250000 0.250000"  weight="1.000000" size="22">
+ <!-- sdcontext: 4x1 -->
+<grid nx="12" ny="12" nz="12"/>
+ <!-- basis size: 477 -->
+ <!-- c dimensions: 492x22   (123x22 blocks) -->
+ <density_matrix form="diagonal" size="22">
+ </density_matrix>
+</slater_determinant>
+</wavefunction>
+<!-- EhrenSampleStepper:  fractional occupation detected. -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+<iteration count="1">
+  <!-- total_electronic_charge: 28.00000001, spin = 0 -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+  total_electronic_current:	      0.298436873359	-0.019280851688	0.541564007222
+  <ekin>       79.71233719 </ekin>
+  <eps>       -33.33971416 </eps>
+  <enl>       -33.82116486 </enl>
+  <ecoul>    -127.93763647 </ecoul>
+  <exc>       -36.40231061 </exc>
+  <esr>         0.02019853 </esr>
+  <eself>     129.99100272 </eself>
+  <ets>        -0.00329825 </ets>
+  <etotal>   -151.79178716 </etotal>
+<atomset>
+<unit_cell 
+    a="  0.00000000   5.34500000   5.34500000"
+    b="  5.34500000   0.00000000   5.34500000"
+    c="  5.34500000   5.34500000   0.00000000" />
+  <atom name="Ge1" species="germanium">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.16650920 -0.26067682 -0.59646972 </force>
+  </atom>
+  <atom name="Ge2" species="germanium">
+    <position> 2.67250000 2.67250000 2.67250000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.16650881 0.26067732 0.59646878 </force>
+  </atom>
+</atomset>
+  <econst> -151.79178716 </econst>
+  <ekin_ion> 0.00000000 </ekin_ion>
+  <temp_ion> 0.00000000 </temp_ion>
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <etotal_int>   -151.79176640 </etotal_int>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3700  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.048    " max="0.048    " count="1        "/>
+</iteration>
+<iteration count="2">
+  <!-- total_electronic_charge: 28.00000001, spin = 0 -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+  total_electronic_current:	      0.298429433995	-0.019291284553	0.541557021482
+  <ekin>       79.71232722 </ekin>
+  <eps>       -33.33971817 </eps>
+  <enl>       -33.82113414 </enl>
+  <ecoul>    -127.93763604 </ecoul>
+  <exc>       -36.40232594 </exc>
+  <esr>         0.02019853 </esr>
+  <eself>     129.99100272 </eself>
+  <ets>        -0.00329825 </ets>
+  <etotal>   -151.79178533 </etotal>
+<atomset>
+<unit_cell 
+    a="  0.00000000   5.34500000   5.34500000"
+    b="  5.34500000   0.00000000   5.34500000"
+    c="  5.34500000   5.34500000   0.00000000" />
+  <atom name="Ge1" species="germanium">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.16529970 -0.25848913 -0.59736263 </force>
+  </atom>
+  <atom name="Ge2" species="germanium">
+    <position> 2.67250000 2.67250000 2.67250000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.16515267 0.25828144 0.59721569 </force>
+  </atom>
+</atomset>
+  <econst> -151.79178533 </econst>
+  <ekin_ion> 0.00000000 </ekin_ion>
+  <temp_ion> 0.00000000 </temp_ion>
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <etotal_int>   -151.79172287 </etotal_int>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3700  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.047    " max="0.047    " count="1        "/>
+</iteration>
+<iteration count="3">
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+  total_electronic_current:	      0.298410338410	-0.019319456870	0.541537339127
+  <ekin>       79.71232252 </ekin>
+  <eps>       -33.33973670 </eps>
+  <enl>       -33.82106715 </enl>
+  <ecoul>    -127.93763678 </ecoul>
+  <exc>       -36.40236413 </exc>
+  <esr>         0.02019853 </esr>
+  <eself>     129.99100272 </eself>
+  <ets>        -0.00329825 </ets>
+  <etotal>   -151.79178049 </etotal>
+<atomset>
+<unit_cell 
+    a="  0.00000000   5.34500000   5.34500000"
+    b="  5.34500000   0.00000000   5.34500000"
+    c="  5.34500000   5.34500000   0.00000000" />
+  <atom name="Ge1" species="germanium">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.16210509 -0.25261579 -0.59959547 </force>
+  </atom>
+  <atom name="Ge2" species="germanium">
+    <position> 2.67250000 2.67250000 2.67250000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.16187432 0.25226050 0.59932596 </force>
+  </atom>
+</atomset>
+  <econst> -151.79178049 </econst>
+  <ekin_ion> 0.00000000 </ekin_ion>
+  <temp_ion> 0.00000000 </temp_ion>
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <etotal_int>   -151.79167558 </etotal_int>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3700  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.050    " max="0.050    " count="1        "/>
+</iteration>
+<iteration count="4">
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+  total_electronic_current:	      0.298388042661	-0.019357593181	0.541508971802
+  <ekin>       79.71238279 </ekin>
+  <eps>       -33.33978475 </eps>
+  <enl>       -33.82102282 </enl>
+  <ecoul>    -127.93764365 </ecoul>
+  <exc>       -36.40240762 </exc>
+  <esr>         0.02019853 </esr>
+  <eself>     129.99100272 </eself>
+  <ets>        -0.00329825 </ets>
+  <etotal>   -151.79177430 </etotal>
+<atomset>
+<unit_cell 
+    a="  0.00000000   5.34500000   5.34500000"
+    b="  5.34500000   0.00000000   5.34500000"
+    c="  5.34500000   5.34500000   0.00000000" />
+  <atom name="Ge1" species="germanium">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.15838520 -0.24533768 -0.60242456 </force>
+  </atom>
+  <atom name="Ge2" species="germanium">
+    <position> 2.67250000 2.67250000 2.67250000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.15817510 0.24492041 0.60209234 </force>
+  </atom>
+</atomset>
+  <econst> -151.79177430 </econst>
+  <ekin_ion> 0.00000000 </ekin_ion>
+  <temp_ion> 0.00000000 </temp_ion>
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <etotal_int>   -151.79162509 </etotal_int>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3700  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.051    " max="0.051    " count="1        "/>
+</iteration>
+<iteration count="5">
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+  total_electronic_current:	      0.298373258151	-0.019397856595	0.541479687553
+  <ekin>       79.71256419 </ekin>
+  <eps>       -33.33987525 </eps>
+  <enl>       -33.82105537 </enl>
+  <ecoul>    -127.93766143 </ecoul>
+  <exc>       -36.40244240 </exc>
+  <esr>         0.02019853 </esr>
+  <eself>     129.99100272 </eself>
+  <ets>        -0.00329825 </ets>
+  <etotal>   -151.79176850 </etotal>
+<atomset>
+<unit_cell 
+    a="  0.00000000   5.34500000   5.34500000"
+    b="  5.34500000   0.00000000   5.34500000"
+    c="  5.34500000   5.34500000   0.00000000" />
+  <atom name="Ge1" species="germanium">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.15565983 -0.23915298 -0.60500933 </force>
+  </atom>
+  <atom name="Ge2" species="germanium">
+    <position> 2.67250000 2.67250000 2.67250000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.15557218 0.23873664 0.60470794 </force>
+  </atom>
+</atomset>
+  <econst> -151.79176850 </econst>
+  <ekin_ion> 0.00000000 </ekin_ion>
+  <temp_ion> 0.00000000 </temp_ion>
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <etotal_int>   -151.79157347 </etotal_int>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3700  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.048    " max="0.048    " count="1        "/>
+</iteration>
+<iteration count="6">
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+  total_electronic_current:	      0.298373937908	-0.019436407382	0.541458925624
+  <ekin>       79.71288258 </ekin>
+  <eps>       -33.34000972 </eps>
+  <enl>       -33.82117912 </enl>
+  <ecoul>    -127.93769079 </ecoul>
+  <exc>       -36.40246886 </exc>
+  <esr>         0.02019853 </esr>
+  <eself>     129.99100272 </eself>
+  <ets>        -0.00329825 </ets>
+  <etotal>   -151.79176417 </etotal>
+<atomset>
+<unit_cell 
+    a="  0.00000000   5.34500000   5.34500000"
+    b="  5.34500000   0.00000000   5.34500000"
+    c="  5.34500000   5.34500000   0.00000000" />
+  <atom name="Ge1" species="germanium">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.15473761 -0.23560730 -0.60678396 </force>
+  </atom>
+  <atom name="Ge2" species="germanium">
+    <position> 2.67250000 2.67250000 2.67250000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.15481646 0.23520375 0.60659982 </force>
+  </atom>
+</atomset>
+  <econst> -151.79176417 </econst>
+  <ekin_ion> 0.00000000 </ekin_ion>
+  <temp_ion> 0.00000000 </temp_ion>
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+  <etotal_int>   -151.79152523 </etotal_int>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3700  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.049    " max="0.049    " count="1        "/>
+</iteration>
+<iteration count="7">
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+  total_electronic_current:	      0.298390446792	-0.019474367053	0.541452557282
+  <ekin>       79.71330135 </ekin>
+  <eps>       -33.34017629 </eps>
+  <enl>       -33.82135949 </enl>
+  <ecoul>    -127.93772668 </ecoul>
+  <exc>       -36.40250196 </exc>
+  <esr>         0.02019853 </esr>
+  <eself>     129.99100272 </eself>
+  <ets>        -0.00329825 </ets>
+  <etotal>   -151.79176131 </etotal>
+<atomset>
+<unit_cell 
+    a="  0.00000000   5.34500000   5.34500000"
+    b="  5.34500000   0.00000000   5.34500000"
+    c="  5.34500000   5.34500000   0.00000000" />
+  <atom name="Ge1" species="germanium">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.15544240 -0.23476553 -0.60765207 </force>
+  </atom>
+  <atom name="Ge2" species="germanium">
+    <position> 2.67250000 2.67250000 2.67250000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.15564095 0.23434491 0.60760613 </force>
+  </atom>
+</atomset>
+  <econst> -151.79176131 </econst>
+  <ekin_ion> 0.00000000 </ekin_ion>
+  <temp_ion> 0.00000000 </temp_ion>
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+  <etotal_int>   -151.79148592 </etotal_int>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3700  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.048    " max="0.048    " count="1        "/>
+</iteration>
+<iteration count="8">
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+  total_electronic_current:	      0.298414624999	-0.019515177127	0.541458322623
+  <ekin>       79.71375169 </ekin>
+  <eps>       -33.34035605 </eps>
+  <enl>       -33.82153516 </enl>
+  <ecoul>    -127.93776105 </ecoul>
+  <exc>       -36.40256044 </exc>
+  <esr>         0.02019853 </esr>
+  <eself>     129.99100272 </eself>
+  <ets>        -0.00329825 </ets>
+  <etotal>   -151.79175926 </etotal>
+<atomset>
+<unit_cell 
+    a="  0.00000000   5.34500000   5.34500000"
+    b="  5.34500000   0.00000000   5.34500000"
+    c="  5.34500000   5.34500000   0.00000000" />
+  <atom name="Ge1" species="germanium">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.15692857 -0.23553708 -0.60792050 </force>
+  </atom>
+  <atom name="Ge2" species="germanium">
+    <position> 2.67250000 2.67250000 2.67250000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.15713288 0.23506670 0.60794422 </force>
+  </atom>
+</atomset>
+  <econst> -151.79175926 </econst>
+  <ekin_ion> 0.00000000 </ekin_ion>
+  <temp_ion> 0.00000000 </temp_ion>
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+  <etotal_int>   -151.79145935 </etotal_int>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3700  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.050    " max="0.050    " count="1        "/>
+</iteration>
+<iteration count="9">
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+  total_electronic_current:	      0.298434975835	-0.019560329000	0.541466664312
+  <ekin>       79.71417131 </ekin>
+  <eps>       -33.34053316 </eps>
+  <enl>       -33.82165573 </enl>
+  <ecoul>    -127.93778794 </ecoul>
+  <exc>       -36.40265352 </exc>
+  <esr>         0.02019853 </esr>
+  <eself>     129.99100272 </eself>
+  <ets>        -0.00329825 </ets>
+  <etotal>   -151.79175730 </etotal>
+<atomset>
+<unit_cell 
+    a="  0.00000000   5.34500000   5.34500000"
+    b="  5.34500000   0.00000000   5.34500000"
+    c="  5.34500000   5.34500000   0.00000000" />
+  <atom name="Ge1" species="germanium">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.15829772 -0.23653730 -0.60804262 </force>
+  </atom>
+  <atom name="Ge2" species="germanium">
+    <position> 2.67250000 2.67250000 2.67250000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.15840713 0.23602155 0.60802167 </force>
+  </atom>
+</atomset>
+  <econst> -151.79175730 </econst>
+  <ekin_ion> 0.00000000 </ekin_ion>
+  <temp_ion> 0.00000000 </temp_ion>
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+  <etotal_int>   -151.79144554 </etotal_int>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3700  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.053    " max="0.053    " count="1        "/>
+</iteration>
+<iteration count="10">
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+SlaterDet.resize:  new c dimensions = 492x22   (123x22 blocks, local data size on pe 0 = 123x22) -->
+SlaterDet.resize:  new c dimensions = 476x22   (119x22 blocks, local data size on pe 0 = 119x22) -->
+  total_electronic_current:	      0.298445556867	-0.019606585525	0.541467612164
+  <ekin>       79.71453485 </ekin>
+  <eps>       -33.34070167 </eps>
+  <enl>       -33.82170847 </enl>
+  <ecoul>    -127.93780699 </ecoul>
+  <exc>       -36.40277461 </exc>
+  <esr>         0.02019853 </esr>
+  <eself>     129.99100272 </eself>
+  <ets>        -0.00329825 </ets>
+  <etotal>   -151.79175513 </etotal>
+<atomset>
+<unit_cell 
+    a="  0.00000000   5.34500000   5.34500000"
+    b="  5.34500000   0.00000000   5.34500000"
+    c="  5.34500000   5.34500000   0.00000000" />
+  <atom name="Ge1" species="germanium">
+    <position> 0.00000000 0.00000000 0.00000000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> -0.15908946 -0.23689942 -0.60833857 </force>
+  </atom>
+  <atom name="Ge2" species="germanium">
+    <position> 2.67250000 2.67250000 2.67250000 </position>
+    <velocity> 0.00000000 0.00000000 0.00000000 </velocity>
+    <force> 0.15910191 0.23639139 0.60819930 </force>
+  </atom>
+</atomset>
+  <econst> -151.79175513 </econst>
+  <ekin_ion> 0.00000000 </ekin_ion>
+  <temp_ion> 0.00000000 </temp_ion>
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+  <etotal_int>   -151.79144157 </etotal_int>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  1.9935  1.3700  0.6216  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <occupation spin="0" kpoint="0.25000000 0.25000000 -0.25000000" n="22">
+  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000  2.0000
+  2.0000  2.0000  2.0000  1.9999  0.0051  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000
+  </occupation>
+  <!-- total_electronic_charge: 27.99999999, spin = 0 -->
+<timing where="run"                name=" iteration"       min="0.048    " max="0.048    " count="1        "/>
+</iteration>
+<!-- memory nlp.twnl    :    0.131 MB  (0.033 MB local) -->
+<!-- memory sd.psi      :    0.320 MB  (0.080 MB local) -->
+<!-- memory sd.hpsi     :    0.320 MB  (0.080 MB local) -->
+<!-- memory cd.rhor     :    0.167 MB  (0.042 MB local) -->
+<!-- memory cd.rhog     :    0.028 MB  (0.007 MB local) -->
+<!-- memory cd.nlccrhor :    0.167 MB  (0.042 MB local) -->
+<!-- memory cd.nlccrhog :    0.028 MB  (0.007 MB local) -->
+<!-- memory total       :    1.163 MB  (0.291 MB local) -->
+  <!-- total_electronic_charge: 28.00000000, spin = 0 -->
+</run>
+<!-- [qball]  -->
+<!-- end of command stream -->
+<real_time> 0.89818692 </real_time>
+<end_time> 2026-11-09T09:57:27Z </end_time>
+</qbox:simulation>

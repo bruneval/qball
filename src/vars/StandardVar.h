@@ -43,7 +43,7 @@ class StandardVar : public Var {
 public:
 
   virtual const char * name() const { return name_.c_str(); }
-  const Dimensions & dimensions() const { return dims_; }
+  Dimensions dimensions() const { return dims_; }
 
   typedef unsigned Attributes;
 

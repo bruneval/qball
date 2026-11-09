@@ -1,0 +1,24 @@
+# Bulk Ge with a UPF2 pseudopotential that has a different number of
+# projectors per angular momentum: 3 s (the 3rd one is a tiny fake
+# projector with D = 1e-5), 2 p and 2 d.
+# Regression test for a bug where the projectors were matched to the
+# wrong D coefficients (total energy was wrong by about 51 Ha).
+set cell 0.000 5.345 5.345 5.345 0.000 5.345 5.345 5.345 0.000 bohr
+species germanium Ge_pseudodojo_plus_proj_noproj.upf
+atom Ge1 germanium 0.0000 0.0000 0.0000 bohr
+atom Ge2 germanium 2.6725 2.6725 2.6725 bohr
+set xc PBE
+set ecut 20 rydberg
+set ecutprec 8 rydberg
+set wf_dyn PSDA
+set nempty 8
+set smearing fermi
+set smearing_width 0.01
+set threshold_scf 1.E-7 5
+
+set nkpoints 2
+kpoint 0.25 0.25  0.25 0.25
+kpoint 0.25 0.25 -0.25 0.75
+
+randomize_wf
+run 0 100 5

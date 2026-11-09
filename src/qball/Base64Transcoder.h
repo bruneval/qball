@@ -35,18 +35,18 @@
 #include <cstdio>
 #include <string>
 using namespace std;
-typedef unsigned char byte;
+typedef unsigned char b64byte;
 
 class Base64Transcoder
 {
   char etable[64];  // encode table
-  byte dtable[256]; // decode table
+  b64byte dtable[256]; // decode table
 
   public:
   
   Base64Transcoder();
-  int encode(int nbytes, const byte* const from, char* const to);
-  int decode(int nchars, const char* const from, byte* const to);
+  int encode(int nbytes, const b64byte* const from, char* const to);
+  int decode(int nchars, const char* const from, b64byte* const to);
   void byteswap_double(size_t n, double* const x);
   void byteswap_int(size_t n, int* const x);
   int print(int nchars, const char* const buf, ostream& o);

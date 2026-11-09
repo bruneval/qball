@@ -57,6 +57,11 @@ namespace pseudopotential {
     set(const std::string & dirname){
       DIR * dir = opendir(dirname.c_str());
 
+      if(dir == NULL){
+	std::cerr << "Error: cannot open pseudopotential directory '" << dirname << "'." << std::endl;
+	exit(EXIT_FAILURE);
+      }
+
       struct dirent *ent;
       while ((ent = readdir(dir)) != NULL) {
 	const std::string filename(ent->d_name);
