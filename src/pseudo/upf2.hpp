@@ -291,7 +291,7 @@ namespace pseudopotential {
       assert(node);
       
       int size = value<int>(node->first_attribute("size"));
-      density.resize(size);
+      density.resize(size + start_point_);
 
       std::istringstream stst(node->value());
       for(int ii = 0; ii < size; ii++) stst >> density[start_point_ + ii];
