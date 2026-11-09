@@ -1,0 +1,25 @@
+# Diamond with a UPF2 pseudopotential that has a model core charge (NLCC)
+# on a logarithmic radial grid that does not start at r=0 (as written by
+# Quantum ESPRESSO's ld1.x).
+# C_loggrid.upf is the PseudoDojo C.upf shipped with QBALL
+# (share/pseudopotentials/pseudo-dojo.org/nc-sr-04_pbe_standard/C.upf),
+# with all radial functions interpolated onto the grid
+# r_i = exp(xmin + i*dx)/zmesh, xmin=-7, dx=0.0125, zmesh=6.
+# Regression test for a bug where reading the core charge on such a grid
+# wrote past the end of an array (crash or wrong results).
+set cell 0.000 3.37 3.37 3.37 0.000 3.37 3.37 3.37 0.000 bohr
+species carbon C_loggrid.upf
+atom C1 carbon 0.0000 0.0000 0.0000 bohr
+atom C2 carbon 1.6850 1.6850 1.6850 bohr
+set xc PBE
+set ecut 40 rydberg
+set ecutprec 8 rydberg
+set wf_dyn PSDA
+set threshold_scf 1.E-8 5
+
+set nkpoints 2
+kpoint 0.25 0.25  0.25 0.25
+kpoint 0.25 0.25 -0.25 0.75
+
+randomize_wf
+run 0 100 5
