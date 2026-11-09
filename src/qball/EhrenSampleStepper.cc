@@ -398,6 +398,15 @@ void EhrenSampleStepper::step(int niter)
        }
     }
 
+    // electronic dipole from the density (set density_dipole ON);
+    // all tasks take part in the sum
+    D3vector density_dipole(0.0, 0.0, 0.0);
+    if ( s_.ctrl.density_dipole && iter%s_.ctrl.iprint == 0 ) {
+       if ( s_.wf.nspin() != 1 )
+          Messages::fatal("density_dipole ON is not supported for spin-polarized calculations");
+       density_dipole = cd_.dipole();
+    }
+
     if ( oncoutpe && iter%s_.ctrl.iprint == 0)
     {
        cout.setf(ios::fixed,ios::floatfield);
@@ -414,6 +423,11 @@ void EhrenSampleStepper::step(int niter)
             << "  <eself>  " << setw(15) << ef_.eself() << " </eself>\n"
             << "  <ets>    " << setw(15) << ef_.ets() << " </ets>\n"
             << "  <etotal> " << setw(15) << ef_.etotal() << " </etotal>\n";
+       if ( s_.ctrl.density_dipole )
+          cout << "  <electronic_dipole_density> " << setprecision(10)
+               << density_dipole.x << " " << density_dipole.y << " "
+               << density_dipole.z << " </electronic_dipole_density>\n"
+               << setprecision(8);
        if ( compute_stress )
        {
           const double pext = (sigma_ext[0]+sigma_ext[1]+sigma_ext[2])/3.0;

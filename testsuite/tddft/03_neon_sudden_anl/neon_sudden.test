@@ -1,0 +1,21 @@
+Test       : RT-TDDFT Neon sudden start (traveling pseudopotentials, A^nl)
+Program    : qball
+TestGroups : short-run
+Enabled    : Yes
+
+ExtraFile  : Ne.psp8
+ExtraFile  : anl_check.sh
+Input      : neon_sudden.inp
+
+# ground state
+match ; etotal_gs      ; GREPFIELD(out, '<etotal>', 2) ; -33.28838802
+# E_KS alone misses the work done by -v.Delta(A^nl) between steps 20 and 100:
+# about 0.26 Ha (regression value, documents the spurious oscillation)
+Precision  : 1e-2
+match ; ks_balance     ; SHELL(sh anl_check.sh out ks_balance 20 100) ; 0.26430022
+# exact relations, expected 0: printed A^nl = P - <p> (P from the density dipole) ...
+match ; anl_step20     ; SHELL(sh anl_check.sh out anl 20)  ; 0.0
+match ; anl_step100    ; SHELL(sh anl_check.sh out anl 100) ; 0.0
+# ... and energy balance Delta(E_KS + A^nl.v) = v.Delta(P)
+Precision  : 5e-3
+match ; energy_balance ; SHELL(sh anl_check.sh out balance 20 100) ; 0.0

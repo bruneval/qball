@@ -1,0 +1,39 @@
+# Energy balance with traveling pseudopotentials (A^nl term).
+# Isolated Ne atom (PseudoDojo PBE v0.4 standard Ne.psp8), ground state at rest,
+# then suddenly set moving at constant velocity v = 0.5 a.u. along x
+# (atoms_dyn IMPULSIVE, traveling_pseudo ON); the electrons start at rest and
+# slosh around the moving nucleus.
+#
+# With velocity-dependent projectors, the energy put in by the agent that keeps
+# v constant is Delta(E_KS + A^nl.v) = v . Delta(P), where
+#   A^nl = i<[V_nl, r]> = -dE_nl/dv   (nonlocal part of the electron momentum)
+#   P    = d<sum r>/dt = <p> + A^nl  (physical electron momentum)
+# (Stengel, Royo, Artacho, PRL 136, 196401 (2026), Eq. 6; see etf_kb.md).
+# E_KS alone misses v . Delta(A^nl): a spurious oscillation.
+# The checks are done by anl_check.sh from the printed energies, A^nl, the
+# electronic current (<p>) and the electronic dipole computed from the density
+# (P = -d dipole/dt; density_dipole ON). The atom starts at the box centre so
+# that its density stays far from the cell boundaries.
+#
+# 1) ground state with the atom at rest
+set cell 14 0 0 0 14 0 0 0 14 bohr
+species neon Ne.psp8
+atom Ne neon 7.0 7.0 7.0 bohr 0.5 0.0 0.0 atomicvelocity
+set xc PBE
+set ecut 40 rydberg
+set ecutprec 4 rydberg
+set force_complex_wf ON
+set wf_dyn PSDA
+set wf_diag T
+set threshold_scf 1.E-10 5
+randomize_wf
+run 0 100 5
+
+# 2) sudden start at constant velocity; dipole printed at every step
+set atoms_dyn IMPULSIVE
+set traveling_pseudo ON
+set wf_dyn ETRS
+set density_dipole ON
+set TD_dt 0.025 atomictime
+set dt 0.025 atomictime
+run 104 1

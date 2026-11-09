@@ -267,4 +267,82 @@ Checks:
 
 Not done yet:
 
-- Printing A^nl and A^nl·v of each moving atom (decision 4).
+- Printing A^nl and A^nl·v of each moving atom (decision 4); the test of
+  section 12 checks it.
+
+## 12. Regression test: Ne sudden start, A^nl (`testsuite/tddft/03_neon_sudden_anl`)
+
+Same Ne atom as section 9, placed at the box centre (7, 7, 7), but
+**without** the vector-potential trick: the ground state is computed at rest,
+then the nucleus is suddenly set moving at v = 0.5 a.u. along x
+(`IMPULSIVE`, `traveling_pseudo ON`), while the electrons start at rest. Seen
+from the atom, the electrons get a kick and slosh around the nucleus. ETRS,
+`TD_dt` = `dt` = 0.025 a.u., 104 steps (about 19 s).
+
+Physics: with velocity-dependent projectors, the work done by the agent that
+keeps v constant is
+
+    Δ(E_KS + A^nl·v) = v·ΔP,     P = d⟨Σ r⟩/dt = ⟨p⟩ + A^nl
+
+(P = physical electron momentum, ⟨p⟩ = canonical momentum). Also
+ΔE_KS = v·Δ⟨p⟩, so E_KS alone misses v·ΔA^nl: a spurious oscillation.
+
+How the quantities are obtained:
+
+- ⟨p⟩ = −`total_electronic_current` (electron charge −1; canonical part
+  only, no nonlocal contribution).
+- P = −d(dipole)/dt, central difference of the new output
+  `<electronic_dipole_density>` (section 13).
+- A^nl: printed by QBALL (to be implemented, decision 4) as
+  `<anl_velocity> Ne Ax Ay Az </anl_velocity>` and
+  `<anl_dot_v> Ne value </anl_dot_v>`, one line per moving atom and per step.
+- Energy, current, density dipole and A^nl of step N are printed together,
+  for the same wavefunctions (start of the step).
+
+Measured with the current code, A^nl obtained as P − ⟨p⟩ (400-step run):
+
+- E_KS jumps by +0.1837 Ha at the first step (the nonlocal energy changes
+  when the projectors switch from at-rest to traveling); afterwards
+  ΔE_KS = v·Δ⟨p⟩ holds within 1.4e-3 Ha over 400 steps (time-step error).
+- v·A^nl oscillates between about −0.25 and +0.13 Ha. Between steps 20 and
+  100 it goes from +0.133 to −0.131 Ha, so E_KS alone misses the work by
+  0.264 Ha.
+
+Why not the Wannier dipole (`wf_diag MLWFC`): it was tried first. It has
+isolated bad values (one step off by about 0.1, e.g. steps 152 and 274 of a
+400-step run), it is computed after the propagation (one step later than
+the energy and current, which biased A^nl by up to about 0.2 Ha·(1/v) during
+the fast initial acceleration), and it is 5 to 10 times less accurate
+(P = 4.004 instead of 4 on the boosted Ne of section 9).
+
+Checks (`neon_sudden.test`, computed by `anl_check.sh` from the output):
+
+| Check | Expected | Tolerance | Current code |
+|---|---|---|---|
+| ground-state energy | −33.28838802 | 1e-4 | pass |
+| `ks_balance`: ΔE_KS − v·ΔP, steps 20→100 | 0.26430022 (regression value: the missing −v·ΔA^nl) | 1e-2 | pass |
+| `anl` at step 20: A_x − (P − ⟨p⟩) | 0 (exact) | 1e-2 | fail (A^nl not printed) |
+| `anl` at step 100 | 0 (exact) | 1e-2 | fail (A^nl not printed) |
+| `energy_balance`: Δ(E_KS + A^nl·v) − v·ΔP, steps 20→100 | 0 (exact) | 5e-3 | fail (A^nl not printed) |
+
+The tolerances may be tightened once A^nl is implemented and the actual
+errors are known; the effect being tested is 0.26 Ha.
+
+## 13. Density dipole output (`set density_dipole ON`)
+
+Added for the test of section 12, opt-in (default `OFF`):
+
+- `src/vars/DensityDipole.h`, flag `ctrl.density_dipole`, registered in
+  `src/main/qb.cc` and `src/qball/qbLink.cc`.
+- `ChargeDensity::dipole()`: −∫ r n(r) d³r with r = (i/np0) a + (j/np1) b +
+  (k/np2) c on the real-space grid of the cell. Meaningful only for an
+  isolated system whose density is negligible at the cell boundaries.
+  Spin-unpolarized only (stops with an error otherwise).
+- Printed by `EhrenSampleStepper` at every RT-TDDFT step, right after
+  `<etotal>`, as `<electronic_dipole_density> Dx Dy Dz </electronic_dipole_density>`
+  (10 decimals).
+
+Validation on the boosted Ne of section 9, moved to the box centre:
+the dipole starts at −55.99995 (exact −56) in each direction; y and z stay
+constant to 6e-9; P = −dD_x/dt is between 3.9992 and 3.9998 at every step
+(exact 4, the difference is a time-step error).

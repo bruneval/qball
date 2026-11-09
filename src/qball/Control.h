@@ -116,6 +116,7 @@ struct Control
     
   bool tddft_involved;
   bool traveling_pseudo; // velocity-dependent nonlocal projectors (traveling pseudopotentials)
+  bool density_dipole;   // print the electronic dipole computed from the density (RT-TDDFT)
   bool dft_plus_u;
   bool ultrasoft;
   bool nlcc;         // non-linear core correction
